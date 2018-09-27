@@ -35,11 +35,11 @@ public interface EnumSanitizer {
 	static ArrayList<String> extractEnumFromString(String stringValue,
 			char separator) throws BadFormatException{
 		
-		String pSep = String.format("\\%s", separator);
-		
 		// Verify that string is of format "[...]| [...] | [...]" while allowing single choice enums.
 		// ~ Resetting stringValue here was not necessary, but this will make it future-proof ~
 		stringValue = verifyStringFormat(stringValue, separator);
+		
+		String pSep = protectSeparator(separator);
 		
 		String expNonProtectedSeparator = "(?<!\\\\)" + pSep;
 		
@@ -69,7 +69,7 @@ public interface EnumSanitizer {
 		// Please see https://regex101.com/r/FrVwfk for an interactive testing session for this regex.
 		// Make sure to use the latest version on this website (click the v1 button to check).
 		
-		String pSep = String.format("\\%s", separator);
+		String pSep = protectSeparator(separator);
 		
 		String expAnyNonBreakOrSep = "[^\\n" + pSep + "]*";
 		String expAnyNonSpaceOrSep = "([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\"
@@ -82,6 +82,17 @@ public interface EnumSanitizer {
 		String expEnumFormat = expValidWord + expAdditionalValidWords;
 		
 		return TextRegexSanitizer.sanitizeValue(stringValue, expEnumFormat);
+		
+	}
+	
+	static String protectSeparator(char separator){
+		
+		if("<([{\\^-=$!|]})?*+.>".indexOf(separator) != -1){
+			return String.format("\\%s", separator);
+		}
+		else{
+			return String.valueOf(separator);
+		}
 		
 	}
 	
