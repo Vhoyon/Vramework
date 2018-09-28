@@ -11,12 +11,9 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	
 	public AbstractUIConsole(){
 		super();
-
-
-		setIconImage(new ImageIcon("io/github/vhoyon/res/img/Voyon.jpg").getImage());
-
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e){
@@ -24,11 +21,11 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 					onStop();
 				}
 				catch(Exception e1){}
-
+				
 				super.windowClosing(e);
 			}
 		});
-
+		
 		setLocationRelativeTo(null);
 	}
 	
@@ -39,7 +36,7 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	
 	@Override
 	public int getConfirmation(String question, QuestionType questionType){
-
+		
 		int jOptionType;
 		
 		switch(questionType){
@@ -54,21 +51,21 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 		
 		int choice = JOptionPane.showConfirmDialog(this, question,
 				"Hey, gotta confirm this!", jOptionType);
-
+		
 		return choice;
 		
 	}
 	
 	@Override
-	public void onStart() {}
-
+	public void onStart(){}
+	
 	@Override
 	public void onStop() throws Exception{}
-
+	
 	@Override
 	public void onInitialized(){}
-
+	
 	@Override
-	public void onExit() {}
+	public void onExit(){}
 	
 }
