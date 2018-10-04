@@ -96,6 +96,18 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
+	void testSingleValueSeparatorOnlyProtected(){
+		
+		String value = "\\|";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(1, list.size());
+		assertEquals("\\|", list.get(0));
+		
+	}
+	
+	@Test
 	void testSingleValueSeparatorOnlyMultiple(){
 		
 		String value = "||||";
@@ -117,6 +129,19 @@ class EnumSanitizerTest {
 		
 		assertEquals(1, list.size());
 		assertEquals("[", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueSeparatorOnlyProtectedCustom(){
+		
+		String value = "\\[";
+		
+		ArrayList<String> list = EnumSanitizer
+				.extractEnumFromString(value, '[');
+		
+		assertEquals(1, list.size());
+		assertEquals("\\[", list.get(0));
 		
 	}
 	

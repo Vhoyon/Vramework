@@ -41,7 +41,7 @@ public interface EnumSanitizer {
 		
 		String pSep = protectSeparator(separator);
 		
-		if(stringValue.matches("^\\s*" + pSep + "+\\s*$")){
+		if(stringValue.matches("^\\s*(\\\\*" + pSep + ")+\\s*$")){
 			
 			ArrayList<String> values = new ArrayList<>();
 			values.add(stringValue);
