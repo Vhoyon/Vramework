@@ -159,6 +159,32 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
+	void testSingleValueProtectionSyntax(){
+		
+		String value = "\\\\||\\";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(2, list.size());
+		assertEquals("\\|", list.get(0));
+		assertEquals("\\", list.get(1));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectionSyntaxCustom(){
+		
+		String value = "\\\\[[\\";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value, '[');
+		
+		assertEquals(2, list.size());
+		assertEquals("\\[", list.get(0));
+		assertEquals("\\", list.get(1));
+		
+	}
+	
+	@Test
 	void testMultipleValuesNoSpace(){
 		
 		String value = "First|Second|Third";
