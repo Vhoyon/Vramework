@@ -84,6 +84,56 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
+	void testSingleValueSeparatorOnly(){
+		
+		String value = "|";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(1, list.size());
+		assertEquals("|", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueSeparatorOnlyMultiple(){
+		
+		String value = "||||";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(1, list.size());
+		assertEquals("||||", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueSeparatorOnlyCustom(){
+		
+		String value = "[";
+		
+		ArrayList<String> list = EnumSanitizer
+				.extractEnumFromString(value, '[');
+		
+		assertEquals(1, list.size());
+		assertEquals("[", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueSeparatorOnlyMultipleCustom(){
+		
+		String value = "[[[[";
+		
+		ArrayList<String> list = EnumSanitizer
+				.extractEnumFromString(value, '[');
+		
+		assertEquals(1, list.size());
+		assertEquals("[[[[", list.get(0));
+		
+	}
+	
+	@Test
 	void testMultipleValuesNoSpace(){
 		
 		String value = "First|Second|Third";
@@ -507,7 +557,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormat2(){
 		
-		String value = "|";
+		String value = "First||Third";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value);
@@ -519,7 +569,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormat3(){
 		
-		String value = "First||Third";
+		String value = "First|  |Third";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value);
@@ -531,7 +581,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormat4(){
 		
-		String value = "First|  |Third";
+		String value = "First|Second|";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value);
@@ -543,7 +593,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormat5(){
 		
-		String value = "First|Second|";
+		String value = "|First|Second";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value);
@@ -555,18 +605,6 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormat6(){
 		
-		String value = "|First|Second";
-		
-		Executable shouldThrowBadFormatException = () -> EnumSanitizer
-				.extractEnumFromString(value);
-		
-		assertThrows(BadFormatException.class, shouldThrowBadFormatException);
-		
-	}
-	
-	@Test
-	void testMultipleValuesBadFormat7(){
-		
 		String value = "    |First";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
@@ -577,7 +615,7 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
-	void testMultipleValuesBadFormat8(){
+	void testMultipleValuesBadFormat7(){
 		
 		String value = "First|    ";
 		
@@ -603,7 +641,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormatCustomSep2(){
 		
-		String value = "[";
+		String value = "First[[Third";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value, '[');
@@ -615,7 +653,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormatCustomSep3(){
 		
-		String value = "First[[Third";
+		String value = "First[  [Third";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value, '[');
@@ -627,7 +665,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormatCustomSep4(){
 		
-		String value = "First[  [Third";
+		String value = "First[Second[";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value, '[');
@@ -639,7 +677,7 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormatCustomSep5(){
 		
-		String value = "First[Second[";
+		String value = "[First[Second";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
 				.extractEnumFromString(value, '[');
@@ -651,18 +689,6 @@ class EnumSanitizerTest {
 	@Test
 	void testMultipleValuesBadFormatCustomSep6(){
 		
-		String value = "[First[Second";
-		
-		Executable shouldThrowBadFormatException = () -> EnumSanitizer
-				.extractEnumFromString(value, '[');
-		
-		assertThrows(BadFormatException.class, shouldThrowBadFormatException);
-		
-	}
-	
-	@Test
-	void testMultipleValuesBadFormatCustomSep7(){
-		
 		String value = "    [First";
 		
 		Executable shouldThrowBadFormatException = () -> EnumSanitizer
@@ -673,7 +699,7 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
-	void testMultipleValuesBadFormatCustomSep8(){
+	void testMultipleValuesBadFormatCustomSep7(){
 		
 		String value = "First[    ";
 		

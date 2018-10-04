@@ -41,25 +41,37 @@ public interface EnumSanitizer {
 		
 		String pSep = protectSeparator(separator);
 		
-		String expNonProtectedSeparator = "(?<!\\\\)" + pSep;
-		
-		String[] possibleValues = stringValue.trim().split(
-				"\\s*" + expNonProtectedSeparator + "\\s*");
-		
-		ArrayList<String> values = new ArrayList<>();
-		
-		for(String possibleValue : possibleValues){
-			values.add(possibleValue.replaceAll("\\\\" + pSep,
-					String.valueOf(separator)));
+		if(stringValue.matches("^\\s*" + pSep + "+\\s*$")){
+			
+			ArrayList<String> values = new ArrayList<>();
+			values.add(stringValue);
+			
+			return values;
+			
 		}
-		
-		// Remove duplicate while keeping the order of the values
-		LinkedHashSet<String> hs = new LinkedHashSet<>();
-		hs.addAll(values);
-		values.clear();
-		values.addAll(hs);
-		
-		return values;
+		else{
+			
+			String expNonProtectedSeparator = "(?<!\\\\)" + pSep;
+			
+			String[] possibleValues = stringValue.trim().split(
+					"\\s*" + expNonProtectedSeparator + "\\s*");
+			
+			ArrayList<String> values = new ArrayList<>();
+			
+			for(String possibleValue : possibleValues){
+				values.add(possibleValue.replaceAll("\\\\" + pSep,
+						String.valueOf(separator)));
+			}
+			
+			// Remove duplicate while keeping the order of the values
+			LinkedHashSet<String> hs = new LinkedHashSet<>();
+			hs.addAll(values);
+			values.clear();
+			values.addAll(hs);
+			
+			return values;
+			
+		}
 		
 	}
 	
@@ -75,11 +87,16 @@ public interface EnumSanitizer {
 		String expAnyNonSpaceOrSep = "([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\"
 				+ pSep + ")";
 		
+		String expOnlySeparators = pSep + "+";
+		
 		String expValidWord = expAnyNonBreakOrSep + expAnyNonSpaceOrSep
 				+ expAnyNonBreakOrSep;
-		String expAdditionalValidWords = "(" + pSep + expValidWord + ")*";
+		String expAdditionalValidWords = pSep + expValidWord;
 		
-		String expEnumFormat = expValidWord + expAdditionalValidWords;
+		String expValidWordsAsEnum = expValidWord + "("
+				+ expAdditionalValidWords + ")*";
+		
+		String expEnumFormat = expOnlySeparators + "|" + expValidWordsAsEnum;
 		
 		return TextRegexSanitizer.sanitizeValue(stringValue, expEnumFormat);
 		
