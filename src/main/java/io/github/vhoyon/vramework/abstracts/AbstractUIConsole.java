@@ -57,7 +57,7 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	}
 	
 	@Override
-	public void onStart(){}
+	public void onStart() throws Exception{}
 	
 	@Override
 	public void onStop() throws Exception{}

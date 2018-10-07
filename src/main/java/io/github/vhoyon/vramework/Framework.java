@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class Framework {
 	
+	private static Class<?> classRunIn;
+	
 	private static boolean IS_RUNNING_FROM_TERMINAL;
 	private static String RUNNABLE_SYSTEM_PATH;
 	private static Date BUILD_STARTED_AT;
@@ -37,11 +39,17 @@ public class Framework {
 		"Environment", "Logger", "Metrics", "Audit"
 	};
 	
-	public static void build() throws Exception{
-		Framework.build(false);
+	public static void build(Class<?> caller) throws Exception{
+		Framework.build(caller, false);
 	}
 	
-	public static void build(boolean isDebugging) throws Exception{
+	public static void build(Class<?> caller, boolean isDebugging)
+			throws Exception{
+		
+		if(caller == null)
+			throw new IllegalArgumentException("The caller cannot be null!");
+		
+		Framework.classRunIn = caller;
 		
 		Framework.setupGlobalVariables(isDebugging);
 		
@@ -52,8 +60,9 @@ public class Framework {
 			try{
 				String formattedModuleName = moduleName.replaceAll("/", ".");
 				
-				Class<?> moduleClass = Class.forName("io.github.vhoyon.vramework.modules."
-						+ formattedModuleName);
+				Class<?> moduleClass = Class
+						.forName("io.github.vhoyon.vramework.modules."
+								+ formattedModuleName);
 				
 				if(Module.class.isAssignableFrom(moduleClass)){
 					
@@ -101,7 +110,7 @@ public class Framework {
 	
 	private static String getRunnableFolderPath(){
 		
-		String systemPath = Framework.class.getProtectionDomain()
+		String systemPath = Framework.classRunIn.getProtectionDomain()
 				.getCodeSource().getLocation().getPath();
 		
 		try{
