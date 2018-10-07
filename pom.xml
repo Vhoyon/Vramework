@@ -11,6 +11,48 @@
     <name>Vramework</name>
     <description>Framework to create bots easily for Discord!</description>
 
+    <organization>
+        <name>Vhoyon</name>
+        <url>https://github.com/Vhoyon</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Guillaume Marcoux</name>
+            <email>guillaumemarcoux@gmail.com</email>
+            <url>https://github.com/V-ed</url>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Stephano Mehawej</name>
+            <url>https://github.com/StephanoMehawej</url>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Vhoyon/Vramework/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/Vhoyon/Vramework</url>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
