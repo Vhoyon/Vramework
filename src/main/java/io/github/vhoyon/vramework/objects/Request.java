@@ -119,7 +119,7 @@ public class Request implements Utils {
 			}
 			else{
 				
-				int weight = calculateWeight(weightPosition);
+				int weight = calculateWeight(weightPosition - 1);
 				
 				if(weight == -1)
 					return -1;
@@ -759,21 +759,25 @@ public class Request implements Utils {
 		
 		if(paramFound != null){
 			
-			int prevWeightPosition = paramFound.getWeightPosition();
+			final int prevWeightPosition = paramFound.getWeightPosition();
 			
 			if(paramFound.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
 				
-				if(weightPosition > this.uniqueWeightIndex)
+				if(weightPosition == this.uniqueWeightIndex + 1)
 					Request.this.uniqueWeightIndex++;
 				
-				int smallestPosition = (prevWeightPosition > weightPosition) ? weightPosition
+				final boolean isWeightSmaller = prevWeightPosition != Parameter.DEFAULT_WEIGHT
+						&& prevWeightPosition > weightPosition;
+				
+				int smallestPosition = isWeightSmaller ? weightPosition
 						: prevWeightPosition;
 				
-				int vector = (prevWeightPosition > weightPosition) ? 1 : -1;
+				int vector = isWeightSmaller ? 1 : -1;
 				
 				this.parameters.forEach((s, param) -> {
 					
 					if(param.getWeight() != Parameter.DEFAULT_WEIGHT
+							&& prevWeightPosition != 0
 							&& !paramFound.equals(param)
 							&& param.getWeightPosition() >= smallestPosition
 							&& param.getWeightPosition() <= paramFound
