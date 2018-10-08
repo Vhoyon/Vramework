@@ -13,6 +13,8 @@ public class Request implements Utils {
 	
 	public class Parameter {
 		
+		public static final int DEFAULT_WEIGHT = 0;
+		
 		private String parameterName;
 		private String parameterContent;
 		
@@ -37,7 +39,7 @@ public class Request implements Utils {
 		}
 		
 		protected Parameter(String paramName, String paramContent, int position){
-			this(paramName, paramContent, position, 0);
+			this(paramName, paramContent, position, DEFAULT_WEIGHT);
 		}
 		
 		protected Parameter(String paramName, String paramContent,
@@ -111,9 +113,9 @@ public class Request implements Utils {
 		
 		protected int setWeight(int weightPosition){
 			
-			if(weightPosition == 0){
-				this.weigthPosition = 0;
-				this.weight = 0;
+			if(weightPosition == DEFAULT_WEIGHT){
+				this.weigthPosition = DEFAULT_WEIGHT;
+				this.weight = DEFAULT_WEIGHT;
 			}
 			else{
 				
@@ -746,7 +748,7 @@ public class Request implements Utils {
 		
 		if(weightPosition < 1){
 			throw new IllegalArgumentException(
-					"The importance parameter can only be above 0 (excluded).");
+					"The importance parameter can only be 1 or above.");
 		}
 		
 		if(weightPosition > this.uniqueWeightIndex + 1){
@@ -759,7 +761,7 @@ public class Request implements Utils {
 			
 			int prevWeightPosition = paramFound.getWeightPosition();
 			
-			if(paramFound.setWeight(weightPosition) > 0){
+			if(paramFound.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
 				
 				if(weightPosition > this.uniqueWeightIndex)
 					Request.this.uniqueWeightIndex++;
@@ -771,7 +773,7 @@ public class Request implements Utils {
 				
 				this.parameters.forEach((s, param) -> {
 					
-					if(param.getWeight() != 0
+					if(param.getWeight() != Parameter.DEFAULT_WEIGHT
 							&& !paramFound.equals(param)
 							&& param.getWeightPosition() >= smallestPosition
 							&& param.getWeightPosition() <= paramFound
