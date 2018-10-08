@@ -48,7 +48,7 @@ public class RequestTest {
 		
 		assertEquals(4, weightForAMod);
 		assertEquals(1, weightForBMod);
-		assertEquals(8, weightForCMod);
+		assertEquals(32, weightForCMod);
 		assertEquals(2, weightForDMod);
 		
 	}

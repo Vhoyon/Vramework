@@ -173,8 +173,6 @@ public class Request implements Utils {
 	
 	private ArrayList<Parameter> duplicateParams;
 	
-	private int uniqueWeightIndex;
-	
 	public Request(String[] args){
 		this(args, DEFAULT_PARAMETER_PREFIX);
 	}
@@ -204,8 +202,6 @@ public class Request implements Utils {
 		this.commandPrefix = commandPrefix;
 		
 		this.parametersPrefix = parametersPrefix;
-		
-		this.uniqueWeightIndex = 0;
 		
 		if(!receivedMessage.startsWith(commandPrefix)){
 			setContent(receivedMessage);
@@ -759,16 +755,9 @@ public class Request implements Utils {
 					"The importance parameter can only be 1 or above.");
 		}
 		
-		if(weightPosition > this.uniqueWeightIndex + 1){
-			weightPosition = this.uniqueWeightIndex + 1;
-		}
-		
 		final int prevWeightPosition = parameter.getWeightPosition();
 		
 		if(parameter.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
-			
-			if(weightPosition == this.uniqueWeightIndex + 1)
-				Request.this.uniqueWeightIndex++;
 			
 			final boolean isWeightSmaller = prevWeightPosition != Parameter.DEFAULT_WEIGHT
 					&& prevWeightPosition > weightPosition;
