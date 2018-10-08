@@ -1,6 +1,7 @@
 package io.github.vhoyon.vramework.objects;
 
 import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.modules.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +13,16 @@ public class Request implements Utils {
 	
 	public class Parameter {
 		
+		public static final int DEFAULT_WEIGHT = 0;
+		
 		private String parameterName;
 		private String parameterContent;
 		
 		private int position;
 		private boolean acceptsContent;
+		
+		private int weigthPosition;
+		private int weight;
 		
 		protected Parameter(){}
 		
@@ -33,6 +39,11 @@ public class Request implements Utils {
 		}
 		
 		protected Parameter(String paramName, String paramContent, int position){
+			this(paramName, paramContent, position, DEFAULT_WEIGHT);
+		}
+		
+		protected Parameter(String paramName, String paramContent,
+				int position, int weight){
 			
 			if(paramName.matches(getParametersPrefixProtected() + "{1,2}.+")){
 				
@@ -50,6 +61,7 @@ public class Request implements Utils {
 			this.setPosition(position);
 			this.setContent(paramContent);
 			this.acceptsContent = true;
+			this.setWeight(weight);
 			
 		}
 		
@@ -89,6 +101,36 @@ public class Request implements Utils {
 			if(!acceptsContent && getContent() != null){
 				setContent(null);
 			}
+		}
+		
+		public int getWeightPosition(){
+			return this.weigthPosition;
+		}
+		
+		public int getWeight(){
+			return this.weight;
+		}
+		
+		protected int setWeight(int weightPosition){
+			
+			if(weightPosition == DEFAULT_WEIGHT){
+				this.weigthPosition = DEFAULT_WEIGHT;
+				this.weight = DEFAULT_WEIGHT;
+			}
+			else{
+				
+				int weight = calculateWeight(weightPosition - 1);
+				
+				if(weight == -1)
+					return -1;
+				
+				this.weigthPosition = weightPosition;
+				this.weight = weight;
+				
+			}
+			
+			return this.weight;
+			
 		}
 		
 		@Override
@@ -176,6 +218,21 @@ public class Request implements Utils {
 		if(hasContent()){
 			setupParameters();
 		}
+		
+	}
+	
+	public static int calculateWeight(int weightPosition){
+		
+		double weight = Math.pow(2, weightPosition);
+		
+		if(weight > Integer.MAX_VALUE){
+			Logger.log("Weight index is too high to deal with...",
+					Logger.LogType.WARNING);
+			
+			return -1;
+		}
+		
+		return (int)weight;
 		
 	}
 	
@@ -319,8 +376,7 @@ public class Request implements Utils {
 		else{
 			// Single param prefix means that all letters counts as a different param
 			
-			String[] singleParams = possibleParam.name.substring(1
-            ).split("");
+			String[] singleParams = possibleParam.name.substring(1).split("");
 			
 			for(int j = 0; j < singleParams.length && canRoll; j++){
 				
@@ -414,6 +470,34 @@ public class Request implements Utils {
 	
 	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
 		return this.parametersLinks;
+	}
+	
+	public Parameter getParameterFromPosition(int position){
+		
+		for(Map.Entry<String, Parameter> parameterEntry : this.parameters
+				.entrySet()){
+			
+			if(parameterEntry.getValue().getWeightPosition() == position)
+				return parameterEntry.getValue();
+			
+		}
+		
+		return null;
+		
+	}
+	
+	public Parameter getParameterFromWeight(int weight){
+		
+		for(Map.Entry<String, Parameter> parameterEntry : this.parameters
+				.entrySet()){
+			
+			if(parameterEntry.getValue().getWeight() == weight)
+				return parameterEntry.getValue();
+			
+		}
+		
+		return null;
+		
 	}
 	
 	public Parameter getParameter(String... parameterNames){
@@ -651,6 +735,53 @@ public class Request implements Utils {
 				this.setParameterContentLess(paramName);
 			}
 			catch(NullPointerException e){}
+		}
+		
+	}
+	
+	public void setParameterWeight(String parameterName, int weightPosition)
+			throws IllegalArgumentException{
+		this.setParameterWeight(getParameter(parameterName), weightPosition);
+	}
+	
+	public void setParameterWeight(Parameter parameter, int weightPosition)
+			throws IllegalArgumentException{
+		
+		if(parameter == null){
+			throw new IllegalArgumentException("The parameter cannot be null.");
+		}
+		if(weightPosition < 1){
+			throw new IllegalArgumentException(
+					"The importance parameter can only be 1 or above.");
+		}
+		
+		final int prevWeightPosition = parameter.getWeightPosition();
+		
+		if(parameter.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
+			
+			final boolean isWeightSmaller = prevWeightPosition != Parameter.DEFAULT_WEIGHT
+					&& prevWeightPosition > weightPosition;
+			
+			int smallestPosition = isWeightSmaller ? weightPosition
+					: prevWeightPosition;
+			
+			int vector = isWeightSmaller ? 1 : -1;
+			
+			this.parameters.forEach((s, param) -> {
+				
+				if(param.getWeight() != Parameter.DEFAULT_WEIGHT
+						&& prevWeightPosition != 0
+						&& !parameter.equals(param)
+						&& param.getWeightPosition() >= smallestPosition
+						&& param.getWeightPosition() <= parameter
+								.getWeightPosition()){
+					
+					param.setWeight(param.getWeightPosition() + vector);
+					
+				}
+				
+			});
+			
 		}
 		
 	}
