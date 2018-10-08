@@ -745,7 +745,15 @@ public class Request implements Utils {
 	
 	public void setParameterWeight(String parameterName, int weightPosition)
 			throws IllegalArgumentException{
+		this.setParameterWeight(getParameter(parameterName), weightPosition);
+	}
+	
+	public void setParameterWeight(Parameter parameter, int weightPosition)
+			throws IllegalArgumentException{
 		
+		if(parameter == null){
+			throw new IllegalArgumentException("The parameter cannot be null.");
+		}
 		if(weightPosition < 1){
 			throw new IllegalArgumentException(
 					"The importance parameter can only be 1 or above.");
@@ -755,41 +763,35 @@ public class Request implements Utils {
 			weightPosition = this.uniqueWeightIndex + 1;
 		}
 		
-		Parameter paramFound = getParameter(parameterName);
+		final int prevWeightPosition = parameter.getWeightPosition();
 		
-		if(paramFound != null){
+		if(parameter.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
 			
-			final int prevWeightPosition = paramFound.getWeightPosition();
+			if(weightPosition == this.uniqueWeightIndex + 1)
+				Request.this.uniqueWeightIndex++;
 			
-			if(paramFound.setWeight(weightPosition) > Parameter.DEFAULT_WEIGHT){
+			final boolean isWeightSmaller = prevWeightPosition != Parameter.DEFAULT_WEIGHT
+					&& prevWeightPosition > weightPosition;
+			
+			int smallestPosition = isWeightSmaller ? weightPosition
+					: prevWeightPosition;
+			
+			int vector = isWeightSmaller ? 1 : -1;
+			
+			this.parameters.forEach((s, param) -> {
 				
-				if(weightPosition == this.uniqueWeightIndex + 1)
-					Request.this.uniqueWeightIndex++;
-				
-				final boolean isWeightSmaller = prevWeightPosition != Parameter.DEFAULT_WEIGHT
-						&& prevWeightPosition > weightPosition;
-				
-				int smallestPosition = isWeightSmaller ? weightPosition
-						: prevWeightPosition;
-				
-				int vector = isWeightSmaller ? 1 : -1;
-				
-				this.parameters.forEach((s, param) -> {
+				if(param.getWeight() != Parameter.DEFAULT_WEIGHT
+						&& prevWeightPosition != 0
+						&& !parameter.equals(param)
+						&& param.getWeightPosition() >= smallestPosition
+						&& param.getWeightPosition() <= parameter
+								.getWeightPosition()){
 					
-					if(param.getWeight() != Parameter.DEFAULT_WEIGHT
-							&& prevWeightPosition != 0
-							&& !paramFound.equals(param)
-							&& param.getWeightPosition() >= smallestPosition
-							&& param.getWeightPosition() <= paramFound
-									.getWeightPosition()){
-						
-						param.setWeight(param.getWeightPosition() + vector);
-						
-					}
+					param.setWeight(param.getWeightPosition() + vector);
 					
-				});
+				}
 				
-			}
+			});
 			
 		}
 		
