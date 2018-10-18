@@ -1,5 +1,7 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import io.github.vhoyon.vramework.interfaces.Hidden;
+import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
 
@@ -40,23 +42,33 @@ public abstract class CommandsLinker extends Translatable {
 		
 		HashMap<String, Link> linksMap = container.getLinkMap();
 		
-		TreeMap<String, Link> defaultCommands = new TreeMap<>();
+		TreeMap<String, LinkableCommand> defaultCommands = new TreeMap<>();
 		
 		linksMap.forEach((key, link) -> {
 			
-			boolean isSubstitute = defaultCommands.containsKey(link
-					.getDefaultCall());
-			
-			if(!isSubstitute){
-				defaultCommands.put(link.getDefaultCall(), link);
+			try{
+				
+				LinkableCommand command = link.getInstance();
+				
+				boolean isSubstitute = defaultCommands.containsKey(link
+						.getDefaultCall());
+				
+				boolean isHidden = (command instanceof Hidden)
+						&& ((Hidden)command).hiddenCondition();
+				
+				if(!isSubstitute && !isHidden){
+					defaultCommands.put(link.getDefaultCall(), command);
+				}
+				
 			}
+			catch(Exception e){}
 			
 		});
 		
 		String prependChars = getPrependChars();
 		String prependCharsVariants = getPrependCharsForVariants();
 		
-		defaultCommands.forEach((key, link) -> {
+		defaultCommands.forEach((key, command) -> {
 			
 			String wholeCommandString = formatWholeCommand(prependChars, key);
 			
@@ -70,8 +82,7 @@ public abstract class CommandsLinker extends Translatable {
 				// Try to get the help string of a link
 				try{
 					
-					String helpString = link.getInstance()
-							.getCommandDescription();
+					String helpString = command.getCommandDescription();
 					
 					wholeHelpString = formatHelpString(helpString);
 					
@@ -90,7 +101,7 @@ public abstract class CommandsLinker extends Translatable {
 			
 			builder.append("\n");
 			
-			Object calls = link.getCalls();
+			Object calls = command.getCalls();
 			
 			if(calls instanceof String[]){
 				
