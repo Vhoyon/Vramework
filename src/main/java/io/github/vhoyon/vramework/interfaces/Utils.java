@@ -16,7 +16,7 @@ public interface Utils {
 	
 	default String format(String stringToFormat, Object... replacements){
 		
-		String protectedString = Pattern.compile("[()\\[\\]%.+?^$\\\\|]")
+		String protectedString = Pattern.compile("[()\\[\\]%.+?^$!\\\\|]")
 				.matcher(stringToFormat).replaceAll("\\\\$0");
 		
 		String noLeadingZeroString = protectedString.replaceAll("\\{0+", "\\{");
