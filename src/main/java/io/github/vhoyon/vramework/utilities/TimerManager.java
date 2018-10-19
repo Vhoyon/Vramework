@@ -41,7 +41,7 @@ public final class TimerManager {
 
 	public static void stopTimer(String timerName){
 
-		if(timers.containsKey(timerName))
+		if(timers != null && timers.containsKey(timerName))
 			timers.remove(timerName).cancel();
 
 	}
