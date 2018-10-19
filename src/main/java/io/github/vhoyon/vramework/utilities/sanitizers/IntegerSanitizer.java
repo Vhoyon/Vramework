@@ -35,7 +35,7 @@ public interface IntegerSanitizer {
 			
 		}
 		catch(Exception e){
-			throw new IllegalArgumentException("Value is not a number!");
+			throw new NumberFormatException("Value is not a number!");
 		}
 		
 		if(minValue != Integer.MIN_VALUE && castedValue < minValue){
