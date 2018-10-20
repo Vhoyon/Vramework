@@ -10,7 +10,7 @@ public class NotificationUI extends AbstractUIConsole {
 	private NotificationLogger logger;
 
 	@Override
-	public void initialize(){
+	public void initialize(boolean startImmediately){
 
 		logger = new NotificationLogger(this);
 

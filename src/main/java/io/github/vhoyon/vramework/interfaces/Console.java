@@ -20,7 +20,11 @@ public interface Console {
 	
 	void onInitialized();
 	
-	void initialize();
+	default void initialize(){
+		initialize(false);
+	}
+	
+	void initialize(boolean startImmediately);
 	
 	String getInput(String message);
 	

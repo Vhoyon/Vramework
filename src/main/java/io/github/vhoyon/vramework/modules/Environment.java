@@ -234,7 +234,7 @@ public class Environment extends Module {
 					
 					console = new AbstractTerminalConsole(){
 						@Override
-						public void initialize(){
+						public void initialize(boolean startImmediately){
 							Logger.setOutputs(this);
 						}
 					};
