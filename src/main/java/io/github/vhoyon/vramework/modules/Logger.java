@@ -80,11 +80,11 @@ public class Logger extends ModuleOutputtable {
 	 */
 	public static boolean addOutput(Loggable output){
 		
-		if(outputs.contains(output)){
+		if(getOutputs().contains(output)){
 			return false;
 		}
 		
-		return outputs.add(output);
+		return getOutputs().add(output);
 		
 	}
 	
@@ -115,7 +115,7 @@ public class Logger extends ModuleOutputtable {
 	 *         removed, {@code false} if the output is not in the list.
 	 */
 	public static boolean removeOutput(Loggable output){
-		return outputs.remove(output);
+		return getOutputs().remove(output);
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public class Logger extends ModuleOutputtable {
 	 */
 	public static Loggable removeOutput(int index){
 		try{
-			return outputs.remove(index);
+			return getOutputs().remove(index);
 		}
 		catch(IndexOutOfBoundsException e){
 			return null;
@@ -233,9 +233,40 @@ public class Logger extends ModuleOutputtable {
 			
 			builder.append(message);
 			
+			if("ERROR".equalsIgnoreCase(logType)){
+				
+				StackTraceElement[] stackElements = Thread.currentThread()
+						.getStackTrace();
+				
+				String className = null;
+				String methodName = null;
+				int lineNumber = -1;
+				
+				for(StackTraceElement stackElement : stackElements){
+					
+					if(!stackElement.getClassName().equals("Logger")){
+						
+						className = stackElement.getClassName();
+						methodName = stackElement.getMethodName();
+						lineNumber = stackElement.getLineNumber();
+						
+						break;
+						
+					}
+					
+				}
+				
+				String errorMessage = String.format(
+						"Error in %1$s at line %2$s (in method %3$s).",
+						className, lineNumber, methodName);
+				
+				builder.append("\n\t").append(errorMessage);
+				
+			}
+			
 			String logText = builder.toString();
 			
-			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
+			hasIssuedWarning = handleMessageAndWarning(logText, getOutputs(),
 					hasIssuedWarning,
 					(output) -> output.log(logText, logType, appendDate));
 			
