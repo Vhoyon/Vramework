@@ -4,6 +4,7 @@ import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.modules.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -696,6 +697,26 @@ public class Request implements Utils {
 				}
 				
 			});
+		
+	}
+	
+	public void setParamLink(String param, String... links){
+		
+		if(links.length != 0){
+			
+			onParameterPresent(param, (parameter) -> {
+				
+					if(this.parametersLinks == null){
+						this.parametersLinks = new HashMap<>();
+					}
+					
+					ArrayList<String> list = new ArrayList<>(Arrays.asList(links));
+					
+					this.parametersLinks.put(parameter, list);
+				
+			});
+			
+		}
 		
 	}
 	
