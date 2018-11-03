@@ -22,4 +22,18 @@ public class TextLengthField extends TextNotEmptyField {
 				this.maxLength);
 	}
 	
+	@Override
+	protected TextLengthField clone() throws CloneNotSupportedException{
+		TextLengthField cloned = new TextLengthField(getName(), getEnv(),
+				getDefaultValue(), this.minLength, this.maxLength){
+			@Override
+			protected String sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return TextLengthField.this.sanitizeValue(value);
+			}
+		};
+		
+		return cloned;
+	}
+	
 }

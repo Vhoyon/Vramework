@@ -13,7 +13,8 @@ public interface Translatable {
 				: lang(key);
 	}
 	
-	default String lang(boolean isFullString, String key, Object... replacements){
+	default String lang(boolean isFullString, String key,
+			Object... replacements){
 		return isFullString ? this.getDictionary().getDirectString(key,
 				replacements) : lang(key, replacements);
 	}
@@ -51,8 +52,8 @@ public interface Translatable {
 	 * 
 	 * @param key
 	 *            The key to search the resource lang files for.
-	 * @return The language String found in the resources, or {@code null}
-	 *         if there is absolutely no string found in the resources.
+	 * @return The language String found in the resources, or {@code null} if
+	 *         there is absolutely no string found in the resources.
 	 * @see #langDirect(String key, Object... replacements)
 	 */
 	default String langDirect(String key){

@@ -58,7 +58,7 @@ public class FrameworkTemplate {
 		
 	}
 	
-	public static void stopBot(Console console) {
+	public static void stopBot(Console console){
 		
 		if(jda != null){
 			

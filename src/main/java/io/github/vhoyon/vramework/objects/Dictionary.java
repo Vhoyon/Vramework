@@ -80,6 +80,9 @@ public class Dictionary implements Utils {
 	
 	public String getString(String key, String possiblePrefix,
 			Object... replacements){
+		if(replacements.length == 1 && replacements[0] == null)
+			return this.getString(key, possiblePrefix);
+		
 		return format(this.getString(key, possiblePrefix), replacements);
 	}
 	

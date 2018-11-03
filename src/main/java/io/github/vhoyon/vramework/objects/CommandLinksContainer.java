@@ -14,8 +14,6 @@ public abstract class CommandLinksContainer {
 	
 	/**
 	 * The latest links commands will always replace the first command call.
-	 * 
-	 * @param links
 	 */
 	public CommandLinksContainer(Link... links){
 		initializeContainer(links);
@@ -23,8 +21,6 @@ public abstract class CommandLinksContainer {
 	
 	/**
 	 * The latest links commands will always replace the first command call.
-	 *
-	 * @param commands
 	 */
 	@SafeVarargs
 	public CommandLinksContainer(Class<? extends LinkableCommand>... commands){

@@ -9,9 +9,9 @@ public class NotificationLogger implements Loggable {
 	private JFrame frame;
 	
 	public NotificationLogger(){
-	    frame = new JFrame();
-	    frame.setLocationRelativeTo(null);
-    }
+		frame = new JFrame();
+		frame.setLocationRelativeTo(null);
+	}
 	
 	public NotificationLogger(JFrame frame){
 		this.frame = frame;

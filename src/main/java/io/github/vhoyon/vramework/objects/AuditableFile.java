@@ -115,10 +115,12 @@ public class AuditableFile implements Auditable {
 			
 			this.hasSentWarning = true;
 			
-			String fileLocation = "File : \"" + auditFile.getAbsolutePath() + "\"";
+			String fileLocation = "File : \"" + auditFile.getAbsolutePath()
+					+ "\"";
 			String onlyOneWarningString = "This warning will only be shown once!";
 			
-			Logger.log(message + "\n\t" + fileLocation + "\n\t" + onlyOneWarningString, Logger.LogType.ERROR);
+			Logger.log(message + "\n\t" + fileLocation + "\n\t"
+					+ onlyOneWarningString, Logger.LogType.ERROR);
 			
 		}
 		

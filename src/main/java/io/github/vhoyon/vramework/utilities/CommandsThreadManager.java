@@ -21,8 +21,10 @@ public class CommandsThreadManager {
 	 * @param eventDigger
 	 *            The server's {@code commandID} required to search for
 	 *            commands running in said server's text channel.
-	 * @return The command found with all of it's attribute in a
-	 *         {@code Command} object, {@code null} if the command
+	 * @param inRouter
+	 *            The CommandRouter that holds the possible command.
+	 * @return The command found with all of it's attribute in a {@code Command}
+	 *         object, {@code null} if the command
 	 *         wasn't found.
 	 */
 	public static AbstractBotCommand getCommandRunning(String commandName,
@@ -132,14 +134,16 @@ public class CommandsThreadManager {
 	 * Method that quickly tells if a command is running based off its name in
 	 * the guild provided in parameters.
 	 * <p>
-	 * Internally, this uses the method {@code getCommandRunning()} and
-	 * tests if that returns {@code null} or not.
+	 * Internally, this uses the method {@code getCommandRunning()} and tests if
+	 * that returns {@code null} or not.
 	 * 
 	 * @param commandName
 	 *            The command name to search for.
 	 * @param eventDigger
 	 *            The server's {@code commandID} required to search for
 	 *            commands running in said server.
+	 * @param router
+	 *            The CommandRouter that holds the possible command.
 	 * @return {@code true} if the command is running in the specified
 	 *         command id, {@code false} otherwise.
 	 */

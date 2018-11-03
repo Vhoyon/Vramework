@@ -22,8 +22,16 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 /**
- * Class that implements all the logic to execute actions for a Discord command on the the bot will need to respond to. Note that this does not mean the action is implemented : that's the exact reason why this class is abstract : you need to implement your own action logic for this abstract BotCommand to have any value.
- * This class has many io.github.vhoyon.vramework.utilities for handling different condition types for doing appropriate actions depending on the command you are trying to implement. They should all be available inside the {@code action()} method body, so fire up your IDE to get auto completion to know more about available methods!
+ * Class that implements all the logic to execute actions for a Discord command
+ * on the the bot will need to respond to. Note that this does not mean the
+ * action is implemented : that's the exact reason why this class is abstract :
+ * you need to implement your own action logic for this abstract BotCommand to
+ * have any value.
+ * This class has many io.github.vhoyon.vramework.utilities for handling
+ * different condition types for doing appropriate actions depending on the
+ * command you are trying to implement. They should all be available inside the
+ * {@code action()} method body, so fire up your IDE to get auto completion to
+ * know more about available methods!
  *
  * @version 1.0
  * @since v0.7.0
@@ -34,14 +42,20 @@ public abstract class AbstractBotCommand extends Translatable implements
 		DiscordUtils {
 	
 	/**
-	 * Enum that defines which level should the Buffer saves the object given in appropriate methods.
+	 * Enum that defines which level should the Buffer saves the object given in
+	 * appropriate methods.
 	 * <p>
 	 * Here's the meaning of the possibilities :
 	 * </p>
 	 * <ul>
-	 * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning other channels in the same server may not have access to the data stored in here (DEFAULT);</li>
-	 * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in Discord's terms), meaning this data could apply to every TextChannel in the same server;</li>
-	 * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this data is only accessible when this user calls a command.</li>
+	 * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning
+	 * other channels in the same server may not have access to the data stored
+	 * in here (DEFAULT);</li>
+	 * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in
+	 * Discord's terms), meaning this data could apply to every TextChannel in
+	 * the same server;</li>
+	 * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this
+	 * data is only accessible when this user calls a command.</li>
 	 * </ul>
 	 *
 	 * @version 1.0
@@ -63,7 +77,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	/**
-	 * Creates a new AbstractBotCommand with the same context as the command added in the parameter {@code commandToCopy}.
+	 * Creates a new AbstractBotCommand with the same context as the command
+	 * added in the parameter {@code commandToCopy}.
 	 *
 	 * @version 1.0
 	 * @since v0.7.0
@@ -75,7 +90,9 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	/**
-	 * Sets the context of the command in the parameter {@code commandToCopy} into this command by giving the same router and dictionary pf the commandToCopy and flag this command as a copy.
+	 * Sets the context of the command in the parameter {@code commandToCopy}
+	 * into this command by giving the same router and dictionary pf the
+	 * commandToCopy and flag this command as a copy.
 	 *
 	 * @version 1.0
 	 * @since v0.7.0
@@ -488,14 +505,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return action.complete().getId();
 	}
 	
-	protected void callCommand(String commandName){
+	public void callCommand(String commandName){
 		AbstractBotCommand command = (AbstractBotCommand)getRouter()
 				.getLinkableCommand(commandName);
 		
 		this.callCommand(command);
 	}
 	
-	protected void callCommand(AbstractBotCommand command){
+	public void callCommand(AbstractBotCommand command){
 		command.putStateFromCommand(this);
 		
 		command.action();

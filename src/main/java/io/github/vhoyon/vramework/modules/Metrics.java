@@ -13,7 +13,7 @@ public class Metrics extends Module {
 	private static Date clock;
 	
 	@Override
-	public void build() {
+	public void build(){
 		jda = null;
 		clock = null;
 	}
@@ -46,7 +46,7 @@ public class Metrics extends Module {
 			throw new JDANotSetException();
 		
 		return jda.getGuilds().size();
-
+		
 	}
 	
 }

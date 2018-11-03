@@ -16,14 +16,14 @@ public interface Utils {
 	
 	default String format(String stringToFormat, Object... replacements){
 		
-		String protectedString = Pattern.compile("[()\\[\\]%.+?^$\\\\|]")
-				.matcher(stringToFormat).replaceAll("\\\\$0");
+		String protectedString = Pattern.compile("[%]").matcher(stringToFormat)
+				.replaceAll("$0$0");
 		
 		String noLeadingZeroString = protectedString.replaceAll("\\{0+", "\\{");
 		
-		String convertedString = noLeadingZeroString
-				.replaceAll("\\{([1-9][0-9]*)\\}", "\\%$1\\$s")
-				.replaceAll("\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
+		String convertedString = noLeadingZeroString.replaceAll(
+				"\\{([1-9][0-9]*)\\}", "\\%$1\\$s").replaceAll(
+				"\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
 		
 		return formatS(convertedString, replacements);
 		
@@ -44,20 +44,20 @@ public interface Utils {
 	default boolean hasEnv(String key){
 		return Environment.hasVar(key);
 	}
-
+	
 	static String buildKey(String baseKey, String... additionalKeys){
 		StringBuilder keyBuilder = new StringBuilder(baseKey);
-
-		for (String additionalKey : additionalKeys)
+		
+		for(String additionalKey : additionalKeys)
 			keyBuilder.append("_").append(additionalKey);
-
+		
 		return keyBuilder.toString();
 	}
 	
 	default ArrayList<String> splitSpacesExcludeQuotes(String string){
 		ArrayList<String> possibleStrings = new ArrayList<>();
-		Matcher matcher = Pattern.compile(
-				"[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(string);
+		Matcher matcher = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'")
+				.matcher(string);
 		while(matcher.find()){
 			possibleStrings.add(matcher.group());
 		}
@@ -82,7 +82,8 @@ public interface Utils {
 		}
 		
 		List<String> splittedUpTo = fullSplit.subList(0, maxSize - 1);
-		List<String> allOthers = fullSplit.subList(maxSize, fullSplit.size() - 1);
+		List<String> allOthers = fullSplit.subList(maxSize,
+				fullSplit.size() - 1);
 		
 		ArrayList<String> allAndTruncated = new ArrayList<>();
 		allAndTruncated.addAll(splittedUpTo);

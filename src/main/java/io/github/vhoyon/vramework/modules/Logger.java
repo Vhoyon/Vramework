@@ -30,16 +30,16 @@ public class Logger extends ModuleOutputtable {
 	private static String separator;
 	
 	@Override
-	public void build() {
+	public void build(){
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
 		separator = "-";
 	}
-
+	
 	protected static ArrayList<Loggable> getOutputs(){
 		return outputs;
 	}
-
+	
 	public static boolean hasOutputs(){
 		return getOutputs() != null && !getOutputs().isEmpty();
 	}
@@ -48,8 +48,6 @@ public class Logger extends ModuleOutputtable {
 	 * Sets the separator for logs that has a prefix before the message.
 	 * <p>
 	 * Set to {@code null} if you don't want any separator.
-	 * 
-	 * @param newSeparator
 	 */
 	public static void setSeparator(String newSeparator){
 		separator = newSeparator;
@@ -59,7 +57,8 @@ public class Logger extends ModuleOutputtable {
 	 * Overwrite the output list with those passed as parameters.
 	 * 
 	 * @param outputs
-	 *            Objects implementing the {@link vendor.interfaces.Loggable
+	 *            Objects implementing the
+	 *            {@link io.github.vhoyon.vramework.interfaces.Loggable
 	 *            Loggable} interface which are meant to receive logs from the
 	 *            Logger module.
 	 */
@@ -72,19 +71,20 @@ public class Logger extends ModuleOutputtable {
 	 * Adds an output to the already existing output list for the Logger module.
 	 * 
 	 * @param output
-	 *            Object implementing the {@link vendor.interfaces.Loggable
+	 *            Object implementing the
+	 *            {@link io.github.vhoyon.vramework.interfaces.Loggable
 	 *            Loggable} interface which is meant to receive logs from the
 	 *            Logger module.
-	 * @return {@code true} if the output was added successfully,
-	 *         {@code false} if the output is already in the outputs list.
+	 * @return {@code true} if the output was added successfully, {@code false}
+	 *         if the output is already in the outputs list.
 	 */
 	public static boolean addOutput(Loggable output){
 		
-		if(outputs.contains(output)){
+		if(getOutputs().contains(output)){
 			return false;
 		}
 		
-		return outputs.add(output);
+		return getOutputs().add(output);
 		
 	}
 	
@@ -93,7 +93,8 @@ public class Logger extends ModuleOutputtable {
 	 * module.
 	 * 
 	 * @param outputs
-	 *            Objects implementing the {@link vendor.interfaces.Loggable
+	 *            Objects implementing the
+	 *            {@link io.github.vhoyon.vramework.interfaces.Loggable
 	 *            Loggable} interface which are meant to receive logs from the
 	 *            Logger module.
 	 */
@@ -107,13 +108,14 @@ public class Logger extends ModuleOutputtable {
 	 * Removes an output from the output list for the Logger module.
 	 * 
 	 * @param output
-	 *            Object implementing the {@link vendor.interfaces.Loggable
+	 *            Object implementing the
+	 *            {@link io.github.vhoyon.vramework.interfaces.Loggable
 	 *            Loggable} interface.
 	 * @return {@code true} if the output was in the list and has been
 	 *         removed, {@code false} if the output is not in the list.
 	 */
 	public static boolean removeOutput(Loggable output){
-		return outputs.remove(output);
+		return getOutputs().remove(output);
 	}
 	
 	/**
@@ -122,13 +124,14 @@ public class Logger extends ModuleOutputtable {
 	 * 
 	 * @param index
 	 *            The position of the output in the internal list.
-	 * @return The {@link vendor.interfaces.Loggable Loggable} object found at
+	 * @return The {@link io.github.vhoyon.vramework.interfaces.Loggable
+	 *         Loggable} object found at
 	 *         this position, or {@code null} if the index is out of
 	 *         bounds.
 	 */
 	public static Loggable removeOutput(int index){
 		try{
-			return outputs.remove(index);
+			return getOutputs().remove(index);
 		}
 		catch(IndexOutOfBoundsException e){
 			return null;
@@ -230,9 +233,40 @@ public class Logger extends ModuleOutputtable {
 			
 			builder.append(message);
 			
+			if("ERROR".equalsIgnoreCase(logType)){
+				
+				StackTraceElement[] stackElements = Thread.currentThread()
+						.getStackTrace();
+				
+				String className = null;
+				String methodName = null;
+				int lineNumber = -1;
+				
+				for(StackTraceElement stackElement : stackElements){
+					
+					if(!stackElement.getClassName().equals("Logger")){
+						
+						className = stackElement.getClassName();
+						methodName = stackElement.getMethodName();
+						lineNumber = stackElement.getLineNumber();
+						
+						break;
+						
+					}
+					
+				}
+				
+				String errorMessage = String.format(
+						"Error in %1$s at line %2$s (in method %3$s).",
+						className, lineNumber, methodName);
+				
+				builder.append("\n\t").append(errorMessage);
+				
+			}
+			
 			String logText = builder.toString();
 			
-			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
+			hasIssuedWarning = handleMessageAndWarning(logText, getOutputs(),
 					hasIssuedWarning,
 					(output) -> output.log(logText, logType, appendDate));
 			

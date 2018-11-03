@@ -1,17 +1,15 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import io.github.vhoyon.vramework.exceptions.NoCommandException;
+import io.github.vhoyon.vramework.interfaces.*;
+import io.github.vhoyon.vramework.interfaces.Translatable;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import io.github.vhoyon.vramework.exceptions.NoCommandException;
-import io.github.vhoyon.vramework.interfaces.Command;
-import io.github.vhoyon.vramework.interfaces.LinkableCommand;
-import io.github.vhoyon.vramework.interfaces.Translatable;
-import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
-		Translatable, FrameworkResources {
+		DiscordUtils, Translatable, FrameworkResources {
 	
 	private Dictionary dict;
 	private Request request;
@@ -88,17 +86,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public Request getRequest(){
 		return this.request;
 	}
-
+	
 	@Override
 	public Dictionary getDictionary(){
 		return this.dict;
 	}
-
+	
 	@Override
 	public void setDictionary(Dictionary dict){
 		this.dict = dict;
 	}
-
+	
 	protected AbstractBotCommand getAbstractBotCommand(){
 		
 		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
@@ -138,15 +136,28 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		MessageReceivedEvent event = getEvent();
 		
-		if(event.isFromType(ChannelType.PRIVATE)){
+		boolean isOnlyBotMention = false;
+		
+		String message = event.getMessage().getContentRaw();
+		
+		if(isStringMention(message)){
 			
+			String botId = event.getJDA().getSelfUser().getId();
+			
+			isOnlyBotMention = event.getMessage().getMentionedUsers().get(0)
+					.getId().equals(botId);
+			
+		}
+		
+		if(isOnlyBotMention){
+			return commandWhenBotMention();
+		}
+		else if(event.isFromType(ChannelType.PRIVATE)){
 			return commandWhenFromPrivate();
-			
 		}
 		else if(event.isFromType(ChannelType.TEXT)){
 			
 			Request request = getRequest();
-			String commandPrefix = getCommandPrefix();
 			
 			if(!request.isCommand()){
 				throw new NoCommandException();
@@ -173,6 +184,8 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		return null;
 	}
 	
+	public abstract Command commandWhenBotMention();
+	
 	public abstract Command commandWhenFromPrivate();
 	
 	public abstract Command commandWhenFromServerIsOnlyPrefix();
@@ -184,9 +197,9 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public LinkableCommand getLinkableCommand(String commandName){
 		return this.getCommandsRepo().getContainer().initiateLink(commandName);
 	}
-
+	
 	@Override
-	public void interrupt() {
+	public void interrupt(){
 		super.interrupt();
 		
 		this.isDead = true;
