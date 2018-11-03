@@ -15,13 +15,26 @@ public class Setting {
 	}
 	
 	public Setting(Dictionary dict, SettingField<Object>... fields){
+		this(dict, true, fields);
+	}
+	
+	public Setting(Dictionary dict, boolean doClone,
+			SettingField<Object>... fields){
 		
 		this.fields = new HashMap<>();
 		
 		for(SettingField<Object> field : fields){
-			field.setDictionary(dict);
+			SettingField<Object> clonedField = field;
 			
-			this.getFieldsMap().put(field.getName(), field);
+			if(doClone)
+				try{
+					clonedField = field.clone();
+				}
+				catch(CloneNotSupportedException e){}
+			
+			clonedField.setDictionary(dict);
+			
+			this.getFieldsMap().put(clonedField.getName(), clonedField);
 		}
 		
 	}
