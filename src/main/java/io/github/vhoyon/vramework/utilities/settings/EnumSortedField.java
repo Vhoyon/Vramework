@@ -17,4 +17,20 @@ public class EnumSortedField extends EnumField {
 		return sortedArray;
 	}
 	
+	@Override
+	protected EnumSortedField clone() throws CloneNotSupportedException{
+		EnumSortedField cloned = new EnumSortedField(getName(), getEnv(),
+				getDefaultValue()){
+			@Override
+			protected String sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return EnumSortedField.this.sanitizeValue(value);
+			}
+		};
+		
+		cloned.values = (ArrayList<String>)this.values.clone();
+		
+		return cloned;
+	}
+	
 }

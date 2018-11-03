@@ -9,9 +9,9 @@ import io.github.vhoyon.vramework.utilities.sanitizers.TextRegexSanitizer;
 
 public class TextRegexField extends TextField {
 	
-	private String regexToMatch;
-	private boolean isInverted;
-	private boolean shouldBox;
+	protected String regexToMatch;
+	protected boolean isInverted;
+	protected boolean shouldBox;
 	
 	public TextRegexField(String name, String env, String defaultValue,
 			String regexToMatch){
@@ -49,6 +49,21 @@ public class TextRegexField extends TextField {
 			throws IllegalArgumentException{
 		return TextRegexSanitizer.sanitizeValue(value, this.regexToMatch,
 				this.isInverted, this.shouldBox, false);
+	}
+	
+	@Override
+	protected TextRegexField clone() throws CloneNotSupportedException{
+		TextRegexField cloned = new TextRegexField(getName(), getEnv(),
+				getDefaultValue(), this.regexToMatch, this.isInverted,
+				this.shouldBox){
+			@Override
+			protected String sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return TextRegexField.this.sanitizeValue(value);
+			}
+		};
+		
+		return cloned;
 	}
 	
 }

@@ -71,4 +71,19 @@ public class EnumField extends TextField {
 		
 	}
 	
+	@Override
+	protected EnumField clone() throws CloneNotSupportedException{
+		EnumField cloned = new EnumField(getName(), getEnv(), getDefaultValue()){
+			@Override
+			protected String sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return EnumField.this.sanitizeValue(value);
+			}
+		};
+		
+		cloned.values = (ArrayList<String>)this.values.clone();
+		
+		return cloned;
+	}
+	
 }

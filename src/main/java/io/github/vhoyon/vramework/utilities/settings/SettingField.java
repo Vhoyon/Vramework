@@ -8,7 +8,7 @@ import io.github.vhoyon.vramework.modules.Logger.LogType;
 
 import java.util.function.Consumer;
 
-public abstract class SettingField<E> extends Translatable {
+public abstract class SettingField<E> extends Translatable implements Cloneable {
 	
 	protected E value;
 	private E defaultValue;
@@ -56,6 +56,14 @@ public abstract class SettingField<E> extends Translatable {
 		
 		return this.value;
 	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	protected String getEnv(){
+		return this.env;
+	}
 	
 	public E getDefaultValue(){
 		return this.defaultValue;
@@ -87,15 +95,25 @@ public abstract class SettingField<E> extends Translatable {
 		
 	}
 	
-	public String getName(){
-		return this.name;
-	}
-	
 	protected abstract E sanitizeValue(Object value)
 			throws IllegalArgumentException;
 	
 	protected E formatEnvironment(E envValue) throws BadFormatException{
 		return envValue;
+	}
+	
+	@Override
+	protected SettingField<E> clone() throws CloneNotSupportedException{
+		SettingField<E> settingClone = new SettingField<E>(name, env,
+				defaultValue){
+			@Override
+			protected E sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return SettingField.this.sanitizeValue(value);
+			}
+		};
+		
+		return settingClone;
 	}
 	
 }
