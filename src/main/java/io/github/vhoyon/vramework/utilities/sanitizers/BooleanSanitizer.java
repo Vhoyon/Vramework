@@ -30,7 +30,8 @@ public interface BooleanSanitizer {
 		}
 		catch(Exception e){
 			throw new BadFormatException(
-					"Value cannot be something else than \"true\" or \"false\"!", 1);
+					"Value cannot be something else than \"true\" or \"false\"!",
+					1);
 		}
 		
 		return castedValue;

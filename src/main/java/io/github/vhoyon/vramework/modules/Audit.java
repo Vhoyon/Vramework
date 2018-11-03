@@ -20,7 +20,7 @@ public class Audit extends ModuleOutputtable {
 	private static String separator;
 	
 	@Override
-	public void build() {
+	public void build(){
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
 		separator = null;
@@ -65,8 +65,8 @@ public class Audit extends ModuleOutputtable {
 	 *            Object implementing the {@link Auditable
 	 *            Auditable} interface which is meant to receive logs from the
 	 *            Audit module.
-	 * @return {@code true} if the output was added successfully,
-	 *         {@code false} if the output is already in the outputs list.
+	 * @return {@code true} if the output was added successfully, {@code false}
+	 *         if the output is already in the outputs list.
 	 */
 	public static boolean addOutput(Auditable output){
 		

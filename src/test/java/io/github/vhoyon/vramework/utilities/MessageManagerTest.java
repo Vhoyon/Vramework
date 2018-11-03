@@ -91,9 +91,9 @@ public class MessageManagerTest implements Utils {
 	
 	@Test
 	void testGetMessageRaw(){
-
+		
 		MessageManager manager = new MessageManager();
-
+		
 		manager.addMessage(1, "test1");
 		manager.addMessage(2, "test2");
 		manager.addMessage(3, "test3");

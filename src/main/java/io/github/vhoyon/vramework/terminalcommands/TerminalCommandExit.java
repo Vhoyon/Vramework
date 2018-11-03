@@ -18,7 +18,7 @@ public class TerminalCommandExit extends AbstractTerminalCommand {
 		
 		try{
 			console.onStop();
-
+			
 			console.onExit();
 		}
 		catch(Exception e){
@@ -26,10 +26,10 @@ public class TerminalCommandExit extends AbstractTerminalCommand {
 		}
 		
 	}
-
+	
 	@Override
-	public boolean doesStopTerminal() {
+	public boolean doesStopTerminal(){
 		return true;
 	}
-
+	
 }

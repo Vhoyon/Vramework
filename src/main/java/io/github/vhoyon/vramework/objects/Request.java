@@ -706,13 +706,13 @@ public class Request implements Utils {
 			
 			onParameterPresent(param, (parameter) -> {
 				
-					if(this.parametersLinks == null){
-						this.parametersLinks = new HashMap<>();
-					}
-					
-					ArrayList<String> list = new ArrayList<>(Arrays.asList(links));
-					
-					this.parametersLinks.put(parameter, list);
+				if(this.parametersLinks == null){
+					this.parametersLinks = new HashMap<>();
+				}
+				
+				ArrayList<String> list = new ArrayList<>(Arrays.asList(links));
+				
+				this.parametersLinks.put(parameter, list);
 				
 			});
 			

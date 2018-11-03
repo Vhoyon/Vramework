@@ -6,20 +6,23 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 	private String emoji;
 	private boolean isErrorOneLiner;
 	
-	public AbstractBotError(AbstractBotCommand commandInError, String errorMessage){
+	public AbstractBotError(AbstractBotCommand commandInError,
+			String errorMessage){
 		this(commandInError, errorMessage, EMOJI_RED_CROSS);
 	}
-
-	public AbstractBotError(AbstractBotCommand commandInError, String errorMessage, String errorEmoji){
+	
+	public AbstractBotError(AbstractBotCommand commandInError,
+			String errorMessage, String errorEmoji){
 		this(commandInError, errorMessage, errorEmoji, true);
 	}
-
-	public AbstractBotError(AbstractBotCommand commandInError, String errorMessage, boolean isErrorOneLiner){
+	
+	public AbstractBotError(AbstractBotCommand commandInError,
+			String errorMessage, boolean isErrorOneLiner){
 		this(commandInError, errorMessage, EMOJI_RED_CROSS, isErrorOneLiner);
 	}
-
-	public AbstractBotError(AbstractBotCommand commandInError, String errorMessage, String errorEmoji,
-							boolean isErrorOneLiner){
+	
+	public AbstractBotError(AbstractBotCommand commandInError,
+			String errorMessage, String errorEmoji, boolean isErrorOneLiner){
 		
 		this.errorMessage = errorMessage;
 		this.emoji = errorEmoji;
@@ -28,7 +31,7 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 		putStateFromCommand(commandInError);
 		
 		action();
-
+		
 	}
 	
 	public AbstractBotError(String errorMessage){

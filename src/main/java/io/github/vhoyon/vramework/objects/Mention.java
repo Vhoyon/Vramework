@@ -161,19 +161,19 @@ public class Mention implements Member {
 	
 	@Override
 	public boolean equals(Object obj){
-
+		
 		if(obj == null)
 			return false;
-
+		
 		if(obj instanceof Member){
-
+			
 			Member mbr = (Member)obj;
 			return this.getUser().getId().equals(mbr.getUser().getId());
-
+			
 		}
-
+		
 		return false;
-
+		
 	}
 	
 }

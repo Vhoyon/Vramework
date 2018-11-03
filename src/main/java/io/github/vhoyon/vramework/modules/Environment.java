@@ -103,7 +103,8 @@ public class Environment extends Module {
 		if(envVars == null){
 			
 			if(Framework.isDebugging())
-				Logger.log("A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
+				Logger.log(
+						"A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
 						Logger.LogType.WARNING);
 			
 			return defaultValue;
@@ -140,7 +141,7 @@ public class Environment extends Module {
 			
 		}
 		
-		return (EnvVar) value;
+		return (EnvVar)value;
 	}
 	
 	public static boolean hasVar(String key){

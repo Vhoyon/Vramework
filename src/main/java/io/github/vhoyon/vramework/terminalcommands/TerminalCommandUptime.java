@@ -16,11 +16,11 @@ public class TerminalCommandUptime extends AbstractTerminalCommand {
 	
 	@Override
 	public void action(){
-
+		
 		long milliseconds = Metrics.getUptime();
-
+		
 		Logger.log("The bot has been up for " + milliseconds + " milliseconds!");
 		
 	}
-
+	
 }

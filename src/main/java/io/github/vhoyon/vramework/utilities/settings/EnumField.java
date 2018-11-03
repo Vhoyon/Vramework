@@ -7,25 +7,25 @@ import java.util.ArrayList;
 
 public class EnumField extends TextField {
 	
-	protected class CaseArrayList extends ArrayList<String>{
-        @Override
-        public boolean contains(Object o){
-            if(o == null || o instanceof String){
-                
-                String e = (String)o;
-                
-                for(String s : this){
-                    boolean val = e == null ? s == null : e.equalsIgnoreCase(s);
-                    
-                    if(val)
-                        return true;
-                }
-                
-            }
-            
-            return false;
-        }
-    }
+	protected class CaseArrayList extends ArrayList<String> {
+		@Override
+		public boolean contains(Object o){
+			if(o == null || o instanceof String){
+				
+				String e = (String)o;
+				
+				for(String s : this){
+					boolean val = e == null ? s == null : e.equalsIgnoreCase(s);
+					
+					if(val)
+						return true;
+				}
+				
+			}
+			
+			return false;
+		}
+	}
 	
 	protected ArrayList<String> values;
 	

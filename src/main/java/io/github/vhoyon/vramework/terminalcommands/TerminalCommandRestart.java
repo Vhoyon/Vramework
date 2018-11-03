@@ -18,7 +18,7 @@ public class TerminalCommandRestart extends AbstractTerminalCommand {
 		
 		try{
 			console.onStop();
-
+			
 			console.onStart();
 		}
 		catch(Exception e){
