@@ -10,7 +10,8 @@ public class TerminalCommandsLinker extends CommandsLinker {
 	@Override
 	public CommandLinksContainer createLinksContainer(){
 		
-		return new CommandLinksContainer("io.github.vhoyon.vramework.terminalcommands"){
+		return new CommandLinksContainer(
+				"io.github.vhoyon.vramework.terminalcommands"){
 			
 			@Override
 			public LinkableCommand whenCommandNotFound(String commandName){

@@ -34,7 +34,9 @@ public class TextRegexField extends TextField {
 		catch(PatternSyntaxException e){
 			
 			Logger.log(e);
-			Logger.log("\nFix your regex quickly! In the meanwhile, any string will be accepted for the setting \"" + getName() + "\"...", LogType.WARNING);
+			Logger.log(
+					"\nFix your regex quickly! In the meanwhile, any string will be accepted for the setting \""
+							+ getName() + "\"...", LogType.WARNING);
 			
 			this.regexToMatch = null;
 			

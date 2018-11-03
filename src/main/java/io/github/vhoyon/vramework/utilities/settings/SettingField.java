@@ -56,11 +56,11 @@ public abstract class SettingField<E> extends Translatable implements Cloneable 
 		
 		return this.value;
 	}
-
+	
 	public String getName(){
 		return this.name;
 	}
-
+	
 	protected String getEnv(){
 		return this.env;
 	}

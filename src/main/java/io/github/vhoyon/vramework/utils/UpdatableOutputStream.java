@@ -42,7 +42,8 @@ public abstract class UpdatableOutputStream extends PrintStream {
 		else if(System.err.equals(sysOutput))
 			return Type.ERR;
 		
-		throw new RuntimeException("Parameter sysOutput is not a System PrintStream object : you should only use System.out and System.err!");
+		throw new RuntimeException(
+				"Parameter sysOutput is not a System PrintStream object : you should only use System.out and System.err!");
 	}
 	
 	public UpdatableOutputStream(PrintStream sysOutput, Type outputType){

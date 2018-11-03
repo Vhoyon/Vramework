@@ -15,11 +15,12 @@ public class TerminalCommandHelp extends AbstractTerminalCommand {
 	
 	@Override
 	public void action(){
-
-		String fullHelpString = console.getCommandsRepo().getFullHelpString("Available commands :");
-
+		
+		String fullHelpString = console.getCommandsRepo().getFullHelpString(
+				"Available commands :");
+		
 		Logger.log(fullHelpString, false);
-
+		
 	}
 	
 }

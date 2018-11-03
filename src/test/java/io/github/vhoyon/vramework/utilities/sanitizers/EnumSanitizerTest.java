@@ -176,7 +176,8 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\[[\\";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value, '[');
+		ArrayList<String> list = EnumSanitizer
+				.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("\\[", list.get(0));

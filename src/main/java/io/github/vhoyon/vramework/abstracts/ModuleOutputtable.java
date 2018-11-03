@@ -7,7 +7,9 @@ import java.util.function.Consumer;
 
 public abstract class ModuleOutputtable extends Module {
 	
-	protected static <E extends Outputtable> boolean handleMessageAndWarning(String message, ArrayList<E> outputs, boolean hasIssuedWarning, Consumer<E> onOutputs){
+	protected static <E extends Outputtable> boolean handleMessageAndWarning(
+			String message, ArrayList<E> outputs, boolean hasIssuedWarning,
+			Consumer<E> onOutputs){
 		
 		boolean isOutputLess = outputs == null || outputs.isEmpty();
 		
