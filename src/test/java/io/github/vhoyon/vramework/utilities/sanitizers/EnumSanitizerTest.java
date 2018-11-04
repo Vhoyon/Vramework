@@ -186,6 +186,33 @@ class EnumSanitizerTest {
 	}
 	
 	@Test
+	void testSingleValueProtectionSyntaxProtector(){
+		
+		String value = "\\\\\\ \\ \\\\";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(2, list.size());
+		assertEquals("\\\\", list.get(0));
+		assertEquals("\\", list.get(1));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectionSyntax2(){
+		
+		String value = "\\\\| | \\|";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(2, list.size());
+		assertEquals("\\|", list.get(0));
+		assertEquals("|", list.get(1));
+		
+	}
+	
+	@Test
 	void testMultipleValuesNoSpace(){
 		
 		String value = "First|Second|Third";
@@ -578,6 +605,186 @@ class EnumSanitizerTest {
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\l Second", list.get(0));
+		assertEquals("Third", list.get(1));
+		
+	}
+	
+	@Test
+	void testMultipleValuesNoSpaceProtectorSeparator(){
+		
+		String value = "First\\Second\\Third";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(3, list.size());
+		assertEquals("First", list.get(0));
+		assertEquals("Second", list.get(1));
+		assertEquals("Third", list.get(2));
+		
+	}
+	
+	@Test
+	void testMultipleValuesSpacesProtectorSeparator(){
+		
+		String value = "First  \\  Second  \\  Third";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(3, list.size());
+		assertEquals("First", list.get(0));
+		assertEquals("Second", list.get(1));
+		assertEquals("Third", list.get(2));
+		
+	}
+	
+	@Test
+	void testMultipleValuesTabsProtectorSeparator(){
+		
+		String value = "First\t\\\tSecond\t\\\tThird";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(3, list.size());
+		assertEquals("First", list.get(0));
+		assertEquals("Second", list.get(1));
+		assertEquals("Third", list.get(2));
+		
+	}
+	
+	@Test
+	void testMultipleValuesSpacesAndTabsProtectorSeparator(){
+		
+		String value = "First\t  \\ \t Second \t  \\\t  Third";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(3, list.size());
+		assertEquals("First", list.get(0));
+		assertEquals("Second", list.get(1));
+		assertEquals("Third", list.get(2));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectedProtectorSeparator(){
+		
+		String value = "Hello \\\\ World";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(1, list.size());
+		assertEquals("Hello \\ World", list.get(0));
+		
+	}
+	
+	@Test
+	void testMultipleValuesProtectedProtectorSeparator(){
+		
+		String value = "First \\\\ Second \\ Third";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(2, list.size());
+		assertEquals("First \\ Second", list.get(0));
+		assertEquals("Third", list.get(1));
+		
+	}
+	
+	@Test
+	void testMultipleValuesProtectedOnlyStartProtectorSeparator(){
+		
+		String value = "\\\\ \\ Second";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(2, list.size());
+		assertEquals("\\", list.get(0));
+		assertEquals("Second", list.get(1));
+		
+	}
+	
+	@Test
+	void testMultipleValuesProtectedOnlyEndProtectorSeparator(){
+		
+		String value = "First \\ \\\\";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(2, list.size());
+		assertEquals("First", list.get(0));
+		assertEquals("\\", list.get(1));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectedProtectedProtectorSeparator(){
+		
+		String value = "Hello \\\\\\ World";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(1, list.size());
+		assertEquals("Hello \\\\ World", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectedProtectedProtectorSeparatorBig(){
+		
+		String value = "Hello \\\\\\\\\\\\\\ World";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(1, list.size());
+		assertEquals("Hello \\\\\\\\\\\\ World", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectedTwice(){
+		
+		String value = "Hello \\| \\| World";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		
+		assertEquals(1, list.size());
+		assertEquals("Hello | | World", list.get(0));
+		
+	}
+	
+	@Test
+	void testSingleValueProtectedProtectedProtectorSeparatorTwice(){
+		
+		String value = "Hello \\\\ \\\\ World";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(1, list.size());
+		assertEquals("Hello \\ \\ World", list.get(0));
+		
+	}
+	
+	@Test
+	void testMultipleValuesProtectedProtectedBarProtectorSeparator(){
+		
+		String value = "First \\\\\\ Second \\ Third";
+		
+		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
+				'\\');
+		
+		assertEquals(2, list.size());
+		assertEquals("First \\\\ Second", list.get(0));
 		assertEquals("Third", list.get(1));
 		
 	}

@@ -51,7 +51,14 @@ public interface EnumSanitizer {
 		}
 		else{
 			
-			String expNonProtectedSeparator = "(?<!\\\\)" + pSep;
+			String expNonProtectedSeparator;
+			
+			if(separator == '\\'){
+				expNonProtectedSeparator = "(?<!\\\\)\\\\(?!\\\\)";
+			}
+			else{
+				expNonProtectedSeparator = "(?<!\\\\)" + pSep;
+			}
 			
 			String[] possibleValues = stringValue.trim().split(
 					"\\s*" + expNonProtectedSeparator + "\\s*");
@@ -59,8 +66,13 @@ public interface EnumSanitizer {
 			ArrayList<String> values = new ArrayList<>();
 			
 			for(String possibleValue : possibleValues){
-				values.add(possibleValue.replaceAll("\\\\" + pSep,
-						String.valueOf(separator)));
+				if(separator == '\\'){
+					values.add(possibleValue.replaceAll("(\\\\*)\\\\", "$1"));
+				}
+				else{
+					values.add(possibleValue.replaceAll("\\\\" + pSep,
+							String.valueOf(separator)));
+				}
 			}
 			
 			// Remove duplicate while keeping the order of the values
@@ -84,8 +96,8 @@ public interface EnumSanitizer {
 		String pSep = protectSeparator(separator);
 		
 		String expAnyNonBreakOrSep = "[^\\n" + pSep + "]*";
-		String expAnyNonSpaceOrSep = "([^\\r\\n\\t\\f\\v " + pSep + "]|\\\\"
-				+ pSep + ")";
+		String expAnyNonSpaceOrSep = "([^\\r\\n\\t\\f\\v "
+				+ (separator == '\\' ? "" : pSep) + "]|\\\\+" + pSep + ")";
 		
 		String expOnlySeparators = pSep + "+";
 		
