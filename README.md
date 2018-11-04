@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Vhoyon/Vramework.svg?branch=dev)](https://travis-ci.com/Vhoyon/Vramework) [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=version)](https://search.maven.org/search?q=g:%22io.github.vhoyon%22%20AND%20a:%22vramework%22) 
+[![Build Status](https://travis-ci.com/Vhoyon/Vramework.svg?branch=dev)](https://travis-ci.com/Vhoyon/Vramework) [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=version)](https://search.maven.org/artifact/io.github.vhoyon/vramework) 
 [![version (SNAPSHOT)](https://img.shields.io/nexus/s/https/oss.sonatype.org/io.github.vhoyon/vramework.svg?label=version%20(SNAPSHOT)&colorB=e60000)](https://oss.sonatype.org/#nexus-search;quick~vramework)
 
 
