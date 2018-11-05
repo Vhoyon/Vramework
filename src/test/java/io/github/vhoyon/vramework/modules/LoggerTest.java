@@ -34,7 +34,7 @@ public class LoggerTest {
 				(i) -> {
 					
 					assertTrue(((String)i.getArgument(0))
-							.contains("Error in LoggerTest at line 49"));
+							.contains("Error in LoggerTest"));
 					
 					return null;
 				}).when(mockLoggable).log("Testing stuff", "ERROR", true);
