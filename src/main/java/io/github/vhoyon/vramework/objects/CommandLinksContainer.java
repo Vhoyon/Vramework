@@ -2,8 +2,8 @@ package io.github.vhoyon.vramework.objects;
 
 import java.util.*;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import io.github.vhoyon.vramework.exceptions.CommandNotFoundException;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.modules.Logger;
@@ -34,27 +34,25 @@ public abstract class CommandLinksContainer {
 	}
 	
 	public CommandLinksContainer(String linksPackage){
-		ScanResult results = new FastClasspathScanner(linksPackage)
-				.strictWhitelist().scan();
 		
-		List<String> classNames = results.getNamesOfAllClasses();
-		
-		List<Class<?>> linkableClasses = results
-				.classNamesToClassRefs(classNames);
-		
-		ArrayList<Link> links = new ArrayList<>();
-		
-		linkableClasses.forEach(linkableClass -> {
+		try(ScanResult results = new ClassGraph().whitelistPackages(
+				linksPackage).scan()){
 			
-			if(LinkableCommand.class.isAssignableFrom(linkableClass)){
-				
-				links.add(new Link((Class<LinkableCommand>)linkableClass));
-				
+			List<Class<LinkableCommand>> linkableCommands = results
+					.getClassesImplementing(
+							LinkableCommand.class.getCanonicalName())
+					.loadClasses(LinkableCommand.class);
+			
+			Link[] links = new Link[linkableCommands.size()];
+			
+			for(int i = 0; i < linkableCommands.size(); i++){
+				links[i] = new Link(linkableCommands.get(i));
 			}
 			
-		});
+			initializeContainer(links);
+			
+		}
 		
-		initializeContainer(links.toArray(new Link[links.size()]));
 	}
 	
 	private void initializeContainer(Link[] links){
