@@ -1,26 +1,20 @@
 package io.github.vhoyon.vramework.utilities;
 
-import io.github.vhoyon.vramework.modules.Logger;
-
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ThreadPool {
 	
-	private final int nThreads;
-	private final PoolWorker[] workers;
 	private final LinkedBlockingQueue<Runnable> queue;
-	private final Class<?> ownerClass;
 	
-	private static int WORKER_ID_NEXT = 0;
+	private final Class<?> ownerClass;
 	
 	public ThreadPool(){
 		this(1);
 	}
 	
 	public ThreadPool(int nThreads){
-		this.nThreads = nThreads;
 		this.queue = new LinkedBlockingQueue<>();
-		this.workers = new PoolWorker[nThreads];
+		PoolWorker[] workers = new PoolWorker[nThreads];
 		
 		StackTraceElement[] stackElements = Thread.currentThread()
 				.getStackTrace();
@@ -53,10 +47,10 @@ public class ThreadPool {
 		}
 		
 		for(int i = 0; i < nThreads; i++){
-			this.workers[i] = new PoolWorker();
-			this.workers[i].setName("ThreadPool_" + className + lineNumber
-					+ "_" + i);
-			this.workers[i].start();
+			workers[i] = new PoolWorker();
+			workers[i]
+					.setName("ThreadPool_" + className + lineNumber + "_" + i);
+			workers[i].start();
 		}
 	}
 	
