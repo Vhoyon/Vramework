@@ -71,4 +71,82 @@ public class UtilsTest implements Utils {
 		
 	}
 	
+	@Test
+	void testFormatCurlyBrackets(){
+		
+		String test = "function(){{1}}";
+		
+		String replaced = format(test, "/*code*/");
+		
+		String expected = "function(){/*code*/}";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
+	@Test
+	void testFormatNonWantedFormat(){
+		
+		String test = "Type example this : \\{1\\}. {1}";
+		
+		String replaced = format(test, "Voila!");
+		
+		String expected = "Type example this : {1}. Voila!";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
+	@Test
+	void testFormatNonWantedFormatExtraProtector(){
+		
+		String test = "Type example this : \\\\{1\\\\}. {1}";
+		
+		String replaced = format(test, "Voila!");
+		
+		String expected = "Type example this : \\{1\\}. Voila!";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
+	@Test
+	void testFormatNonWantedFormatExtraProtectorFunky(){
+		
+		String test = "Type example this : \\\\{1\\\\\\\\}. {1}";
+		
+		String replaced = format(test, "Voila!");
+		
+		String expected = "Type example this : \\{1\\\\\\}. Voila!";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
+	@Test
+	void testFormatOneCurlyBracketProtected(){
+		
+		String test = "Type example this : {1\\}. {1}";
+		
+		String replaced = format(test, "Voila!");
+		
+		String expected = "Type example this : {1\\}. Voila!";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
+	@Test
+	void testFormatMultipleSameNumber(){
+		
+		String test = "{1} {1} {1}";
+		
+		String replaced = format(test, 1, 2, 3);
+		
+		String expected = "1 1 1";
+		
+		assertEquals(expected, replaced);
+		
+	}
+	
 }

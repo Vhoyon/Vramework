@@ -25,7 +25,15 @@ public interface Utils {
 				"\\{([1-9][0-9]*)\\}", "\\%$1\\$s").replaceAll(
 				"\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
 		
-		return formatS(convertedString, replacements);
+		if(!convertedString.matches(".*\\\\+\\{([1-9][0-9]*)\\\\+}.*")){
+			return String.format(convertedString, replacements);
+		}
+		else{
+			String removedProtectorsString = convertedString.replaceAll(
+					"(\\\\*)\\\\\\{(.+)(\\\\*)\\\\}", "$1{$2$3}");
+			
+			return String.format(removedProtectorsString, replacements);
+		}
 		
 	}
 	
