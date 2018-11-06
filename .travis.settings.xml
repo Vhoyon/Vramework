@@ -1,0 +1,9 @@
+<settings>
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>vhoyon.build</username>
+      <password>${env.VHOYON_CI_PASS}</password>
+    </server>
+  </servers>
+</settings>
