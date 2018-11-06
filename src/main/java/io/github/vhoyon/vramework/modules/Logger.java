@@ -2,12 +2,11 @@ package io.github.vhoyon.vramework.modules;
 
 import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
 import io.github.vhoyon.vramework.interfaces.Loggable;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,11 +28,14 @@ public class Logger extends ModuleOutputtable {
 	
 	private static String separator;
 	
+	protected static ThreadPool outputThreadPool;
+	
 	@Override
 	public void build(){
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
 		separator = "-";
+		outputThreadPool = new ThreadPool();
 	}
 	
 	protected static ArrayList<Loggable> getOutputs(){
@@ -168,25 +170,29 @@ public class Logger extends ModuleOutputtable {
 			
 			final ArrayList<Loggable> outputs = getOutputs();
 			
-			new Thread(() -> {
+			final StackTraceElement[] stackElements = Thread.currentThread()
+					.getStackTrace();
+			
+			outputThreadPool.execute(() -> {
 				
-				final String logText = buildLogMessage(message, logType, appendDate);
+				final String logText = buildLogMessage(message, logType,
+						appendDate, stackElements);
 				
 				hasIssuedWarning = handleMessageAndWarning(logText, outputs,
 						hasIssuedWarning,
 						(output) -> output.log(logText, logType, appendDate));
 				
-			}).start();
+			});
 			
 		}
 		
 	}
 	
 	private static String buildLogMessage(String message, final String logType,
-			final boolean appendDate){
+			final boolean appendDate, final StackTraceElement[] stackElements){
 		
 		StringBuilder builder = new StringBuilder();
-	
+		
 		Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
 				message);
 		
@@ -213,8 +219,7 @@ public class Logger extends ModuleOutputtable {
 					
 					message = message.substring(secondCaretPos + 1);
 					
-					builder.append(beforehandWhitespace, 1,
-							secondCaretPos + 1);
+					builder.append(beforehandWhitespace, 1, secondCaretPos + 1);
 					
 				}
 				
@@ -225,11 +230,10 @@ public class Logger extends ModuleOutputtable {
 		boolean hasAddedPrefix = false;
 		
 		if(appendDate){
-			DateFormat dateFormat = new SimpleDateFormat(
-					"yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
+			String dateTime = LocalDateTime.now().format(
+					DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
 			
-			builder.append("[").append(dateFormat.format(date)).append("]");
+			builder.append("[").append(dateTime).append("]");
 			
 			hasAddedPrefix = true;
 		}
@@ -254,9 +258,6 @@ public class Logger extends ModuleOutputtable {
 		
 		if("ERROR".equalsIgnoreCase(logType)){
 			
-			StackTraceElement[] stackElements = Thread.currentThread()
-					.getStackTrace();
-			
 			String className = null;
 			String methodName = null;
 			int lineNumber = -1;
@@ -264,7 +265,8 @@ public class Logger extends ModuleOutputtable {
 			for(StackTraceElement stackElement : stackElements){
 				
 				if(!stackElement.equals(stackElements[0])
-						&& !stackElement.getClassName().equals("Logger")){
+						&& !stackElement.getClassName().equals(
+								Logger.class.getCanonicalName())){
 					
 					className = stackElement.getClassName();
 					methodName = stackElement.getMethodName();
@@ -277,8 +279,8 @@ public class Logger extends ModuleOutputtable {
 			}
 			
 			String errorMessage = String.format(
-					"Error in %1$s at line %2$s (in method %3$s).",
-					className, lineNumber, methodName);
+					"Error in %1$s at line %2$s (in method %3$s).", className,
+					lineNumber, methodName);
 			
 			builder.append("\n\t").append(errorMessage);
 			
@@ -287,5 +289,4 @@ public class Logger extends ModuleOutputtable {
 		return builder.toString();
 		
 	}
-	
 }
