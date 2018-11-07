@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,7 +16,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello!";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello!", list.get(0));
@@ -28,7 +28,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello fellow kid!";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello fellow kid!", list.get(0));
@@ -40,7 +40,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello\tfellow\tkid!";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello\tfellow\tkid!", list.get(0));
@@ -52,7 +52,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello\t fellow \t kid!";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello\t fellow \t kid!", list.get(0));
@@ -64,7 +64,7 @@ class EnumSanitizerTest {
 		
 		String value = "  Hello!  ";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello!", list.get(0));
@@ -76,7 +76,7 @@ class EnumSanitizerTest {
 		
 		String value = "\tHello!\t";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello!", list.get(0));
@@ -88,7 +88,7 @@ class EnumSanitizerTest {
 		
 		String value = "|";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("|", list.get(0));
@@ -100,7 +100,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\|";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("\\|", list.get(0));
@@ -112,7 +112,7 @@ class EnumSanitizerTest {
 		
 		String value = "||||";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("||||", list.get(0));
@@ -124,8 +124,7 @@ class EnumSanitizerTest {
 		
 		String value = "[";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(1, list.size());
 		assertEquals("[", list.get(0));
@@ -137,8 +136,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\[";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(1, list.size());
 		assertEquals("\\[", list.get(0));
@@ -150,8 +148,7 @@ class EnumSanitizerTest {
 		
 		String value = "[[[[";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(1, list.size());
 		assertEquals("[[[[", list.get(0));
@@ -163,7 +160,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\||\\";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("\\|", list.get(0));
@@ -176,8 +173,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\[[\\";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("\\[", list.get(0));
@@ -190,8 +186,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\\\ \\ \\\\";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(2, list.size());
 		assertEquals("\\\\", list.get(0));
@@ -204,7 +199,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\| | \\|";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("\\|", list.get(0));
@@ -217,7 +212,7 @@ class EnumSanitizerTest {
 		
 		String value = "First|Second|Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -231,7 +226,7 @@ class EnumSanitizerTest {
 		
 		String value = "First  |  Second  |  Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -245,7 +240,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\t|\tSecond\t|\tThird";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -259,7 +254,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\t  | \t Second \t  |\t  Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -273,7 +268,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\| World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello | World", list.get(0));
@@ -285,7 +280,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\| Second | Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("First | Second", list.get(0));
@@ -298,7 +293,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\| | Second";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("|", list.get(0));
@@ -311,7 +306,7 @@ class EnumSanitizerTest {
 		
 		String value = "First | \\|";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -324,7 +319,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\| World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\| World", list.get(0));
@@ -336,7 +331,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\\\| Second | Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\| Second", list.get(0));
@@ -349,7 +344,7 @@ class EnumSanitizerTest {
 		
 		String value = "First | Se[ond";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -362,8 +357,7 @@ class EnumSanitizerTest {
 		
 		String value = "First [ Second";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -376,8 +370,7 @@ class EnumSanitizerTest {
 		
 		String value = "First [ Secon]";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -390,8 +383,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\[ World";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello [ World", list.get(0));
@@ -403,8 +395,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\[ Second [ Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("First [ Second", list.get(0));
@@ -417,8 +408,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\[ [ Second";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("[", list.get(0));
@@ -431,8 +421,7 @@ class EnumSanitizerTest {
 		
 		String value = "First [ \\[";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -445,8 +434,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\[ World";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\[ World", list.get(0));
@@ -458,8 +446,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\\\[ Second [ Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, '[');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '[');
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\[ Second", list.get(0));
@@ -472,8 +459,7 @@ class EnumSanitizerTest {
 		
 		String value = "FirstlSecondlThird";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -487,8 +473,7 @@ class EnumSanitizerTest {
 		
 		String value = "First  l  Second  l  Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -502,8 +487,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\tl\tSecond\tl\tThird";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -517,8 +501,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\t  l \t Second \t  l\t  Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -532,8 +515,7 @@ class EnumSanitizerTest {
 		
 		String value = "He\\l\\lo \\l Wor\\ld";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello l World", list.get(0));
@@ -545,8 +527,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\l Second l Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(2, list.size());
 		assertEquals("First l Second", list.get(0));
@@ -559,8 +540,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\l l Second";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(2, list.size());
 		assertEquals("l", list.get(0));
@@ -573,8 +553,7 @@ class EnumSanitizerTest {
 		
 		String value = "First l \\l";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -587,8 +566,7 @@ class EnumSanitizerTest {
 		
 		String value = "He\\l\\lo \\\\l Wor\\ld";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\l World", list.get(0));
@@ -600,8 +578,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\\\l Second l Third";
 		
-		ArrayList<String> list = EnumSanitizer
-				.extractEnumFromString(value, 'l');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, 'l');
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\l Second", list.get(0));
@@ -614,8 +591,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\\Second\\Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -629,8 +605,7 @@ class EnumSanitizerTest {
 		
 		String value = "First  \\  Second  \\  Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -644,8 +619,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\t\\\tSecond\t\\\tThird";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -659,8 +633,7 @@ class EnumSanitizerTest {
 		
 		String value = "First\t  \\ \t Second \t  \\\t  Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(3, list.size());
 		assertEquals("First", list.get(0));
@@ -674,8 +647,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\ World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\ World", list.get(0));
@@ -687,8 +659,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\\\ Second \\ Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\ Second", list.get(0));
@@ -701,8 +672,7 @@ class EnumSanitizerTest {
 		
 		String value = "\\\\ \\ Second";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(2, list.size());
 		assertEquals("\\", list.get(0));
@@ -715,8 +685,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\ \\\\";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(2, list.size());
 		assertEquals("First", list.get(0));
@@ -729,8 +698,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\\\ World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\\\ World", list.get(0));
@@ -742,8 +710,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\\\\\\\\\\\ World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\\\\\\\\\\\ World", list.get(0));
@@ -755,7 +722,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\| \\| World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value);
+		List<String> list = EnumSanitizer.extractEnumFromString(value);
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello | | World", list.get(0));
@@ -767,8 +734,7 @@ class EnumSanitizerTest {
 		
 		String value = "Hello \\\\ \\\\ World";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(1, list.size());
 		assertEquals("Hello \\ \\ World", list.get(0));
@@ -780,8 +746,7 @@ class EnumSanitizerTest {
 		
 		String value = "First \\\\\\ Second \\ Third";
 		
-		ArrayList<String> list = EnumSanitizer.extractEnumFromString(value,
-				'\\');
+		List<String> list = EnumSanitizer.extractEnumFromString(value, '\\');
 		
 		assertEquals(2, list.size());
 		assertEquals("First \\\\ Second", list.get(0));
