@@ -5,10 +5,11 @@ import io.github.vhoyon.vramework.modules.Environment;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 public interface EnumSanitizer {
 	
-	static String sanitizeValue(Object value, ArrayList<String> values)
+	static String sanitizeValue(Object value, List<String> values)
 			throws BadFormatException{
 		
 		String stringValue = TextSanitizer.sanitizeValue(value);
@@ -22,18 +23,18 @@ public interface EnumSanitizer {
 		
 	}
 	
-	static ArrayList<String> formatEnvironment(String envKey)
+	static List<String> formatEnvironment(String envKey)
 			throws BadFormatException{
 		return extractEnumFromString(Environment.getVar(envKey));
 	}
 	
-	static ArrayList<String> extractEnumFromString(String stringValue)
+	static List<String> extractEnumFromString(String stringValue)
 			throws BadFormatException{
 		return extractEnumFromString(stringValue, '|');
 	}
 	
-	static ArrayList<String> extractEnumFromString(String stringValue,
-			char separator) throws BadFormatException{
+	static List<String> extractEnumFromString(String stringValue, char separator)
+			throws BadFormatException{
 		
 		// Verify that string is of format "[...]| [...] | [...]" while allowing single choice enums.
 		// ~ Resetting stringValue here was not necessary, but this will make it future-proof ~
@@ -76,8 +77,7 @@ public interface EnumSanitizer {
 			}
 			
 			// Remove duplicate while keeping the order of the values
-			LinkedHashSet<String> hs = new LinkedHashSet<>();
-			hs.addAll(values);
+			LinkedHashSet<String> hs = new LinkedHashSet<>(values);
 			values.clear();
 			values.addAll(hs);
 			
