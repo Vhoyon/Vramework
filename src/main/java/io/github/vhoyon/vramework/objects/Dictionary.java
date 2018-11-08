@@ -5,9 +5,7 @@ import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
-import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

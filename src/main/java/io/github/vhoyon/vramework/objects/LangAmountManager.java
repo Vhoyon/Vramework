@@ -15,9 +15,9 @@ class LangAmountManager {
 	
 	private class LangAmount {
 		
-		int countMin;
-		int countMax;
-		String message;
+		public int countMin;
+		public int countMax;
+		public String message;
 		
 		public LangAmount(String messyLine) throws BadFormatException{
 			
@@ -45,14 +45,14 @@ class LangAmountManager {
 			
 			try{
 				
-				this.countMin = (possibleMin.equals("*")) ? Integer.MIN_VALUE
+				this.countMin = ("*".equals(possibleMin)) ? Integer.MIN_VALUE
 						: Integer.parseInt(possibleMin);
 				
 				if(possibleMax == null){
 					this.countMax = this.countMin;
 				}
 				else{
-					this.countMax = (possibleMax.equals("*")) ? Integer.MAX_VALUE
+					this.countMax = ("*".equals(possibleMax)) ? Integer.MAX_VALUE
 							: Integer.parseInt(possibleMax);
 				}
 				
