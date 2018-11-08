@@ -16,24 +16,18 @@ public interface Utils {
 	
 	default String format(String stringToFormat, Object... replacements){
 		
-		String protectedString = Pattern.compile("[%]").matcher(stringToFormat)
-				.replaceAll("$0$0");
+		String protectedString = stringToFormat.replaceAll("(%)", "$1$1");
 		
-		String noLeadingZeroString = protectedString.replaceAll("\\{0+", "\\{");
+		String noLeadingZeroString = protectedString.replaceAll(
+				"\\{0+([1-9][0-9]*)", "\\{$1");
 		
-		String convertedString = noLeadingZeroString.replaceAll(
-				"\\{([1-9][0-9]*)\\}", "\\%$1\\$s").replaceAll(
-				"\\{\\^(0*[1-9][0-9]*)\\}", "\\{$1\\}");
+		String cleaned = noLeadingZeroString.replaceAll("\\{([1-9][0-9]*)\\}",
+				"\\%$1\\$s");
 		
-		if(!convertedString.matches(".*\\\\+\\{([1-9][0-9]*)\\\\+}.*")){
-			return String.format(convertedString, replacements);
-		}
-		else{
-			String removedProtectorsString = convertedString.replaceAll(
-					"(\\\\*)\\\\\\{(.+)(\\\\*)\\\\}", "$1{$2$3}");
-			
-			return String.format(removedProtectorsString, replacements);
-		}
+		String cleanedProtected = cleaned.replaceAll(
+				"\\{(\\\\*)\\\\(0*[1-9][0-9]*)}", "\\{$1$2\\}");
+		
+		return String.format(cleanedProtected, replacements);
 		
 	}
 	
