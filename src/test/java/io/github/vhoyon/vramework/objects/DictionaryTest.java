@@ -20,28 +20,30 @@ public class DictionaryTest {
 	void setUp(){
 		mockDict = spy(Dictionary.class);
 		
-		doReturn("[0] Test|[1,2] Test {1}|[3,*] Tests {1}").when(mockDict)
-				.getString(eq("consistentFormat"), nullable(String.class));
+		doReturn("[0] Test|[1,2] Test {1}|[3,*] Tests {1}")
+				.when(mockDict)
+				.getString(eq("amountConsistentFormat"), nullable(String.class));
 		
 		doReturn("  [0]\tTest|  [1,2]Test {1}|[3,*]   \t  Tests {1}  ").when(
-				mockDict).getString(eq("funkySpaces"), nullable(String.class));
+				mockDict).getString(eq("amountFunkySpaces"),
+				nullable(String.class));
 		
 		doReturn(
 				"[*,-3] Negative Infinity | [-2, 2] Passing 0 | [3, *] Positive Infinity")
-				.when(mockDict).getString(eq("infinities"),
+				.when(mockDict).getString(eq("amountInfinities"),
 						nullable(String.class));
 		
 		doReturn("[0,1] First | Second").when(mockDict).getString(
-				eq("missingRange"), nullable(String.class));
+				eq("amountMissingRange"), nullable(String.class));
 		
 		doReturn("[0,1] First|[2,12345678901234567890] Second").when(mockDict)
-				.getString(eq("rangeTooBig"), nullable(String.class));
+				.getString(eq("amountRangeTooBig"), nullable(String.class));
 		
 		doReturn("[0,1] First|[3,2] Second").when(mockDict).getString(
-				eq("inverted"), nullable(String.class));
+				eq("amountInverted"), nullable(String.class));
 		
 		doReturn("[0,3] First|[2,5] Second").when(mockDict).getString(
-				eq("overlapping"), nullable(String.class));
+				eq("amountOverlapping"), nullable(String.class));
 		
 	}
 	
@@ -52,7 +54,7 @@ public class DictionaryTest {
 		
 		String expectedLang = "Test";
 		
-		String lang = mockDict.getStringAmount("consistentFormat", null,
+		String lang = mockDict.getStringAmount("amountConsistentFormat", null,
 				expectedAmount);
 		
 		assertEquals(expectedLang, lang);
@@ -66,7 +68,7 @@ public class DictionaryTest {
 		
 		String expectedLang = "Test " + expectedAmount;
 		
-		String lang = mockDict.getStringAmount("consistentFormat", null,
+		String lang = mockDict.getStringAmount("amountConsistentFormat", null,
 				expectedAmount, expectedAmount);
 		
 		assertEquals(expectedLang, lang);
@@ -75,7 +77,7 @@ public class DictionaryTest {
 		
 		expectedLang = "Test " + expectedAmount;
 		
-		lang = mockDict.getStringAmount("consistentFormat", null,
+		lang = mockDict.getStringAmount("amountConsistentFormat", null,
 				expectedAmount, expectedAmount);
 		
 		assertEquals(expectedLang, lang);
@@ -89,8 +91,8 @@ public class DictionaryTest {
 			
 			String expectedLang = "Tests " + i;
 			
-			String lang = mockDict.getStringAmount("consistentFormat", null, i,
-					i);
+			String lang = mockDict.getStringAmount("amountConsistentFormat",
+					null, i, i);
 			
 			assertEquals(expectedLang, lang);
 			
@@ -105,7 +107,7 @@ public class DictionaryTest {
 		
 		String expectedLang = "Test";
 		
-		String lang = mockDict.getStringAmount("funkySpaces", null,
+		String lang = mockDict.getStringAmount("amountFunkySpaces", null,
 				expectedAmount);
 		
 		assertEquals(expectedLang, lang);
@@ -119,7 +121,7 @@ public class DictionaryTest {
 		
 		String expectedLang = "Test " + expectedAmount;
 		
-		String lang = mockDict.getStringAmount("funkySpaces", null,
+		String lang = mockDict.getStringAmount("amountFunkySpaces", null,
 				expectedAmount, expectedAmount);
 		
 		assertEquals(expectedLang, lang);
@@ -128,8 +130,8 @@ public class DictionaryTest {
 		
 		expectedLang = "Test " + expectedAmount;
 		
-		lang = mockDict.getStringAmount("funkySpaces", null, expectedAmount,
-				expectedAmount);
+		lang = mockDict.getStringAmount("amountFunkySpaces", null,
+				expectedAmount, expectedAmount);
 		
 		assertEquals(expectedLang, lang);
 		
@@ -142,7 +144,8 @@ public class DictionaryTest {
 			
 			String expectedLang = "Tests " + i;
 			
-			String lang = mockDict.getStringAmount("funkySpaces", null, i, i);
+			String lang = mockDict.getStringAmount("amountFunkySpaces", null,
+					i, i);
 			
 			assertEquals(expectedLang, lang);
 			
@@ -157,7 +160,7 @@ public class DictionaryTest {
 		
 		for(int i = -30; i <= -3; i++){
 			
-			String lang = mockDict.getStringAmount("infinities", null, i);
+			String lang = mockDict.getStringAmount("amountInfinities", null, i);
 			
 			assertEquals(expectedLang, lang);
 			
@@ -172,7 +175,7 @@ public class DictionaryTest {
 		
 		for(int i = -2; i <= 2; i++){
 			
-			String lang = mockDict.getStringAmount("infinities", null, i);
+			String lang = mockDict.getStringAmount("amountInfinities", null, i);
 			
 			assertEquals(expectedLang, lang);
 			
@@ -187,7 +190,7 @@ public class DictionaryTest {
 		
 		for(int i = 30; i >= 3; i--){
 			
-			String lang = mockDict.getStringAmount("infinities", null, i);
+			String lang = mockDict.getStringAmount("amountInfinities", null, i);
 			
 			assertEquals(expectedLang, lang);
 			
@@ -199,7 +202,7 @@ public class DictionaryTest {
 	void testLangAmountMissingRange(){
 		
 		Executable shouldThrowBadFormatException = () -> mockDict
-				.getStringAmount("missingRange", null, 1);
+				.getStringAmount("amountMissingRange", null, 1);
 		
 		BadFormatException exception = assertThrows(BadFormatException.class,
 				shouldThrowBadFormatException);
@@ -212,7 +215,7 @@ public class DictionaryTest {
 	void testLangAmountRangeTooBig(){
 		
 		Executable shouldThrowBadFormatException = () -> mockDict
-				.getStringAmount("rangeTooBig", null, 1);
+				.getStringAmount("amountRangeTooBig", null, 1);
 		
 		BadFormatException exception = assertThrows(BadFormatException.class,
 				shouldThrowBadFormatException);
@@ -225,7 +228,7 @@ public class DictionaryTest {
 	void testLangAmountInverted(){
 		
 		Executable shouldThrowBadFormatException = () -> mockDict
-				.getStringAmount("inverted", null, 2);
+				.getStringAmount("amountInverted", null, 2);
 		
 		BadFormatException exception = assertThrows(BadFormatException.class,
 				shouldThrowBadFormatException);
@@ -238,7 +241,7 @@ public class DictionaryTest {
 	void testLangAmountOverlapping(){
 		
 		Executable shouldThrowBadFormatException = () -> mockDict
-				.getStringAmount("overlapping", null, 2);
+				.getStringAmount("amountOverlapping", null, 2);
 		
 		BadFormatException exception = assertThrows(BadFormatException.class,
 				shouldThrowBadFormatException);
