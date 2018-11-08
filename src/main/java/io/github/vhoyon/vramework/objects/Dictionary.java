@@ -1,9 +1,13 @@
 package io.github.vhoyon.vramework.objects;
 
+import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
+import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -148,6 +152,27 @@ public class Dictionary implements Utils {
 		}
 		
 		return string;
+		
+	}
+	
+	public String getStringAmount(String key, String possiblePrefix,
+			int amount, Object... replacements) throws BadFormatException,
+			AmountNotDefinedException{
+		if(replacements.length == 1 && replacements[0] == null)
+			return this.getStringAmount(key, possiblePrefix, amount);
+		
+		return format(this.getStringAmount(key, possiblePrefix, amount),
+				replacements);
+	}
+	
+	public String getStringAmount(String key, String possiblePrefix, int amount)
+			throws BadFormatException, AmountNotDefinedException{
+		
+		String langLine = getString(key, possiblePrefix);
+		
+		LangAmountManager langManager = new LangAmountManager(langLine);
+		
+		return langManager.getMessageAmount(amount);
 		
 	}
 	
