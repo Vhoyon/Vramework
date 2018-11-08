@@ -70,6 +70,16 @@ class LangAmountManager {
 								+ Integer.MAX_VALUE + ".", 4);
 			}
 			
+			if(this.countMin > this.countMax){
+				throw new BadFormatException(
+						"The range \"["
+								+ this.countMin
+								+ ","
+								+ this.countMax
+								+ "] is inverted (the first number shouldn't be bigger than the second)!",
+						5);
+			}
+			
 			this.message = matcher.group(3);
 			
 		}
@@ -122,7 +132,7 @@ class LangAmountManager {
 						"Another message already has at least one number of the range ["
 								+ langAmount.countMin + ","
 								+ langAmount.countMax
-								+ "], please verify your strings!", 5);
+								+ "], please verify your strings!", 6);
 				
 			}
 			

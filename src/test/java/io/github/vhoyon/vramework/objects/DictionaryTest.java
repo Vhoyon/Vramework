@@ -37,6 +37,9 @@ public class DictionaryTest {
 		doReturn("[0,1] First|[2,12345678901234567890] Second").when(mockDict)
 				.getString(eq("rangeTooBig"), nullable(String.class));
 		
+		doReturn("[0,1] First|[3,2] Second").when(mockDict).getString(
+				eq("inverted"), nullable(String.class));
+		
 		doReturn("[0,3] First|[2,5] Second").when(mockDict).getString(
 				eq("overlapping"), nullable(String.class));
 		
@@ -219,6 +222,19 @@ public class DictionaryTest {
 	}
 	
 	@Test
+	void testLangAmountInverted(){
+		
+		Executable shouldThrowBadFormatException = () -> mockDict
+				.getStringAmount("inverted", null, 2);
+		
+		BadFormatException exception = assertThrows(BadFormatException.class,
+				shouldThrowBadFormatException);
+		
+		assertEquals(5, exception.getErrorCode());
+		
+	}
+	
+	@Test
 	void testLangAmountOverlapping(){
 		
 		Executable shouldThrowBadFormatException = () -> mockDict
@@ -227,7 +243,7 @@ public class DictionaryTest {
 		BadFormatException exception = assertThrows(BadFormatException.class,
 				shouldThrowBadFormatException);
 		
-		assertEquals(5, exception.getErrorCode());
+		assertEquals(6, exception.getErrorCode());
 		
 	}
 	
