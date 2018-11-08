@@ -170,7 +170,14 @@ public class Dictionary implements Utils {
 		
 		LangAmountManager langManager = new LangAmountManager(langLine);
 		
-		return langManager.getMessageAmount(amount);
+		String message = langManager.getMessageAmount(amount);
+		
+		String cleaned = message.replaceAll("\\{(0)}", "\\%$1\\$s");
+		
+		String cleanedProtected = cleaned.replaceAll("\\{(\\\\*)\\\\0}",
+				"\\{$1\\0\\}");
+		
+		return String.format(cleanedProtected, amount);
 		
 	}
 	

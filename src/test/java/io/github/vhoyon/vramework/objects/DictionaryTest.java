@@ -33,6 +33,22 @@ public class DictionaryTest {
 				.when(mockDict).getString(eq("amountInfinities"),
 						nullable(String.class));
 		
+		doReturn("[0] 0 : {0}|[1,2] 1 or 2 : {0}|[3,*] 3 or more : {0}").when(
+				mockDict).getString(eq("amountReplaceCount"),
+				nullable(String.class));
+		
+		doReturn(
+				"[0] 0 : {\\0}|[1,2] 1 or 2 : {\\\\0}|[3,*] 3 or more : {\\\\\\0}")
+				.when(mockDict).getString(eq("amountReplaceCountProtected"),
+						nullable(String.class));
+		
+		doReturn("[1] {0} : {1}|[2] {0} : {1} {2}").when(mockDict).getString(
+				eq("amountReplaceCountReplacements"), nullable(String.class));
+		
+		doReturn("[1] {\\0} : {1}|[2] {\\\\0} : {1} {2}").when(mockDict)
+				.getString(eq("amountReplaceCountReplacementsProtected"),
+						nullable(String.class));
+		
 		doReturn("[0,1] First | Second").when(mockDict).getString(
 				eq("amountMissingRange"), nullable(String.class));
 		
@@ -195,6 +211,129 @@ public class DictionaryTest {
 			assertEquals(expectedLang, lang);
 			
 		}
+		
+	}
+	
+	@Test
+	void testLangAmountReplaceCount(){
+		
+		int expectedAmount = 0;
+		
+		String expectedLang = "0 : 0";
+		
+		String lang = mockDict.getStringAmount("amountReplaceCount", null,
+				expectedAmount);
+		
+		assertEquals(expectedLang, lang);
+		
+		int expectedAmount2 = 1;
+		
+		String expectedLang2 = "1 or 2 : 1";
+		
+		String lang2 = mockDict.getStringAmount("amountReplaceCount", null,
+				expectedAmount2);
+		
+		assertEquals(expectedLang2, lang2);
+		
+		int expectedAmount3 = 4;
+		
+		String expectedLang3 = "3 or more : 4";
+		
+		String lang3 = mockDict.getStringAmount("amountReplaceCount", null,
+				expectedAmount3);
+		
+		assertEquals(expectedLang3, lang3);
+		
+	}
+	
+	@Test
+	void testLangAmountReplaceCountReplacements(){
+		
+		int expectedAmount = 1;
+		
+		String replacement1 = "hello";
+		
+		String expectedLang = "1 : " + replacement1;
+		
+		String lang = mockDict.getStringAmount(
+				"amountReplaceCountReplacements", null, expectedAmount,
+				replacement1);
+		
+		assertEquals(expectedLang, lang);
+		
+		expectedAmount = 2;
+		
+		replacement1 = "hello";
+		String replacement2 = "world";
+		
+		expectedLang = "2 : " + replacement1 + " " + replacement2;
+		
+		lang = mockDict.getStringAmount("amountReplaceCountReplacements", null,
+				expectedAmount, replacement1, replacement2);
+		
+		assertEquals(expectedLang, lang);
+		
+	}
+	
+	@Test
+	void testLangAmountReplaceCountProtected(){
+		
+		int expectedAmount = 0;
+		
+		String expectedLang = "0 : {0}";
+		
+		String lang = mockDict.getStringAmount("amountReplaceCountProtected",
+				null, expectedAmount);
+		
+		assertEquals(expectedLang, lang);
+		
+		int expectedAmount2 = 1;
+		
+		String expectedLang2 = "1 or 2 : {\\0}";
+		
+		String lang2 = mockDict.getStringAmount("amountReplaceCountProtected",
+				null, expectedAmount2);
+		
+		assertEquals(expectedLang2, lang2);
+		
+		int expectedAmount3 = 4;
+		
+		String expectedLang3 = "3 or more : {\\\\0}";
+		
+		String lang3 = mockDict.getStringAmount("amountReplaceCountProtected",
+				null, expectedAmount3);
+		
+		assertEquals(expectedLang3, lang3);
+		
+	}
+	
+	@Test
+	void testLangAmountReplaceCountReplacementsProtected(){
+		
+		int expectedAmount = 1;
+		
+		String replacement1 = "hello";
+		
+		String expectedLang = "{0} : " + replacement1;
+		
+		String lang = mockDict.getStringAmount(
+				"amountReplaceCountReplacementsProtected", null,
+				expectedAmount, replacement1);
+		
+		assertEquals(expectedLang, lang);
+		
+		expectedAmount = 2;
+		
+		replacement1 = "hello";
+		String replacement2 = "world";
+		
+		expectedLang = "{\\0} : " + replacement1 + " " + replacement2;
+		
+		lang = mockDict.getStringAmount(
+				"amountReplaceCountReplacementsProtected", null,
+				expectedAmount, replacement1, replacement2);
+		
+		assertEquals(expectedLang, lang);
 		
 	}
 	
