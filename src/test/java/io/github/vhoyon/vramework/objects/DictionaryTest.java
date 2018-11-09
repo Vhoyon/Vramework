@@ -1,5 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
+import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,9 @@ public class DictionaryTest {
 		doReturn("[1] {\\0} : {1}|[2] {\\\\0} : {1} {2}").when(mockDict)
 				.getString(eq("amountReplaceCountReplacementsProtected"),
 						nullable(String.class));
+		
+		doReturn("Single|Plural {0}").when(mockDict).getString(
+				eq("amountSingleAndPlural"), nullable(String.class));
 		
 		doReturn("[0,1] First | Second").when(mockDict).getString(
 				eq("amountMissingRange"), nullable(String.class));
@@ -334,6 +338,37 @@ public class DictionaryTest {
 				expectedAmount, replacement1, replacement2);
 		
 		assertEquals(expectedLang, lang);
+		
+	}
+	
+	@Test
+	void testLangAmountSingleAndPlural(){
+		
+		int expectedAmount = 1;
+		
+		String expectedLang = "Single";
+		
+		String lang = mockDict.getStringAmount("amountSingleAndPlural", null,
+				expectedAmount);
+		
+		assertEquals(expectedLang, lang);
+		
+		for(int i = 2; i <= 5; i++){
+			
+			String expectedLangPlural = "Plural " + i;
+			
+			String langPlural = mockDict.getStringAmount(
+					"amountSingleAndPlural", null, i);
+			
+			assertEquals(expectedLangPlural, langPlural);
+			
+		}
+		
+		Executable shouldThrowBadFormatException = () -> mockDict
+				.getStringAmount("amountSingleAndPlural", null, 0);
+		
+		assertThrows(AmountNotDefinedException.class,
+				shouldThrowBadFormatException);
 		
 	}
 	

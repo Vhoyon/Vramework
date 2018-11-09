@@ -21,13 +21,7 @@ class LangAmountManager {
 		
 		public LangAmount(String messyLine) throws BadFormatException{
 			
-			String regexAnyNumber = "0|(?:- ?)?[1-9][0-9]*";
-			String regexAnyNumberOrStar = regexAnyNumber + "|\\*";
-			
-			String regexRangeDefiner = "\\[(" + regexAnyNumberOrStar
-					+ ")(?:, ?(" + regexAnyNumberOrStar + "))?]";
-			
-			String regexMessyLineResolver = regexRangeDefiner + "\\s*(.+)";
+			String regexMessyLineResolver = createMessyLineRegex();
 			
 			Matcher matcher = Pattern.compile(regexMessyLineResolver).matcher(
 					messyLine);
@@ -122,21 +116,48 @@ class LangAmountManager {
 		
 		ArrayList<LangAmount> list = new ArrayList<>();
 		
-		for(String messyLine : unparsedMessages){
+		boolean isLineSinglePlural = false;
+		
+		if(unparsedMessages.size() == 2){
 			
-			LangAmount langAmount = new LangAmount(messyLine);
+			String messyLineRegex = createMessyLineRegex();
 			
-			if(!langAmountNonUsedRange(langAmount, list)){
+			String message1 = unparsedMessages.get(0);
+			String message2 = unparsedMessages.get(1);
+			
+			isLineSinglePlural = !message1.matches(messyLineRegex)
+					&& !message2.matches(messyLineRegex);
+			
+		}
+		
+		if(isLineSinglePlural){
+			
+			String message1 = unparsedMessages.get(0);
+			String message2 = unparsedMessages.get(1);
+			
+			list.add(new LangAmount(1, 1, message1));
+			list.add(new LangAmount(1, '*', message2));
+			
+		}
+		else{
+			
+			for(String messyLine : unparsedMessages){
 				
-				throw new BadFormatException(
-						"Another message already has at least one number of the range ["
-								+ langAmount.countMin + ","
-								+ langAmount.countMax
-								+ "], please verify your strings!", 6);
+				LangAmount langAmount = new LangAmount(messyLine);
+				
+				if(!langAmountNonUsedRange(langAmount, list)){
+					
+					throw new BadFormatException(
+							"Another message already has at least one number of the range ["
+									+ langAmount.countMin + ","
+									+ langAmount.countMax
+									+ "], please verify your strings!", 6);
+					
+				}
+				
+				list.add(langAmount);
 				
 			}
-			
-			list.add(langAmount);
 			
 		}
 		
@@ -173,6 +194,18 @@ class LangAmountManager {
 		}
 		
 		return true;
+		
+	}
+	
+	private static String createMessyLineRegex(){
+		
+		String regexAnyNumber = "0|(?:- ?)?[1-9][0-9]*";
+		String regexAnyNumberOrStar = regexAnyNumber + "|\\*";
+		
+		String regexRangeDefiner = "\\[(" + regexAnyNumberOrStar + ")(?:, ?("
+				+ regexAnyNumberOrStar + "))?]";
+		
+		return regexRangeDefiner + "\\s*(.+)";
 		
 	}
 	
