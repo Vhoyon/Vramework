@@ -103,9 +103,7 @@ public class Framework {
 	}
 	
 	private static boolean getIsRunningFromTerminal(){
-		Console console = System.console();
-		
-		return !(console == null && !GraphicsEnvironment.isHeadless());
+		return System.console() != null || GraphicsEnvironment.isHeadless();
 	}
 	
 	private static String getRunnableFolderPath(){
@@ -120,9 +118,7 @@ public class Framework {
 		
 		File runner = new File(systemPath);
 		
-		String decoratedSystemPath = runner.getParent() + File.separator;
-		
-		return decoratedSystemPath;
+		return runner.getParent() + File.separator;
 		
 	}
 	
