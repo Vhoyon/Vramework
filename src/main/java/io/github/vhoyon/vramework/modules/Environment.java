@@ -288,7 +288,7 @@ public class Environment extends Module {
 				
 				int shouldExitChoice = console
 						.getConfirmation(
-								"Enter yes to continue startup after updating your env file. If you want to exit, enter no",
+								"Enter yes to continue startup after updating your env file. If you want to exit, enter no.",
 								Console.QuestionType.YES_NO);
 				
 				if(shouldExitChoice == Console.NO){
@@ -342,7 +342,12 @@ public class Environment extends Module {
 				
 				if(openFileNow == Console.YES){
 					
-					Desktop.getDesktop().edit(new File(envFilePath));
+					try{
+						Desktop.getDesktop().edit(new File(envFilePath));
+					}
+					catch(IOException e){
+						Desktop.getDesktop().open(new File(envFilePath));
+					}
 					
 				}
 				else{
@@ -361,6 +366,7 @@ public class Environment extends Module {
 			}
 			catch(IOException e){
 				Logger.log(e);
+				return true;
 			}
 			
 			break;
