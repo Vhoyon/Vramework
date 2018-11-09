@@ -21,7 +21,7 @@ public interface Utils {
 		String noLeadingZeroString = protectedString.replaceAll(
 				"\\{0+([1-9][0-9]*)", "\\{$1");
 		
-		String cleaned = noLeadingZeroString.replaceAll("\\{([1-9][0-9]*)\\}",
+		String cleaned = noLeadingZeroString.replaceAll("\\{([1-9][0-9]*)}",
 				"\\%$1\\$s");
 		
 		String cleanedProtected = cleaned.replaceAll(
