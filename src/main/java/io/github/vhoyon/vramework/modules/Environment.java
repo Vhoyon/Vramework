@@ -40,6 +40,9 @@ public class Environment extends Module {
 	public static void refresh(String folderPath) throws FileNotFoundException,
 			RuntimeException{
 		
+		if(singleton == null)
+			return;
+		
 		try{
 			
 			BufferedReader reader = getEnvFile(folderPath);
