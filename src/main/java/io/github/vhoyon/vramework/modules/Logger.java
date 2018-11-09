@@ -35,7 +35,6 @@ public class Logger extends ModuleOutputtable {
 		outputs = new ArrayList<>();
 		hasIssuedWarning = false;
 		separator = "-";
-		outputThreadPool = new ThreadPool();
 	}
 	
 	protected static ArrayList<Loggable> getOutputs(){
@@ -167,6 +166,9 @@ public class Logger extends ModuleOutputtable {
 			log("[tried to log empty message]", LogType.ERROR, true);
 		}
 		else{
+			
+			if(outputThreadPool == null)
+				outputThreadPool = new ThreadPool();
 			
 			final ArrayList<Loggable> outputs = getOutputs();
 			
