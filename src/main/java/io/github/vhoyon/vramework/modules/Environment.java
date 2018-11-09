@@ -17,16 +17,28 @@ import java.util.regex.Pattern;
 
 public class Environment extends Module {
 	
+	private static Environment singleton;
+	
 	private static final String ENV_FILE_NAME = ".env";
 	private static final String ENV_EXAMPLE_FILE_NAME = "example.env";
 	
 	private static HashMap<String, String> envVars;
 	
-	private final String WARNINGS = "WARNINGS";
-	private final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
-	private final String LINE_ERRORS = "LINE_ERRORS";
+	private static final String WARNINGS = "WARNINGS";
+	private static final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
+	private static final String LINE_ERRORS = "LINE_ERRORS";
 	
 	public void build() throws Exception{
+		singleton = new Environment();
+		refresh();
+	}
+	
+	public static void refresh() throws FileNotFoundException, RuntimeException{
+		refresh(null);
+	}
+	
+	public static void refresh(String folderPath) throws FileNotFoundException,
+			RuntimeException{
 		
 		try{
 			
@@ -40,12 +52,7 @@ public class Environment extends Module {
 				
 				// Remove comment from line if there's content in the line
 				if(line.length() != 0){
-					Matcher matcher = Pattern.compile("(\\s)*#.*")
-							.matcher(line);
-					int index = matcher.find() ? matcher.start() : -1;
-					
-					if(index != -1)
-						line = line.substring(0, index);
+					line = removeCommentFromLine(line);
 				}
 				
 				if(line.length() != 0){
@@ -54,28 +61,33 @@ public class Environment extends Module {
 					
 					if(keyValue.length != 2){
 						
-						addError(LINE_ERRORS, "Line " + i + ": \"" + line
-								+ "\"");
+						Environment.singleton.addError(LINE_ERRORS, "Line " + i
+								+ ": \"" + line + "\"");
 						
 					}
 					else{
 						
 						if(keyValue[1].length() == 0){
-							addWarning(WARNINGS, "The variable keyed \""
-									+ keyValue[0] + "\" at line " + i
-									+ " is empty, is that supposed to be..?");
+							Environment.singleton
+									.addWarning(
+											WARNINGS,
+											"The variable keyed \""
+													+ keyValue[0]
+													+ "\" at line "
+													+ i
+													+ " is empty, is that supposed to be..?");
 						}
 						
 						if(keyValue[0].contains(" ")){
 							
-							addError(SPACED_KEY_ERRORS, "Line " + i + ": \""
-									+ line + "\"");
+							Environment.singleton.addError(SPACED_KEY_ERRORS,
+									"Line " + i + ": \"" + line + "\"");
 							
 						}
 						
 					}
 					
-					if(!hasErrors()){
+					if(!Environment.singleton.hasErrors()){
 						envVars.put(keyValue[0].toLowerCase(), keyValue[1]);
 					}
 					
@@ -85,7 +97,12 @@ public class Environment extends Module {
 			
 			reader.close();
 			
-			handleIssues();
+			try{
+				Environment.singleton.handleIssues();
+			}
+			catch(Exception e){
+				throw new RuntimeException(e);
+			}
 			
 		}
 		catch(IOException e){
@@ -93,6 +110,16 @@ public class Environment extends Module {
 					"An unexpected problem happened while reading the line of the file.");
 		}
 		
+	}
+	
+	private static String removeCommentFromLine(String line){
+		Matcher matcher = Pattern.compile("(\\s)*#.*").matcher(line);
+		int index = matcher.find() ? matcher.start() : -1;
+		
+		if(index != -1)
+			return line.substring(0, index);
+		
+		return line;
 	}
 	
 	public static <EnvVar> EnvVar getVar(String key){
@@ -211,7 +238,7 @@ public class Environment extends Module {
 		
 	}
 	
-	private BufferedReader getEnvFile(){
+	private static BufferedReader getEnvFile(String folderPath){
 		
 		InputStream inputStream;
 		
@@ -248,7 +275,8 @@ public class Environment extends Module {
 				try{
 					console.initialize();
 					
-					boolean shouldExit = confirmEnvFileCreation(console);
+					boolean shouldExit = confirmEnvFileCreation(console,
+							folderPath);
 					
 					if(shouldExit)
 						System.exit(0);
@@ -286,13 +314,12 @@ public class Environment extends Module {
 		InputStreamReader streamReader = new InputStreamReader(inputStream,
 				StandardCharsets.UTF_8);
 		
-		BufferedReader reader = new BufferedReader(streamReader);
-		
-		return reader;
+		return new BufferedReader(streamReader);
 		
 	}
 	
-	private boolean confirmEnvFileCreation(Console console){
+	private static boolean confirmEnvFileCreation(Console console,
+			String folderPath){
 		
 		int choice = console
 				.getConfirmation(
@@ -304,7 +331,7 @@ public class Environment extends Module {
 			
 			try{
 				
-				String envFilePath = buildSystemEnvFile();
+				String envFilePath = buildSystemEnvFile(folderPath);
 				
 				int openFileNow = console.getConfirmation(
 						"Open file now in default editor?",
@@ -345,7 +372,8 @@ public class Environment extends Module {
 		
 	}
 	
-	private String buildSystemEnvFile() throws IOException{
+	private static String buildSystemEnvFile(String folderPath)
+			throws IOException{
 		
 		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
 				+ ENV_EXAMPLE_FILE_NAME);
@@ -353,7 +381,7 @@ public class Environment extends Module {
 		byte[] buffer = new byte[exampleFileStream.available()];
 		exampleFileStream.read(buffer);
 		
-		String systemEnvFilePath = buildEnvFilePath();
+		String systemEnvFilePath = buildEnvFilePath(folderPath);
 		
 		File targetFile = new File(systemEnvFilePath);
 		OutputStream outStream = new FileOutputStream(targetFile);
@@ -366,6 +394,9 @@ public class Environment extends Module {
 	}
 	
 	private static String buildEnvFilePath(String folderPath){
+		if(folderPath == null)
+			return buildEnvFilePath();
+		
 		return folderPath
 				+ (folderPath.endsWith(File.separator) ? "" : File.separator)
 				+ ENV_FILE_NAME;
