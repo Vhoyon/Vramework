@@ -2,6 +2,7 @@ package io.github.vhoyon.vramework.modules;
 
 import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
 import io.github.vhoyon.vramework.interfaces.Auditable;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,8 @@ public class Audit extends ModuleOutputtable {
 	private static boolean hasIssuedWarning;
 	
 	private static String separator;
+	
+	protected static ThreadPool outputThreadPool;
 	
 	@Override
 	public void build(){
@@ -142,74 +145,89 @@ public class Audit extends ModuleOutputtable {
 		
 		if(message != null && message.length() != 0){
 			
-			StringBuilder builder = new StringBuilder();
+			if(outputThreadPool == null)
+				outputThreadPool = new ThreadPool();
 			
-			Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
-					message);
+			final ArrayList<Auditable> outputs = getOutputs();
 			
-			if(matcher.find()){
+			outputThreadPool.execute(() -> {
 				
-				int whitespaceStartIndex = matcher.start();
-				int whitespaceEndIndex = matcher.end();
+				final String auditText = buildAuditMessage(message, appendDate,
+						shouldPrependAudit);
 				
-				String beforehandWhitespace = message.substring(
-						whitespaceStartIndex, whitespaceEndIndex);
+				hasIssuedWarning = handleMessageAndWarning(auditText, outputs,
+						hasIssuedWarning, (output) -> output.audit(auditText,
+								appendDate, shouldPrependAudit));
 				
-				if(!message.startsWith("^")){
-					message = message.substring(whitespaceEndIndex);
-					
-					builder.append(beforehandWhitespace);
-				}
-				else{
-					message = message.substring(1);
-					
-					int secondCaretPos = message.indexOf("^");
-					
-					// No second caret
-					if(secondCaretPos != -1){
-						
-						message = message.substring(secondCaretPos + 1);
-						
-						builder.append(beforehandWhitespace, 1,
-								secondCaretPos + 1);
-						
-					}
-					
-				}
-				
-			}
-			
-			boolean hasAddedPrefix = false;
-			
-			if(appendDate){
-				DateFormat dateFormat = new SimpleDateFormat(
-						"yyyy/MM/dd HH:mm:ss");
-				Date date = new Date();
-				
-				builder.append("[").append(dateFormat.format(date)).append("]");
-				
-				hasAddedPrefix = true;
-			}
-			
-			if(hasAddedPrefix){
-				
-				if(separator != null){
-					builder.append(" ").append(separator);
-				}
-				
-				builder.append(" ");
-				
-			}
-			
-			builder.append("\"").append(message).append("\"");
-			
-			String auditText = builder.toString();
-			
-			hasIssuedWarning = handleMessageAndWarning(auditText, outputs,
-					hasIssuedWarning, (output) -> output.audit(auditText,
-							appendDate, shouldPrependAudit));
+			});
 			
 		}
+		
+	}
+	
+	protected static String buildAuditMessage(String message,
+			final boolean appendDate, final boolean shouldPrependAudit){
+		
+		StringBuilder builder = new StringBuilder();
+		
+		Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
+				message);
+		
+		if(matcher.find()){
+			
+			int whitespaceStartIndex = matcher.start();
+			int whitespaceEndIndex = matcher.end();
+			
+			String beforehandWhitespace = message.substring(
+					whitespaceStartIndex, whitespaceEndIndex);
+			
+			if(!message.startsWith("^")){
+				message = message.substring(whitespaceEndIndex);
+				
+				builder.append(beforehandWhitespace);
+			}
+			else{
+				message = message.substring(1);
+				
+				int secondCaretPos = message.indexOf("^");
+				
+				// No second caret
+				if(secondCaretPos != -1){
+					
+					message = message.substring(secondCaretPos + 1);
+					
+					builder.append(beforehandWhitespace, 1, secondCaretPos + 1);
+					
+				}
+				
+			}
+			
+		}
+		
+		boolean hasAddedPrefix = false;
+		
+		if(appendDate){
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date date = new Date();
+			
+			builder.append("[").append(dateFormat.format(date)).append("]");
+			
+			hasAddedPrefix = true;
+		}
+		
+		if(hasAddedPrefix){
+			
+			if(separator != null){
+				builder.append(" ").append(separator);
+			}
+			
+			builder.append(" ");
+			
+		}
+		
+		builder.append("\"").append(message).append("\"");
+		
+		return builder.toString();
 		
 	}
 	
