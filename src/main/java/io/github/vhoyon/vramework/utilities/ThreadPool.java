@@ -50,6 +50,7 @@ public class ThreadPool {
 			workers[i] = new PoolWorker();
 			workers[i]
 					.setName("ThreadPool_" + className + lineNumber + "_" + i);
+			workers[i].setDaemon(true);
 			workers[i].start();
 		}
 	}
