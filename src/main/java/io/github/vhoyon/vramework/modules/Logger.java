@@ -28,8 +28,6 @@ public class Logger extends ModuleOutputtable {
 	
 	private static String separator;
 	
-	protected static ThreadPool outputThreadPool;
-	
 	@Override
 	public void build(){
 		outputs = new ArrayList<>();
@@ -167,24 +165,17 @@ public class Logger extends ModuleOutputtable {
 		}
 		else{
 			
-			if(outputThreadPool == null)
-				outputThreadPool = new ThreadPool();
-			
 			final ArrayList<Loggable> outputs = getOutputs();
 			
 			final StackTraceElement[] stackElements = Thread.currentThread()
 					.getStackTrace();
 			
-			outputThreadPool.execute(() -> {
-				
-				final String logText = buildLogMessage(message, logType,
-						appendDate, stackElements);
-				
-				hasIssuedWarning = handleMessageAndWarning(logText, outputs,
-						hasIssuedWarning,
-						(output) -> output.log(logText, logType, appendDate));
-				
-			});
+			final String logText = buildLogMessage(message, logType,
+					appendDate, stackElements);
+			
+			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
+					hasIssuedWarning,
+					(output) -> output.log(logText, logType, appendDate));
 			
 		}
 		

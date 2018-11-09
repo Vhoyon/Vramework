@@ -49,13 +49,6 @@ public class LoggerTest {
 		
 		Logger.log("Testing stuff", Logger.LogType.ERROR, true);
 		
-		synchronized(Logger.class){
-			try{
-				Logger.class.wait();
-			}
-			catch(InterruptedException e){}
-		}
-		
 		String logMessage = logMessageRef.get();
 		
 		assertNotNull(logMessage);
