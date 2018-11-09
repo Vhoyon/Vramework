@@ -10,10 +10,6 @@ import io.github.vhoyon.vramework.modules.Environment;
 
 public interface Utils {
 	
-	default String formatS(String stringToFormat, Object... replacements){
-		return String.format(stringToFormat, replacements);
-	}
-	
 	default String format(String stringToFormat, Object... replacements){
 		
 		String protectedString = stringToFormat.replaceAll("(%)", "$1$1");
