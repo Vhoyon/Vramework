@@ -43,6 +43,9 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 		case YES_NO:
 			jOptionType = JOptionPane.YES_NO_OPTION;
 			break;
+		case OK:
+			jOptionType = JOptionPane.OK_OPTION;
+			break;
 		case YES_NO_CANCEL:
 		default:
 			jOptionType = JOptionPane.YES_NO_CANCEL_OPTION;
