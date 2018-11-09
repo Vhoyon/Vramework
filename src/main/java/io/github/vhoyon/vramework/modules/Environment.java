@@ -7,6 +7,7 @@ import io.github.vhoyon.vramework.exceptions.BadFileContentException;
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.ui.NotificationUI;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -16,16 +17,28 @@ import java.util.regex.Pattern;
 
 public class Environment extends Module {
 	
+	private static Environment singleton;
+	
 	private static final String ENV_FILE_NAME = ".env";
 	private static final String ENV_EXAMPLE_FILE_NAME = "example.env";
 	
 	private static HashMap<String, String> envVars;
 	
-	private final String WARNINGS = "WARNINGS";
-	private final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
-	private final String LINE_ERRORS = "LINE_ERRORS";
+	private static final String WARNINGS = "WARNINGS";
+	private static final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
+	private static final String LINE_ERRORS = "LINE_ERRORS";
 	
 	public void build() throws Exception{
+		singleton = new Environment();
+		refresh();
+	}
+	
+	public static void refresh() throws FileNotFoundException, RuntimeException{
+		refresh(null);
+	}
+	
+	public static void refresh(String folderPath) throws FileNotFoundException,
+			RuntimeException{
 		
 		try{
 			
@@ -39,12 +52,7 @@ public class Environment extends Module {
 				
 				// Remove comment from line if there's content in the line
 				if(line.length() != 0){
-					Matcher matcher = Pattern.compile("(\\s)*#.*")
-							.matcher(line);
-					int index = matcher.find() ? matcher.start() : -1;
-					
-					if(index != -1)
-						line = line.substring(0, index);
+					line = removeCommentFromLine(line);
 				}
 				
 				if(line.length() != 0){
@@ -53,28 +61,33 @@ public class Environment extends Module {
 					
 					if(keyValue.length != 2){
 						
-						addError(LINE_ERRORS, "Line " + i + ": \"" + line
-								+ "\"");
+						Environment.singleton.addError(LINE_ERRORS, "Line " + i
+								+ ": \"" + line + "\"");
 						
 					}
 					else{
 						
 						if(keyValue[1].length() == 0){
-							addWarning(WARNINGS, "The variable keyed \""
-									+ keyValue[0] + "\" at line " + i
-									+ " is empty, is that supposed to be..?");
+							Environment.singleton
+									.addWarning(
+											WARNINGS,
+											"The variable keyed \""
+													+ keyValue[0]
+													+ "\" at line "
+													+ i
+													+ " is empty, is that supposed to be..?");
 						}
 						
 						if(keyValue[0].contains(" ")){
 							
-							addError(SPACED_KEY_ERRORS, "Line " + i + ": \""
-									+ line + "\"");
+							Environment.singleton.addError(SPACED_KEY_ERRORS,
+									"Line " + i + ": \"" + line + "\"");
 							
 						}
 						
 					}
 					
-					if(!hasErrors()){
+					if(!Environment.singleton.hasErrors()){
 						envVars.put(keyValue[0].toLowerCase(), keyValue[1]);
 					}
 					
@@ -84,7 +97,12 @@ public class Environment extends Module {
 			
 			reader.close();
 			
-			handleIssues();
+			try{
+				Environment.singleton.handleIssues();
+			}
+			catch(Exception e){
+				throw new RuntimeException(e);
+			}
 			
 		}
 		catch(IOException e){
@@ -92,6 +110,16 @@ public class Environment extends Module {
 					"An unexpected problem happened while reading the line of the file.");
 		}
 		
+	}
+	
+	private static String removeCommentFromLine(String line){
+		Matcher matcher = Pattern.compile("(\\s)*#.*").matcher(line);
+		int index = matcher.find() ? matcher.start() : -1;
+		
+		if(index != -1)
+			return line.substring(0, index);
+		
+		return line;
 	}
 	
 	public static <EnvVar> EnvVar getVar(String key){
@@ -210,14 +238,13 @@ public class Environment extends Module {
 		
 	}
 	
-	private BufferedReader getEnvFile(){
+	private static BufferedReader getEnvFile(String folderPath){
 		
 		InputStream inputStream;
 		
+		String systemEnvFilePath = buildEnvFilePath();
+		
 		try{
-			
-			String systemEnvFilePath = Framework.runnableSystemPath()
-					+ ENV_FILE_NAME;
 			
 			inputStream = new FileInputStream(new File(systemEnvFilePath));
 			
@@ -242,19 +269,42 @@ public class Environment extends Module {
 					
 				}
 				else{
-					
 					console = new NotificationUI();
-					
 				}
 				
 				try{
 					console.initialize();
 					
-					confirmEnvFileCreation(console);
+					boolean shouldExit = confirmEnvFileCreation(console,
+							folderPath);
+					
+					if(shouldExit)
+						System.exit(0);
 				}
 				catch(Exception nothing){}
-				finally{
+				
+				int shouldExitChoice = console
+						.getConfirmation(
+								"Enter yes to continue startup after updating your env file. If you want to exit, enter no",
+								Console.QuestionType.YES_NO);
+				
+				if(shouldExitChoice == Console.NO){
 					System.exit(0);
+				}
+				else{
+					
+					try{
+						inputStream = new FileInputStream(new File(
+								systemEnvFilePath));
+					}
+					catch(FileNotFoundException e1){
+						console.getConfirmation(
+								"Failed getting environment file. Exiting.",
+								Console.QuestionType.OK);
+						
+						System.exit(1);
+					}
+					
 				}
 				
 			}
@@ -264,13 +314,12 @@ public class Environment extends Module {
 		InputStreamReader streamReader = new InputStreamReader(inputStream,
 				StandardCharsets.UTF_8);
 		
-		BufferedReader reader = new BufferedReader(streamReader);
-		
-		return reader;
+		return new BufferedReader(streamReader);
 		
 	}
 	
-	private void confirmEnvFileCreation(Console console){
+	private static boolean confirmEnvFileCreation(Console console,
+			String folderPath){
 		
 		int choice = console
 				.getConfirmation(
@@ -282,14 +331,29 @@ public class Environment extends Module {
 			
 			try{
 				
-				String envFilePath = buildSystemEnvFile();
+				String envFilePath = buildSystemEnvFile(folderPath);
 				
-				Logger.log(
-						"Please go fill the environment file with your own informations and start this program again!"
-								+ "\n"
-								+ "Path of the file created : \""
-								+ envFilePath + "\"", Logger.LogType.INFO,
-						false);
+				int openFileNow = console.getConfirmation(
+						"Open file now in default editor?",
+						Console.QuestionType.YES_NO);
+				
+				if(openFileNow == Console.YES){
+					
+					Desktop.getDesktop().edit(new File(envFilePath));
+					
+				}
+				else{
+					
+					Logger.log(
+							"Please go fill the environment file with your own informations and start this program again!"
+									+ "\n"
+									+ "Path of the file created : \""
+									+ envFilePath + "\"", Logger.LogType.INFO,
+							false);
+					
+					return true;
+					
+				}
 				
 			}
 			catch(IOException e){
@@ -300,12 +364,16 @@ public class Environment extends Module {
 		case Console.NO:
 			Logger.log("No environment added, bot stopping.",
 					Logger.LogType.INFO, false);
-			break;
+			
+			return true;
 		}
+		
+		return false;
 		
 	}
 	
-	private String buildSystemEnvFile() throws IOException{
+	private static String buildSystemEnvFile(String folderPath)
+			throws IOException{
 		
 		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
 				+ ENV_EXAMPLE_FILE_NAME);
@@ -313,8 +381,7 @@ public class Environment extends Module {
 		byte[] buffer = new byte[exampleFileStream.available()];
 		exampleFileStream.read(buffer);
 		
-		String systemEnvFilePath = Framework.runnableSystemPath()
-				+ ENV_FILE_NAME;
+		String systemEnvFilePath = buildEnvFilePath(folderPath);
 		
 		File targetFile = new File(systemEnvFilePath);
 		OutputStream outStream = new FileOutputStream(targetFile);
@@ -324,6 +391,19 @@ public class Environment extends Module {
 		
 		return systemEnvFilePath;
 		
+	}
+	
+	private static String buildEnvFilePath(String folderPath){
+		if(folderPath == null)
+			return buildEnvFilePath();
+		
+		return folderPath
+				+ (folderPath.endsWith(File.separator) ? "" : File.separator)
+				+ ENV_FILE_NAME;
+	}
+	
+	private static String buildEnvFilePath(){
+		return buildEnvFilePath(Framework.runnableSystemPath());
 	}
 	
 }
