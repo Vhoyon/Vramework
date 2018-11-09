@@ -7,6 +7,7 @@ import io.github.vhoyon.vramework.exceptions.BadFileContentException;
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.ui.NotificationUI;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -214,10 +215,9 @@ public class Environment extends Module {
 		
 		InputStream inputStream;
 		
+		String systemEnvFilePath = buildEnvFilePath();
+		
 		try{
-			
-			String systemEnvFilePath = Framework.runnableSystemPath()
-					+ ENV_FILE_NAME;
 			
 			inputStream = new FileInputStream(new File(systemEnvFilePath));
 			
@@ -242,19 +242,41 @@ public class Environment extends Module {
 					
 				}
 				else{
-					
 					console = new NotificationUI();
-					
 				}
 				
 				try{
 					console.initialize();
 					
-					confirmEnvFileCreation(console);
+					boolean shouldExit = confirmEnvFileCreation(console);
+					
+					if(shouldExit)
+						System.exit(0);
 				}
 				catch(Exception nothing){}
-				finally{
+				
+				int shouldExitChoice = console
+						.getConfirmation(
+								"Enter yes to continue startup after updating your env file. If you want to exit, enter no",
+								Console.QuestionType.YES_NO);
+				
+				if(shouldExitChoice == Console.NO){
 					System.exit(0);
+				}
+				else{
+					
+					try{
+						inputStream = new FileInputStream(new File(
+								systemEnvFilePath));
+					}
+					catch(FileNotFoundException e1){
+						console.getConfirmation(
+								"Failed getting environment file. Exiting.",
+								Console.QuestionType.OK);
+						
+						System.exit(1);
+					}
+					
 				}
 				
 			}
@@ -270,7 +292,7 @@ public class Environment extends Module {
 		
 	}
 	
-	private void confirmEnvFileCreation(Console console){
+	private boolean confirmEnvFileCreation(Console console){
 		
 		int choice = console
 				.getConfirmation(
@@ -284,12 +306,27 @@ public class Environment extends Module {
 				
 				String envFilePath = buildSystemEnvFile();
 				
-				Logger.log(
-						"Please go fill the environment file with your own informations and start this program again!"
-								+ "\n"
-								+ "Path of the file created : \""
-								+ envFilePath + "\"", Logger.LogType.INFO,
-						false);
+				int openFileNow = console.getConfirmation(
+						"Open file now in default editor?",
+						Console.QuestionType.YES_NO);
+				
+				if(openFileNow == Console.YES){
+					
+					Desktop.getDesktop().edit(new File(envFilePath));
+					
+				}
+				else{
+					
+					Logger.log(
+							"Please go fill the environment file with your own informations and start this program again!"
+									+ "\n"
+									+ "Path of the file created : \""
+									+ envFilePath + "\"", Logger.LogType.INFO,
+							false);
+					
+					return true;
+					
+				}
 				
 			}
 			catch(IOException e){
@@ -300,8 +337,11 @@ public class Environment extends Module {
 		case Console.NO:
 			Logger.log("No environment added, bot stopping.",
 					Logger.LogType.INFO, false);
-			break;
+			
+			return true;
 		}
+		
+		return false;
 		
 	}
 	
@@ -313,8 +353,7 @@ public class Environment extends Module {
 		byte[] buffer = new byte[exampleFileStream.available()];
 		exampleFileStream.read(buffer);
 		
-		String systemEnvFilePath = Framework.runnableSystemPath()
-				+ ENV_FILE_NAME;
+		String systemEnvFilePath = buildEnvFilePath();
 		
 		File targetFile = new File(systemEnvFilePath);
 		OutputStream outStream = new FileOutputStream(targetFile);
@@ -324,6 +363,16 @@ public class Environment extends Module {
 		
 		return systemEnvFilePath;
 		
+	}
+	
+	private static String buildEnvFilePath(String folderPath){
+		return folderPath
+				+ (folderPath.endsWith(File.separator) ? "" : File.separator)
+				+ ENV_FILE_NAME;
+	}
+	
+	private static String buildEnvFilePath(){
+		return buildEnvFilePath(Framework.runnableSystemPath());
 	}
 	
 }
