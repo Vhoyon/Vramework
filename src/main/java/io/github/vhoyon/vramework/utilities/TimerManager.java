@@ -6,7 +6,23 @@ import java.util.TimerTask;
 
 public final class TimerManager {
 	
-	private static HashMap<String, Timer> timers;
+	private static HashMap<String, TimerWrapper> timers;
+	
+	private static class TimerWrapper extends Timer {
+		public int delay;
+		public long timeStarted;
+		
+		public TimerWrapper(String timerName, int delay){
+			super(timerName);
+			this.delay = delay;
+			timeStarted = System.currentTimeMillis();
+		}
+		
+		public int getTimeRemaining(){
+			return delay
+					- ((int)(System.currentTimeMillis() - timeStarted));
+		}
+	}
 	
 	private TimerManager(){}
 	
@@ -52,7 +68,7 @@ public final class TimerManager {
 		
 		stopTimer(timerName);
 		
-		Timer timer = new Timer(timerName);
+		TimerWrapper timer = new TimerWrapper(timerName, delay);
 		
 		timer.schedule(task, delay);
 		
@@ -76,6 +92,11 @@ public final class TimerManager {
 			}
 		}
 		
+	}
+	
+	public static int getTimeRemaining(String timerName)
+			throws NullPointerException{
+		return timers.get(timerName).getTimeRemaining();
 	}
 	
 }
