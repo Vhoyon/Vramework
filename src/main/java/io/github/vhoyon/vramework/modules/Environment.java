@@ -42,7 +42,7 @@ public class Environment extends Module {
 		
 		try{
 			
-			BufferedReader reader = getEnvFile();
+			BufferedReader reader = getEnvFile(folderPath);
 			
 			envVars = new HashMap<>();
 			
