@@ -282,7 +282,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public void onInitialized(){}
 	
 	@Override
-	public void onExit() throws Exception{
+	public void onExit(){
 		this.outputStream.resetStream();
 		this.errorStream.resetStream();
 	}
