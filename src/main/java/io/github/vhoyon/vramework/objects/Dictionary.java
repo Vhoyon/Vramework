@@ -168,9 +168,18 @@ public class Dictionary implements Utils {
 		
 		String langLine = getString(key, possiblePrefix);
 		
-		LangAmountManager langManager = new LangAmountManager(langLine);
+		String message;
 		
-		String message = langManager.getMessageAmount(amount);
+		if(langLine.matches("^[^|]+\\\\+\\|+[^|]+$")){
+			message = langLine;
+		}
+		else{
+			
+			LangAmountManager langManager = new LangAmountManager(langLine);
+			
+			message = langManager.getMessageAmount(amount);
+			
+		}
 		
 		String cleaned = message.replaceAll("\\{(0)}", "\\%$1\\$s");
 		

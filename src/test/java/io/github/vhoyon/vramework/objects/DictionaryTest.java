@@ -53,6 +53,9 @@ public class DictionaryTest {
 		doReturn("Single|Plural {0}").when(mockDict).getString(
 				eq("amountSingleAndPlural"), nullable(String.class));
 		
+		doReturn("Single \\| Still Single").when(mockDict).getString(
+				eq("amountSingleProtectedSeparator"), nullable(String.class));
+		
 		doReturn("[0,1] First | Second").when(mockDict).getString(
 				eq("amountMissingRange"), nullable(String.class));
 		
@@ -369,6 +372,20 @@ public class DictionaryTest {
 		
 		assertThrows(AmountNotDefinedException.class,
 				shouldThrowBadFormatException);
+		
+	}
+	
+	@Test
+	void testLangAmountSingleProtectedSeparator(){
+		
+		int expectedAmount = 1;
+		
+		String expectedLang = "Single \\| Still Single";
+		
+		String lang = mockDict.getStringAmount(
+				"amountSingleProtectedSeparator", null, expectedAmount);
+		
+		assertEquals(expectedLang, lang);
 		
 	}
 	
