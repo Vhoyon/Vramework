@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.TextNotEmptySanitizer;
+import io.github.ved.jsanitizers.TextNotEmptySanitizer;
 
 public class TextNotEmptyField extends TextField {
 	

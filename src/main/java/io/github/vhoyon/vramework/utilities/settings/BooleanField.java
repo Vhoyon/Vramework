@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.BooleanSanitizer;
+import io.github.ved.jsanitizers.BooleanSanitizer;
 
 public class BooleanField extends SettingField<Boolean> {
 	

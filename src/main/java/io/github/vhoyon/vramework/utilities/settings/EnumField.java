@@ -1,7 +1,7 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
+import io.github.ved.jsanitizers.EnumSanitizer;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.CharSanitizer;
+import io.github.ved.jsanitizers.CharSanitizer;
 
 public class CharField extends SettingField<Character> {
 	
