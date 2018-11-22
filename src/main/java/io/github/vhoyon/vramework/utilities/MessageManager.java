@@ -1,5 +1,6 @@
 package io.github.vhoyon.vramework.utilities;
 
+import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.objects.Dictionary;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ public class MessageManager {
 	private HashMap<Integer, Message> messages;
 	private HashMap<String, Object> messageReplacements;
 	
-	protected class Message {
+	protected class Message implements Utils {
 		
 		String langKey;
 		String[] replacementsKeys;
@@ -19,6 +20,10 @@ public class MessageManager {
 			this.replacementsKeys = replacementsKeys;
 		}
 		
+		@Override
+		public String toString(){
+			return format(this.langKey, createReplacementArray(this));
+		}
 	}
 	
 	public MessageManager(){}
@@ -80,15 +85,21 @@ public class MessageManager {
 		
 		Message message = this.getMessageRaw(indice);
 		
+		Object[] replacements = createReplacementArray(message);
+		
+		return dictionary.getString(message.langKey, possiblePrefix,
+				replacements);
+		
+	}
+	
+	private Object[] createReplacementArray(Message message){
 		Object[] replacements = new Object[message.replacementsKeys.length];
 		
 		for(int i = 0; i < replacements.length; i++){
 			replacements[i] = this.getReplacement(message.replacementsKeys[i]);
 		}
 		
-		return dictionary.getString(message.langKey, possiblePrefix,
-				replacements);
-		
+		return replacements;
 	}
 	
 }
