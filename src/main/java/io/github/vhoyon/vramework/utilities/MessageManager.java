@@ -10,10 +10,10 @@ public class MessageManager {
 	private HashMap<Integer, Message> messages;
 	private HashMap<String, Object> messageReplacements;
 	
-	protected class Message implements Utils {
+	public class Message implements Utils {
 		
-		String langKey;
-		String[] replacementsKeys;
+		protected String langKey;
+		protected String[] replacementsKeys;
 		
 		protected Message(String langKey, String... replacementsKeys){
 			this.langKey = langKey;
@@ -24,6 +24,7 @@ public class MessageManager {
 		public String toString(){
 			return format(this.langKey, createReplacementArray(this));
 		}
+		
 	}
 	
 	public MessageManager(){}
