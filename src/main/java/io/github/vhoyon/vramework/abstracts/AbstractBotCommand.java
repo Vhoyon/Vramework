@@ -522,6 +522,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		Logger.log(message);
 	}
 	
+	public void log(Exception e){
+		Logger.log(e);
+	}
+	
 	/**
 	 * @return A String that starts with the router's command prefix
 	 *         followed by the <i>commandName</i> parameter.
