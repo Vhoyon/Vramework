@@ -407,29 +407,29 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String sendMessageToMember(Member member, String messageToSend){
 		
+		if(messageToSend == null){
+			if(isDebugging())
+				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
+			
+			return null;
+		}
+		if(member.getUser().isBot() || member.getUser().isFake()){
+			if(isDebugging())
+				log("The bot attempted to send a message to a bot or to a fake user");
+			
+			return null;
+		}
+		
 		PrivateChannel channel = member.getUser().openPrivateChannel()
 				.complete();
 		
-		if(member.getUser().hasPrivateChannel()){
-			
-			if(messageToSend == null){
-				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
-				
-				return null;
-			}
-			
-			try{
-				return sendMessageForChannel(channel, messageToSend);
-			}
-			catch(IllegalArgumentException e){
-				log(e.getMessage());
-				
-				return null;
-			}
-			
+		try{
+			return sendMessageForChannel(channel, messageToSend);
 		}
-		else{
-			return sendMessage(lang(true, "CommandUserHasNoPrivateChannel"));
+		catch(IllegalArgumentException e){
+			log(e);
+			
+			return null;
 		}
 		
 	}
