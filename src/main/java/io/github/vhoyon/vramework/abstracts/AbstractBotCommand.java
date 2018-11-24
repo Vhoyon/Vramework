@@ -565,4 +565,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return buildParameter(parameterToFormat);
 	}
 	
+	/**
+	 * Gets the formatted usage for this command.
+	 *
+	 * @return A formatted String that uses {@link #buildVCommand(String)} and
+	 *         {@link #getCommandName()}.
+	 * @version 1.0
+	 * @since v0.13.0
+	 */
+	public String getUsage(){
+		return buildVCommand(getCommandName());
+	}
+	
 }
