@@ -8,13 +8,15 @@ public class ThreadPool {
 	
 	private final Class<?> ownerClass;
 	
+	private PoolWorker[] workers;
+	
 	public ThreadPool(){
 		this(1);
 	}
 	
 	public ThreadPool(int nThreads){
 		this.queue = new LinkedBlockingQueue<>();
-		PoolWorker[] workers = new PoolWorker[nThreads];
+		this.workers = new PoolWorker[nThreads];
 		
 		StackTraceElement[] stackElements = Thread.currentThread()
 				.getStackTrace();
@@ -47,11 +49,11 @@ public class ThreadPool {
 		}
 		
 		for(int i = 0; i < nThreads; i++){
-			workers[i] = new PoolWorker();
-			workers[i]
-					.setName("ThreadPool_" + className + lineNumber + "_" + i);
-			workers[i].setDaemon(true);
-			workers[i].start();
+			this.workers[i] = new PoolWorker();
+			this.workers[i].setName("ThreadPool_" + className + lineNumber
+					+ "_" + i);
+			this.workers[i].setDaemon(true);
+			this.workers[i].start();
 		}
 	}
 	
@@ -62,13 +64,19 @@ public class ThreadPool {
 		}
 	}
 	
+	public void stopWorkers(){
+		for(PoolWorker worker : this.workers){
+			worker.interrupt();
+		}
+	}
+	
 	private class PoolWorker extends Thread {
 		
 		@Override
 		public void run(){
 			Runnable task;
 			
-			while(true){
+			while(!this.isInterrupted()){
 				synchronized(queue){
 					while(queue.isEmpty()){
 						try{
