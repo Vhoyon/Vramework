@@ -65,8 +65,9 @@ public class ThreadPool {
 	}
 	
 	public void stopWorkers(){
-		for(PoolWorker worker : this.workers){
-			worker.interrupt();
+		for(int i = 0; i < this.workers.length; i++){
+			this.workers[i].interrupt();
+			this.workers[i] = null;
 		}
 	}
 	
