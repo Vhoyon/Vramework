@@ -18,9 +18,32 @@ public class MessageManager {
 		protected String langKey;
 		protected String[] replacementsKeys;
 		
+		protected boolean isLangAmount;
+		protected int amount;
+		
 		protected Message(String langKey, String... replacementsKeys){
 			this.langKey = langKey;
 			this.replacementsKeys = replacementsKeys;
+			
+			this.isLangAmount = false;
+			this.amount = 0;
+		}
+		
+		protected Message(String langKey, int amount,
+				String... replacementsKeys){
+			this.langKey = langKey;
+			this.replacementsKeys = replacementsKeys;
+			
+			this.isLangAmount = true;
+			this.amount = amount;
+		}
+		
+		public boolean isMessageAmount(){
+			return this.isLangAmount;
+		}
+		
+		public int getMessageAmount(){
+			return this.amount;
 		}
 		
 		@Override
@@ -64,6 +87,19 @@ public class MessageManager {
 			this.messages = new HashMap<>();
 		
 		this.messages.put(indice, new Message(langKey, replacementsKeys));
+		
+		return this;
+		
+	}
+	
+	public MessageManager addMessageAmount(int indice, int amount,
+			String langKey, String... replacementsKeys){
+		
+		if(this.messages == null)
+			this.messages = new HashMap<>();
+		
+		this.messages.put(indice,
+				new Message(langKey, amount, replacementsKeys));
 		
 		return this;
 		
@@ -139,8 +175,14 @@ public class MessageManager {
 		
 		Object[] replacements = createReplacementArray(message);
 		
-		return dictionary.getString(message.langKey, possiblePrefix,
-				replacements);
+		if(message.isMessageAmount()){
+			return dictionary.getStringAmount(message.langKey, possiblePrefix,
+					message.getMessageAmount(), replacements);
+		}
+		else{
+			return dictionary.getString(message.langKey, possiblePrefix,
+					replacements);
+		}
 		
 	}
 	
