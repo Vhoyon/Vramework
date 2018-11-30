@@ -10,6 +10,9 @@ public class MessageManager {
 	private HashMap<Integer, Message> messages;
 	private HashMap<String, Object> messageReplacements;
 	
+	private boolean isInvertedIndice;
+	private int indice;
+	
 	public class Message implements Utils {
 		
 		protected String langKey;
@@ -27,7 +30,32 @@ public class MessageManager {
 		
 	}
 	
-	public MessageManager(){}
+	public MessageManager(){
+		this.isInvertedIndice = false;
+		this.indice = 0;
+	}
+	
+	public void bumpIndice(int amount){
+		if(this.isInvertedIndice()){
+			this.indice -= amount;
+		}
+		else{
+			this.indice += amount;
+		}
+	}
+	
+	public int getCurrentIndice(){
+		return this.indice;
+	}
+	
+	public void invertIndice(){
+		this.isInvertedIndice = !this.isInvertedIndice;
+		this.indice = -this.indice;
+	}
+	
+	public boolean isInvertedIndice(){
+		return this.isInvertedIndice;
+	}
 	
 	public MessageManager addMessage(int indice, String langKey,
 			String... replacementsKeys){
@@ -59,6 +87,29 @@ public class MessageManager {
 		
 		return this.messageReplacements.get(key);
 		
+	}
+	
+	public Message getMessageRaw(){
+		return this.getMessageRaw(this.getCurrentIndice());
+	}
+	
+	public String getMessage(Dictionary dictionary){
+		return this.getMessage(this.getCurrentIndice(), dictionary,
+				(String)null);
+	}
+	
+	public String getMessage(Dictionary dictionary, Object possiblePrefixObject){
+		return this.getMessage(this.getCurrentIndice(), dictionary,
+				possiblePrefixObject);
+	}
+	
+	public String getMessage(Dictionary dictionary, Class<?> possiblePrefixClass){
+		return this.getMessage(this.getCurrentIndice(), dictionary,
+				possiblePrefixClass);
+	}
+	
+	public String getMessage(Dictionary dictionary, String possiblePrefix){
+		return getMessage(this.getCurrentIndice(), dictionary, possiblePrefix);
 	}
 	
 	public Message getMessageRaw(int indice){
