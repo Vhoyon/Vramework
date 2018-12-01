@@ -3,23 +3,13 @@ package io.github.vhoyon.vramework.utilities.formatting;
 public interface DiscordFormatter {
 	
 	/**
-	 * Format the text as a code line.
-	 *
-	 * @return An Object that contains the <i>text</i> parameter enclosed with
-	 *         <b>`</b>.
-	 */
-	default String code(Object text){
-		return "`" + text.toString() + "`";
-	}
-	
-	/**
 	 * Format the text as bold.
 	 *
 	 * @return An Object that contains the <i>text</i> parameter enclosed with
 	 *         <b>**</b>.
 	 */
 	default String bold(Object text){
-		return "**" + text.toString() + "**";
+		return "**" + text.toString().replaceAll("\\*", "\\*") + "**";
 	}
 	
 	/**
@@ -29,7 +19,7 @@ public interface DiscordFormatter {
 	 *         <b>_</b>.
 	 */
 	default String ital(Object text){
-		return "_" + text.toString() + "_";
+		return "_" + text.toString().replaceAll("_", "\\_") + "_";
 	}
 	
 	/**
@@ -39,7 +29,7 @@ public interface DiscordFormatter {
 	 *         <b>__</b>.
 	 */
 	default String unde(Object text){
-		return "__" + text.toString() + "__";
+		return "__" + text.toString().replaceAll("_", "\\_") + "__";
 	}
 	
 	/**
@@ -49,7 +39,40 @@ public interface DiscordFormatter {
 	 *         <b>~~</b>.
 	 */
 	default String strk(Object text){
-		return "~~" + text.toString() + "~~";
+		return "~~" + text.toString().replaceAll("~", "\\~") + "~~";
+	}
+	
+	/**
+	 * Format the text as a code line.
+	 *
+	 * @return An Object that contains the <i>text</i> parameter enclosed with
+	 *         <b>`</b>.
+	 */
+	default String code(Object text){
+		
+		String escapedTicks = text.toString().replaceFirst("^``", "\u200B``")
+				.replaceFirst("``$", "``\u200B").replaceAll("``", "`\u200B`");
+		
+		String escapedItalics = escapedTicks.replaceAll(
+				"(?<!\\*\\*)_(?<!\\*\\*)(.*)(?<!\\*\\*)_(?<!\\*\\*)",
+				"``_``$1``_``");
+		
+		String escapedBold = escapedItalics.replaceAll(
+				"(?<!_)\\*\\*(?<!_)(.*)(?<!_)\\*\\*(?<!_)", "``**``$1``**``");
+		
+		String escapedBoldItalics = escapedBold.replaceAll(
+				"(?:\\*\\*_)(.*)(?:_\\*\\*)", "``**_``$1``_**``");
+		
+		String escapedItalicsBold = escapedBoldItalics.replaceAll(
+				"(?:_\\*\\*)(.*)(?:\\*\\*_)", "``_**``$1``**_``");
+		
+		String cleanedStart = escapedItalicsBold.replaceFirst("^`+(_|\\*\\*)",
+				"$1");
+		String cleanedEnd = cleanedStart.replaceFirst("(_|\\*\\*)`+$", "$1");
+		
+		return ((cleanedEnd.matches("^(_|\\*\\*).*")) ? "" : "``") + cleanedEnd
+				+ ((cleanedEnd.matches(".*(_|\\*\\*)$")) ? "" : "``");
+		
 	}
 	
 	/**
@@ -70,7 +93,9 @@ public interface DiscordFormatter {
 	 *         <i>lang</i>.
 	 */
 	default String bloc(Object text, String lang){
-		return "```" + lang + "\n" + text.toString() + "\n```";
+		return "```" + lang + "\n"
+				+ text.toString().replaceAll("```", "`\u200B`\u200B`")
+				+ "\n```";
 	}
 	
 }
