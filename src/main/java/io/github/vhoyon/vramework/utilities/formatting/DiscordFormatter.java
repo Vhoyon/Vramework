@@ -9,7 +9,15 @@ public interface DiscordFormatter {
 	 *         <b>**</b>.
 	 */
 	default String bold(Object text){
+		
+		String stringText = text.toString();
+		
+		// Don't format if already formatted
+		if(stringText.matches("^\\*\\*.*\\*\\*$"))
+			return stringText;
+		
 		return "**" + text.toString().replaceAll("\\*", "\\*") + "**";
+		
 	}
 	
 	/**
@@ -19,7 +27,15 @@ public interface DiscordFormatter {
 	 *         <b>_</b>.
 	 */
 	default String ital(Object text){
+		
+		String stringText = text.toString();
+		
+		// Don't format if already formatted
+		if(stringText.matches("^_(?!_).*(?<!_)_$"))
+			return stringText;
+		
 		return "_" + text.toString().replaceAll("_", "\\_") + "_";
+		
 	}
 	
 	/**
@@ -29,7 +45,15 @@ public interface DiscordFormatter {
 	 *         <b>__</b>.
 	 */
 	default String unde(Object text){
+		
+		String stringText = text.toString();
+		
+		// Don't format if already formatted
+		if(stringText.matches("^__.*__$"))
+			return stringText;
+		
 		return "__" + text.toString().replaceAll("_", "\\_") + "__";
+		
 	}
 	
 	/**
@@ -39,7 +63,15 @@ public interface DiscordFormatter {
 	 *         <b>~~</b>.
 	 */
 	default String strk(Object text){
-		return "~~" + text.toString().replaceAll("~", "\\~") + "~~";
+		
+		String stringText = text.toString();
+		
+		// Don't format if already formatted
+		if(stringText.matches("^~~.*~~$"))
+			return stringText;
+		
+		return "~~" + stringText.replaceAll("~", "\\~") + "~~";
+		
 	}
 	
 	/**
@@ -50,7 +82,13 @@ public interface DiscordFormatter {
 	 */
 	default String code(Object text){
 		
-		String escapedTicks = text.toString().replaceFirst("^``", "\u200B``")
+		String stringText = text.toString();
+		
+		// Don't format if already formatted
+		if(stringText.matches("^(_|\\*\\*)?``.*``(_|\\*\\*)?$"))
+			return stringText;
+		
+		String escapedTicks = stringText.replaceFirst("^``", "\u200B``")
 				.replaceFirst("``$", "``\u200B").replaceAll("``", "`\u200B`");
 		
 		String escapedItalics = escapedTicks.replaceAll(
