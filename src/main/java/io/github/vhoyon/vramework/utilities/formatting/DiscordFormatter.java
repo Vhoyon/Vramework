@@ -108,8 +108,11 @@ public interface DiscordFormatter {
 				"$1");
 		String cleanedEnd = cleanedStart.replaceFirst("(_|\\*\\*)`+$", "$1");
 		
-		return ((cleanedEnd.matches("^(_|\\*\\*).*")) ? "" : "``") + cleanedEnd
+		String codified = ((cleanedEnd.matches("^(_|\\*\\*).*")) ? "" : "``")
+				+ cleanedEnd
 				+ ((cleanedEnd.matches(".*(_|\\*\\*)$")) ? "" : "``");
+		
+		return codified;
 		
 	}
 	
