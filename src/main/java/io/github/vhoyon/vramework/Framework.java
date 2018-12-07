@@ -1,5 +1,7 @@
 package io.github.vhoyon.vramework;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import io.github.vhoyon.vramework.abstracts.Module;
 import io.github.vhoyon.vramework.modules.*;
 
@@ -88,10 +90,11 @@ public class Framework {
 		if(shouldLoadDefaultModules){
 			defaultModuleErrors = loadDefaultModules();
 		}
+		List<String> autoModuleErrors = loadAutomaticModules();
 		List<String> moduleErrors = loadModules(modulesToLoad);
 		
 		if((defaultModuleErrors != null && defaultModuleErrors.size() > 0)
-				|| moduleErrors.size() > 0){
+				|| autoModuleErrors.size() > 0 || moduleErrors.size() > 0){
 			
 			List<String> allErrors = new ArrayList<>();
 			
@@ -110,7 +113,7 @@ public class Framework {
 		
 	}
 	
-	private static List<String> loadDefaultModules() throws RuntimeException{
+	private static List<String> loadDefaultModules(){
 		
 		List<String> errors = new ArrayList<>();
 		
@@ -144,8 +147,25 @@ public class Framework {
 		
 	}
 	
-	private static List<String> loadModules(Class<? extends Module>[] modules)
-			throws RuntimeException{
+	private static List<String> loadAutomaticModules(){
+		
+		String packageName = classRunIn.getPackage().getName() + ".modules";
+		
+		List<Class<Module>> modules;
+		
+		try(ScanResult results = new ClassGraph()
+				.whitelistPackages(packageName).scan()){
+			
+			modules = results.getSubclasses(Module.class.getCanonicalName())
+					.loadClasses(Module.class);
+			
+		}
+		
+		return loadModules(modules.toArray(new Class[0]));
+		
+	}
+	
+	private static List<String> loadModules(Class<? extends Module>[] modules){
 		
 		List<String> errors = new ArrayList<>();
 		
