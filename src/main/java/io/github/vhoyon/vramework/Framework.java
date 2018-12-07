@@ -49,6 +49,22 @@ public class Framework {
 	
 	public static void build(boolean isDebugging,
 			Class<? extends Module>... modulesToLoad) throws Exception{
+		Framework.build(isDebugging, true, modulesToLoad);
+	}
+	
+	public static void buildClean(Class<? extends Module>... modulesToLoad)
+			throws Exception{
+		Framework.buildClean(false, modulesToLoad);
+	}
+	
+	public static void buildClean(boolean isDebugging,
+			Class<? extends Module>... modulesToLoad) throws Exception{
+		Framework.build(isDebugging, false, modulesToLoad);
+	}
+	
+	public static void build(boolean isDebugging,
+			boolean shouldLoadDefaultModules,
+			Class<? extends Module>... modulesToLoad) throws Exception{
 		
 		final StackTraceElement[] stackElements = Thread.currentThread()
 				.getStackTrace();
@@ -68,10 +84,14 @@ public class Framework {
 		
 		Framework.setupGlobalVariables(isDebugging);
 		
-		List<String> defaultModuleErrors = loadDefaultModules();
+		List<String> defaultModuleErrors = null;
+		if(shouldLoadDefaultModules){
+			defaultModuleErrors = loadDefaultModules();
+		}
 		List<String> moduleErrors = loadModules(modulesToLoad);
 		
-		if(defaultModuleErrors.size() > 0 || moduleErrors.size() > 0){
+		if((defaultModuleErrors != null && defaultModuleErrors.size() > 0)
+				|| moduleErrors.size() > 0){
 			
 			List<String> allErrors = new ArrayList<>();
 			
