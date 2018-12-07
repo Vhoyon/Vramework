@@ -138,7 +138,7 @@ public class Framework {
 			}
 			catch(InstantiationException | IllegalAccessException e){
 				errors.add("Module \"" + defaultModule.getCanonicalName()
-						+ "\" not found.");
+						+ "\" not found. The Framework needs an update...");
 			}
 			
 		}
@@ -161,7 +161,31 @@ public class Framework {
 			
 		}
 		
-		return loadModules(modules.toArray(new Class[0]));
+		List<String> errors = new ArrayList<>();
+		
+		for(Class<? extends Module> module : modules){
+			
+			try{
+				
+				Module moduleToLoad = module.newInstance();
+				
+				try{
+					moduleToLoad.build();
+				}
+				catch(Exception e){
+					errors.add(moduleToLoad.getLoadingErrorMessage(e) + "\n");
+				}
+				
+			}
+			catch(InstantiationException | IllegalAccessException e){
+				errors.add("Module \""
+						+ module.getCanonicalName()
+						+ "\" not found. Very odd considering this was an automatic action.");
+			}
+			
+		}
+		
+		return errors;
 		
 	}
 	
