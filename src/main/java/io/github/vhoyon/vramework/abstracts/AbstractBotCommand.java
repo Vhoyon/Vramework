@@ -366,6 +366,29 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getConnectedVoiceChannelMember() != null;
 	}
 	
+	public boolean hasHumansLeftConnected(){
+		
+		if(!this.isConnectedToVoiceChannelBot()){
+			return false;
+		}
+		else{
+			
+			VoiceChannel channel = getConnectedVoiceChannelBot();
+			
+			for(Member member : channel.getMembers()){
+				
+				if(!(member.getUser().isBot() || member.getUser().isFake())){
+					return true;
+				}
+				
+			}
+			
+			return false;
+			
+		}
+		
+	}
+	
 	public void disconnect(){
 		
 		if(isConnectedToVoiceChannelBot()){
