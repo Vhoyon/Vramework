@@ -3,10 +3,12 @@ package io.github.vhoyon.vramework;
 import io.github.vhoyon.vramework.abstracts.Module;
 import io.github.vhoyon.vramework.modules.*;
 
-import java.awt.*;
+import java.awt.GraphicsEnvironment;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Framework {
 	
@@ -66,14 +68,31 @@ public class Framework {
 		
 		Framework.setupGlobalVariables(isDebugging);
 		
-		loadDefaultModules();
-		loadModules(modulesToLoad);
+		List<String> defaultModuleErrors = loadDefaultModules();
+		List<String> moduleErrors = loadModules(modulesToLoad);
+		
+		if(defaultModuleErrors.size() > 0 || moduleErrors.size() > 0){
+			
+			List<String> allErrors = new ArrayList<>();
+			
+			allErrors.addAll(defaultModuleErrors);
+			allErrors.addAll(moduleErrors);
+			
+			StringBuilder sb = new StringBuilder();
+			
+			for(String error : allErrors){
+				sb.append(error).append("\n");
+			}
+			
+			throw new RuntimeException(sb.toString());
+			
+		}
 		
 	}
 	
-	private static void loadDefaultModules() throws RuntimeException{
+	private static List<String> loadDefaultModules() throws RuntimeException{
 		
-		StringBuilder errors = new StringBuilder();
+		List<String> errors = new ArrayList<>();
 		
 		for(Class<?> defaultModule : defaultModules){
 			
@@ -89,29 +108,26 @@ public class Framework {
 					defaultModuleToLoad.build();
 				}
 				catch(Exception e){
-					errors.append(defaultModuleToLoad.getLoadingErrorMessage(e))
-							.append("\n\n");
+					errors.add(defaultModuleToLoad.getLoadingErrorMessage(e)
+							+ "\n");
 				}
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
-				errors.append("Module \"")
-						.append(defaultModule.getCanonicalName())
-						.append("\" not found.").append("\n");
+				errors.add("Module \"" + defaultModule.getCanonicalName()
+						+ "\" not found.");
 			}
 			
 		}
 		
-		if(errors.length() != 0){
-			throw new RuntimeException(errors.toString());
-		}
+		return errors;
 		
 	}
 	
-	private static void loadModules(Class<? extends Module>[] modules)
+	private static List<String> loadModules(Class<? extends Module>[] modules)
 			throws RuntimeException{
 		
-		StringBuilder errors = new StringBuilder();
+		List<String> errors = new ArrayList<>();
 		
 		for(Class<? extends Module> module : modules){
 			
@@ -123,21 +139,18 @@ public class Framework {
 					moduleToLoad.build();
 				}
 				catch(Exception e){
-					errors.append(moduleToLoad.getLoadingErrorMessage(e))
-							.append("\n\n");
+					errors.add(moduleToLoad.getLoadingErrorMessage(e) + "\n");
 				}
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
-				errors.append("Module \"").append(module.getCanonicalName())
-						.append("\" not found.").append("\n");
+				errors.add("Module \"" + module.getCanonicalName()
+						+ "\" not found.");
 			}
 			
 		}
 		
-		if(errors.length() != 0){
-			throw new RuntimeException(errors.toString());
-		}
+		return errors;
 		
 	}
 	
