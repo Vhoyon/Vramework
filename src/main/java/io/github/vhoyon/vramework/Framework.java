@@ -1,6 +1,7 @@
 package io.github.vhoyon.vramework;
 
 import io.github.vhoyon.vramework.abstracts.Module;
+import io.github.vhoyon.vramework.modules.*;
 
 import java.awt.*;
 import java.io.*;
@@ -34,53 +35,81 @@ public class Framework {
 		return IS_DEBUGGING;
 	}
 	
-	private static String[] modules =
+	private static Class[] defaultModules = new Class[]
 	{
-		"Environment", "Logger", "Metrics", "Audit"
+		Environment.class, Logger.class, Metrics.class, Audit.class
 	};
 	
-	public static void build(Class<?> caller) throws Exception{
-		Framework.build(caller, false);
+	public static void build(Class<? extends Module>... modulesToLoad)
+			throws Exception{
+		Framework.build(false, modulesToLoad);
 	}
 	
-	public static void build(Class<?> caller, boolean isDebugging)
-			throws Exception{
+	public static void build(boolean isDebugging,
+			Class<? extends Module>... modulesToLoad) throws Exception{
 		
-		if(caller == null)
-			throw new IllegalArgumentException("The caller cannot be null!");
+		final StackTraceElement[] stackElements = Thread.currentThread()
+				.getStackTrace();
 		
-		Framework.classRunIn = caller;
+		for(int i = 0; i < stackElements.length; i++){
+			
+			if(!stackElements[i].getClassName().equals(
+					Framework.class.getCanonicalName())){
+				
+				Framework.classRunIn = Class.forName(stackElements[i]
+						.getClassName());
+				break;
+				
+			}
+			
+		}
 		
 		Framework.setupGlobalVariables(isDebugging);
 		
 		StringBuilder errors = new StringBuilder();
 		
-		for(String moduleName : modules){
+		for(Class<?> defaultModule : defaultModules){
+			
+			if(!Module.class.isAssignableFrom(defaultModule))
+				continue;
 			
 			try{
-				String formattedModuleName = moduleName.replaceAll("/", ".");
 				
-				Class<?> moduleClass = Class
-						.forName("io.github.vhoyon.vramework.modules."
-								+ formattedModuleName);
+				Module defaultModuleToLoad = (Module)defaultModule
+						.newInstance();
 				
-				if(Module.class.isAssignableFrom(moduleClass)){
-					
-					Module module = (Module)moduleClass.newInstance();
-					
-					try{
-						module.build();
-					}
-					catch(Exception e){
-						errors.append(module.getLoadingErrorMessage(e)).append(
-								"\n\n");
-					}
-					
+				try{
+					defaultModuleToLoad.build();
+				}
+				catch(Exception e){
+					errors.append(defaultModuleToLoad.getLoadingErrorMessage(e))
+							.append("\n\n");
 				}
 				
 			}
-			catch(ClassNotFoundException | InstantiationException
-					| IllegalAccessException e){
+			catch(InstantiationException | IllegalAccessException e){
+				errors.append("Module \"").append(e.getMessage())
+						.append("\" not found.").append("\n");
+			}
+			
+		}
+		
+		for(Class<? extends Module> module : modulesToLoad){
+			
+			try{
+				
+				Module moduleToLoad = module.newInstance();
+				
+				try{
+					moduleToLoad.build();
+				}
+				catch(Exception e){
+					errors.append(moduleToLoad.getLoadingErrorMessage(e))
+							.append("\n\n");
+				}
+				
+			}
+			catch(InstantiationException | IllegalAccessException e){
 				errors.append("Module \"").append(e.getMessage())
 						.append("\" not found.").append("\n");
 			}
