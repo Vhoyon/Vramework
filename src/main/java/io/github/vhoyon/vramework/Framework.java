@@ -51,12 +51,12 @@ public class Framework {
 		final StackTraceElement[] stackElements = Thread.currentThread()
 				.getStackTrace();
 		
-		for(int i = 0; i < stackElements.length; i++){
+		for(StackTraceElement stackElement : stackElements){
 			
-			if(!stackElements[i].getClassName().equals(
+			if(!stackElement.getClassName().equals(
 					Framework.class.getCanonicalName())){
 				
-				Framework.classRunIn = Class.forName(stackElements[i]
+				Framework.classRunIn = Class.forName(stackElement
 						.getClassName());
 				break;
 				
@@ -65,6 +65,13 @@ public class Framework {
 		}
 		
 		Framework.setupGlobalVariables(isDebugging);
+		
+		loadDefaultModules();
+		loadModules(modulesToLoad);
+		
+	}
+	
+	private static void loadDefaultModules() throws RuntimeException{
 		
 		StringBuilder errors = new StringBuilder();
 		
@@ -88,13 +95,25 @@ public class Framework {
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
-				errors.append("Module \"").append(e.getMessage())
+				errors.append("Module \"")
+						.append(defaultModule.getCanonicalName())
 						.append("\" not found.").append("\n");
 			}
 			
 		}
 		
-		for(Class<? extends Module> module : modulesToLoad){
+		if(errors.length() != 0){
+			throw new RuntimeException(errors.toString());
+		}
+		
+	}
+	
+	private static void loadModules(Class<? extends Module>[] modules)
+			throws RuntimeException{
+		
+		StringBuilder errors = new StringBuilder();
+		
+		for(Class<? extends Module> module : modules){
 			
 			try{
 				
@@ -110,14 +129,14 @@ public class Framework {
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
-				errors.append("Module \"").append(e.getMessage())
+				errors.append("Module \"").append(module.getCanonicalName())
 						.append("\" not found.").append("\n");
 			}
 			
 		}
 		
 		if(errors.length() != 0){
-			throw new Exception(errors.toString());
+			throw new RuntimeException(errors.toString());
 		}
 		
 	}
