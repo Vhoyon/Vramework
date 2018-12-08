@@ -7,6 +7,7 @@ import io.github.vhoyon.vramework.modules.*;
 
 import java.awt.GraphicsEnvironment;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +74,9 @@ public class Framework {
 		
 		for(StackTraceElement stackElement : stackElements){
 			
+			if(stackElement == stackElements[0])
+				continue;
+			
 			if(!stackElement.getClassName().equals(
 					Framework.class.getCanonicalName())){
 				
@@ -98,7 +102,10 @@ public class Framework {
 			
 			List<String> allErrors = new ArrayList<>();
 			
-			allErrors.addAll(defaultModuleErrors);
+			if(shouldLoadDefaultModules){
+				allErrors.addAll(defaultModuleErrors);
+			}
+			allErrors.addAll(autoModuleErrors);
 			allErrors.addAll(moduleErrors);
 			
 			StringBuilder sb = new StringBuilder();
