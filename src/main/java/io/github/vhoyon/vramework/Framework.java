@@ -149,8 +149,7 @@ public class Framework {
 					defaultModuleToLoad.build();
 				}
 				catch(Exception e){
-					errors.add(defaultModuleToLoad.getLoadingErrorMessage(e)
-							+ "\n");
+					errors.add(defaultModuleToLoad.getLoadingErrorMessage(e));
 				}
 				
 			}
@@ -191,14 +190,14 @@ public class Framework {
 					moduleToLoad.build();
 				}
 				catch(Exception e){
-					errors.add(moduleToLoad.getLoadingErrorMessage(e) + "\n");
+					errors.add(moduleToLoad.getLoadingErrorMessage(e));
 				}
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
 				errors.add("Module \""
 						+ module.getCanonicalName()
-						+ "\" not found. Very odd considering this was an automatic action.");
+						+ "\" cannot be instanced. Make sure it has a public constructor with no arguments.");
 			}
 			
 		}
@@ -221,13 +220,19 @@ public class Framework {
 					moduleToLoad.build();
 				}
 				catch(Exception e){
-					errors.add(moduleToLoad.getLoadingErrorMessage(e) + "\n");
+					errors.add(moduleToLoad.getLoadingErrorMessage(e));
 				}
 				
 			}
 			catch(InstantiationException | IllegalAccessException e){
-				errors.add("Module \"" + module.getCanonicalName()
-						+ "\" not found.");
+				if(module.isAnonymousClass()){
+					errors.add("Cannot load anonymous modules. Please create a new class to be able to load it.");
+				}
+				else{
+					errors.add("Module \""
+							+ module.getCanonicalName()
+							+ "\" not found. Make sure it has a public constructor with no arguments.");
+				}
 			}
 			
 		}
