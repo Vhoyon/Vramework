@@ -36,7 +36,7 @@ Maven could be installed through most Java IDE : your mileage may vary.
 </dependency>
 ```
 
-(you can switch `LATEST` to the version number up top)
+(you can switch `LATEST` to the following version number : [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=)](https://search.maven.org/artifact/io.github.vhoyon/vramework))
 
 #### TODO : Describe how to start up with this framework.
 We know, it's quite important. We'll do it ASAP! :)
