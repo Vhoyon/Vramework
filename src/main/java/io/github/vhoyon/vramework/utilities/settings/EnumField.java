@@ -1,9 +1,10 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.vhoyon.vramework.utilities.sanitizers.EnumSanitizer;
+import io.github.ved.jsanitizers.EnumSanitizer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EnumField extends TextField {
 	
@@ -27,13 +28,13 @@ public class EnumField extends TextField {
 		}
 	}
 	
-	protected ArrayList<String> values;
+	protected List<String> values;
 	
 	public EnumField(String name, String env, Object defaultValue,
 			Object... otherValues){
 		super(name, env, defaultValue.toString());
 		
-		this.values = this.getValuesArrayList(defaultValue, otherValues);
+		this.values = this.getValuesList(defaultValue, otherValues);
 	}
 	
 	@Override
@@ -42,7 +43,7 @@ public class EnumField extends TextField {
 		return EnumSanitizer.sanitizeValue(value, this.values);
 	}
 	
-	public ArrayList<String> getPossibleValues(){
+	public List<String> getPossibleValues(){
 		return this.values;
 	}
 	
@@ -56,7 +57,7 @@ public class EnumField extends TextField {
 		return this.values.get(0);
 	}
 	
-	private ArrayList<String> getValuesArrayList(Object defaultValue,
+	private List<String> getValuesList(Object defaultValue,
 			Object... otherValues){
 		
 		CaseArrayList newValues = new CaseArrayList();
@@ -71,6 +72,7 @@ public class EnumField extends TextField {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected EnumField clone() throws CloneNotSupportedException{
 		EnumField cloned = new EnumField(getName(), getEnv(), getDefaultValue()){
@@ -81,7 +83,7 @@ public class EnumField extends TextField {
 			}
 		};
 		
-		cloned.values = (ArrayList<String>)this.values.clone();
+		cloned.values = new ArrayList<>(this.values);
 		
 		return cloned;
 	}

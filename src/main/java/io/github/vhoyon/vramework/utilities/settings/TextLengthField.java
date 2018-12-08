@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.TextLengthSanitizer;
+import io.github.ved.jsanitizers.TextLengthSanitizer;
 
 public class TextLengthField extends TextNotEmptyField {
 	

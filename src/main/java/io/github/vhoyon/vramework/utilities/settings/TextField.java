@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.TextSanitizer;
+import io.github.ved.jsanitizers.TextSanitizer;
 
 public class TextField extends SettingField<String> {
 	

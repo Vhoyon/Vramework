@@ -366,6 +366,29 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getConnectedVoiceChannelMember() != null;
 	}
 	
+	public boolean hasHumansLeftConnected(){
+		
+		if(!this.isConnectedToVoiceChannelBot()){
+			return false;
+		}
+		else{
+			
+			VoiceChannel channel = getConnectedVoiceChannelBot();
+			
+			for(Member member : channel.getMembers()){
+				
+				if(!(member.getUser().isBot() || member.getUser().isFake())){
+					return true;
+				}
+				
+			}
+			
+			return false;
+			
+		}
+		
+	}
+	
 	public void disconnect(){
 		
 		if(isConnectedToVoiceChannelBot()){
@@ -407,29 +430,29 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String sendMessageToMember(Member member, String messageToSend){
 		
+		if(messageToSend == null){
+			if(isDebugging())
+				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
+			
+			return null;
+		}
+		if(member.getUser().isBot() || member.getUser().isFake()){
+			if(isDebugging())
+				log("The bot attempted to send a message to a bot or to a fake user");
+			
+			return null;
+		}
+		
 		PrivateChannel channel = member.getUser().openPrivateChannel()
 				.complete();
 		
-		if(member.getUser().hasPrivateChannel()){
-			
-			if(messageToSend == null){
-				log("The bot attempted to send a null message - probably a fail safe, but concerning nonetheless...");
-				
-				return null;
-			}
-			
-			try{
-				return sendMessageForChannel(channel, messageToSend);
-			}
-			catch(IllegalArgumentException e){
-				log(e.getMessage());
-				
-				return null;
-			}
-			
+		try{
+			return sendMessageForChannel(channel, messageToSend);
 		}
-		else{
-			return sendMessage(lang(true, "CommandUserHasNoPrivateChannel"));
+		catch(IllegalArgumentException e){
+			log(e);
+			
+			return null;
 		}
 		
 	}
@@ -522,6 +545,10 @@ public abstract class AbstractBotCommand extends Translatable implements
 		Logger.log(message);
 	}
 	
+	public void log(Exception e){
+		Logger.log(e);
+	}
+	
 	/**
 	 * @return A String that starts with the router's command prefix
 	 *         followed by the <i>commandName</i> parameter.
@@ -559,6 +586,18 @@ public abstract class AbstractBotCommand extends Translatable implements
 	@Override
 	public String formatParameter(String parameterToFormat){
 		return buildParameter(parameterToFormat);
+	}
+	
+	/**
+	 * Gets the formatted usage for this command.
+	 *
+	 * @return A formatted String that uses {@link #buildVCommand(String)} and
+	 *         {@link #getCommandName()}.
+	 * @version 1.0
+	 * @since v0.13.0
+	 */
+	public String getUsage(){
+		return buildVCommand(getCommandName());
 	}
 	
 }

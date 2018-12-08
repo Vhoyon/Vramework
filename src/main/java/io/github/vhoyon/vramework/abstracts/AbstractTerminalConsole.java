@@ -203,6 +203,12 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 				"y", "n", "c"
 			};
 			break;
+		case OK:
+			choices = new String[]
+			{
+				"press enter to continue"
+			};
+			break;
 		}
 		
 		String choiceSeparator = " / ";
@@ -231,7 +237,11 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			
 			System.out.println();
 			
-			if(input.length() == 0){
+			if(questionType == QuestionType.OK){
+				isChoiceValid = true;
+				formattedInput = "o";
+			}
+			else if(input.length() == 0){
 				Logger.log("The choice cannot be empty!", LogType.ERROR);
 			}
 			else{
@@ -254,6 +264,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			return YES;
 		case "c":
 			return CANCEL;
+		case "o":
+			return OK;
 		default:
 			return -1;
 		}
@@ -270,7 +282,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public void onInitialized(){}
 	
 	@Override
-	public void onExit() throws Exception{
+	public void onExit(){
 		this.outputStream.resetStream();
 		this.errorStream.resetStream();
 	}

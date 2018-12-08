@@ -6,7 +6,7 @@
 
     <groupId>io.github.vhoyon</groupId>
     <artifactId>vramework</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <name>Vramework</name>
     <description>Framework to create bots easily for Discord!</description>
@@ -181,9 +181,15 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.lukehutch</groupId>
-            <artifactId>fast-classpath-scanner</artifactId>
-            <version>2.19.0</version>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.6.5</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>io.github.v-ed</groupId>
+            <artifactId>jsanitizers</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

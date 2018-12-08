@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Vhoyon/Vramework.svg?branch=dev)](https://travis-ci.com/Vhoyon/Vramework) [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=version)](https://search.maven.org/search?q=g:%22io.github.vhoyon%22%20AND%20a:%22vramework%22) 
+[![Build Status](https://travis-ci.com/Vhoyon/Vramework.svg?branch=dev)](https://travis-ci.com/Vhoyon/Vramework) [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=version)](https://search.maven.org/artifact/io.github.vhoyon/vramework) 
 [![version (SNAPSHOT)](https://img.shields.io/nexus/s/https/oss.sonatype.org/io.github.vhoyon/vramework.svg?label=version%20(SNAPSHOT)&colorB=e60000)](https://oss.sonatype.org/#nexus-search;quick~vramework)
 
 
@@ -36,7 +36,7 @@ Maven could be installed through most Java IDE : your mileage may vary.
 </dependency>
 ```
 
-(you can switch `LATEST` to the version number up top)
+(you can switch `LATEST` to the following version number : [![Version](https://img.shields.io/maven-central/v/io.github.vhoyon/vramework.svg?label=)](https://search.maven.org/artifact/io.github.vhoyon/vramework))
 
 #### TODO : Describe how to start up with this framework.
 We know, it's quite important. We'll do it ASAP! :)

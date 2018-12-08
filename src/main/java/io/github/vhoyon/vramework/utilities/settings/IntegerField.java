@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.utilities.sanitizers.IntegerSanitizer;
+import io.github.ved.jsanitizers.IntegerSanitizer;
 
 public class IntegerField extends SettingField<Integer> {
 	

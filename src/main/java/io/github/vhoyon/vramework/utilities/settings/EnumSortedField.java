@@ -2,6 +2,7 @@ package io.github.vhoyon.vramework.utilities.settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class EnumSortedField extends EnumField {
 	
@@ -11,12 +12,13 @@ public class EnumSortedField extends EnumField {
 	}
 	
 	@Override
-	public ArrayList<String> getPossibleValues(){
-		ArrayList<String> sortedArray = super.getPossibleValues();
+	public List<String> getPossibleValues(){
+		List<String> sortedArray = super.getPossibleValues();
 		Collections.sort(sortedArray);
 		return sortedArray;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected EnumSortedField clone() throws CloneNotSupportedException{
 		EnumSortedField cloned = new EnumSortedField(getName(), getEnv(),
@@ -28,7 +30,7 @@ public class EnumSortedField extends EnumField {
 			}
 		};
 		
-		cloned.values = (ArrayList<String>)this.values.clone();
+		cloned.values = new ArrayList<>(this.values);
 		
 		return cloned;
 	}

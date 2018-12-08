@@ -69,4 +69,14 @@ public interface Translatable {
 				replacements);
 	}
 	
+	default String langAmount(String key, int amount){
+		return this.getDictionary().getStringAmount(key,
+				getClass().getSimpleName(), amount);
+	}
+	
+	default String langAmount(String key, int amount, Object... replacements){
+		return this.getDictionary().getStringAmount(key,
+				getClass().getSimpleName(), amount, replacements);
+	}
+	
 }

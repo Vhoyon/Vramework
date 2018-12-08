@@ -2,12 +2,11 @@ package io.github.vhoyon.vramework.modules;
 
 import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
 import io.github.vhoyon.vramework.interfaces.Loggable;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,107 +165,15 @@ public class Logger extends ModuleOutputtable {
 		}
 		else{
 			
-			StringBuilder builder = new StringBuilder();
+			final ArrayList<Loggable> outputs = getOutputs();
 			
-			Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
-					message);
+			final StackTraceElement[] stackElements = Thread.currentThread()
+					.getStackTrace();
 			
-			if(matcher.find()){
-				
-				int whitespaceStartIndex = matcher.start();
-				int whitespaceEndIndex = matcher.end();
-				
-				String beforehandWhitespace = message.substring(
-						whitespaceStartIndex, whitespaceEndIndex);
-				
-				if(!message.startsWith("^")){
-					message = message.substring(whitespaceEndIndex);
-					
-					builder.append(beforehandWhitespace);
-				}
-				else{
-					message = message.substring(1);
-					
-					int secondCaretPos = message.indexOf("^");
-					
-					// No second caret
-					if(secondCaretPos != -1){
-						
-						message = message.substring(secondCaretPos + 1);
-						
-						builder.append(beforehandWhitespace, 1,
-								secondCaretPos + 1);
-						
-					}
-					
-				}
-				
-			}
+			final String logText = buildLogMessage(message, logType,
+					appendDate, stackElements);
 			
-			boolean hasAddedPrefix = false;
-			
-			if(appendDate){
-				DateFormat dateFormat = new SimpleDateFormat(
-						"yyyy/MM/dd HH:mm:ss");
-				Date date = new Date();
-				
-				builder.append("[").append(dateFormat.format(date)).append("]");
-				
-				hasAddedPrefix = true;
-			}
-			
-			if(logType != null){
-				builder.append("[").append(logType).append("]");
-				
-				hasAddedPrefix = true;
-			}
-			
-			if(hasAddedPrefix){
-				
-				if(separator != null){
-					builder.append(" ").append(separator);
-				}
-				
-				builder.append(" ");
-				
-			}
-			
-			builder.append(message);
-			
-			if("ERROR".equalsIgnoreCase(logType)){
-				
-				StackTraceElement[] stackElements = Thread.currentThread()
-						.getStackTrace();
-				
-				String className = null;
-				String methodName = null;
-				int lineNumber = -1;
-				
-				for(StackTraceElement stackElement : stackElements){
-					
-					if(!stackElement.getClassName().equals("Logger")){
-						
-						className = stackElement.getClassName();
-						methodName = stackElement.getMethodName();
-						lineNumber = stackElement.getLineNumber();
-						
-						break;
-						
-					}
-					
-				}
-				
-				String errorMessage = String.format(
-						"Error in %1$s at line %2$s (in method %3$s).",
-						className, lineNumber, methodName);
-				
-				builder.append("\n\t").append(errorMessage);
-				
-			}
-			
-			String logText = builder.toString();
-			
-			hasIssuedWarning = handleMessageAndWarning(logText, getOutputs(),
+			hasIssuedWarning = handleMessageAndWarning(logText, outputs,
 					hasIssuedWarning,
 					(output) -> output.log(logText, logType, appendDate));
 			
@@ -274,4 +181,105 @@ public class Logger extends ModuleOutputtable {
 		
 	}
 	
+	private static String buildLogMessage(String message, final String logType,
+			final boolean appendDate, final StackTraceElement[] stackElements){
+		
+		StringBuilder builder = new StringBuilder();
+		
+		Matcher matcher = Pattern.compile("^\\^?(\\s+\\^)?\\s+").matcher(
+				message);
+		
+		if(matcher.find()){
+			
+			int whitespaceStartIndex = matcher.start();
+			int whitespaceEndIndex = matcher.end();
+			
+			String beforehandWhitespace = message.substring(
+					whitespaceStartIndex, whitespaceEndIndex);
+			
+			if(!message.startsWith("^")){
+				message = message.substring(whitespaceEndIndex);
+				
+				builder.append(beforehandWhitespace);
+			}
+			else{
+				message = message.substring(1);
+				
+				int secondCaretPos = message.indexOf("^");
+				
+				// No second caret
+				if(secondCaretPos != -1){
+					
+					message = message.substring(secondCaretPos + 1);
+					
+					builder.append(beforehandWhitespace, 1, secondCaretPos + 1);
+					
+				}
+				
+			}
+			
+		}
+		
+		boolean hasAddedPrefix = false;
+		
+		if(appendDate){
+			String dateTime = LocalDateTime.now().format(
+					DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+			
+			builder.append("[").append(dateTime).append("]");
+			
+			hasAddedPrefix = true;
+		}
+		
+		if(logType != null){
+			builder.append("[").append(logType).append("]");
+			
+			hasAddedPrefix = true;
+		}
+		
+		if(hasAddedPrefix){
+			
+			if(separator != null){
+				builder.append(" ").append(separator);
+			}
+			
+			builder.append(" ");
+			
+		}
+		
+		builder.append(message);
+		
+		if("ERROR".equalsIgnoreCase(logType)){
+			
+			String className = null;
+			String methodName = null;
+			int lineNumber = -1;
+			
+			for(StackTraceElement stackElement : stackElements){
+				
+				if(!stackElement.equals(stackElements[0])
+						&& !stackElement.getClassName().equals(
+								Logger.class.getCanonicalName())){
+					
+					className = stackElement.getClassName();
+					methodName = stackElement.getMethodName();
+					lineNumber = stackElement.getLineNumber();
+					
+					break;
+					
+				}
+				
+			}
+			
+			String errorMessage = String.format(
+					"Error in %1$s at line %2$s (in method %3$s).", className,
+					lineNumber, methodName);
+			
+			builder.append("\n\t").append(errorMessage);
+			
+		}
+		
+		return builder.toString();
+		
+	}
 }

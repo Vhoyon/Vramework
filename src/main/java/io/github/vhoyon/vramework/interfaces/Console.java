@@ -5,12 +5,13 @@ import javax.swing.JOptionPane;
 public interface Console {
 	
 	enum QuestionType{
-		YES_NO, YES_NO_CANCEL
+		YES_NO, YES_NO_CANCEL, OK
 	}
 	
 	int YES = JOptionPane.YES_OPTION;
 	int NO = JOptionPane.NO_OPTION;
 	int CANCEL = JOptionPane.CANCEL_OPTION;
+	int OK = JOptionPane.OK_OPTION;
 	
 	void onStart() throws Exception;
 	
