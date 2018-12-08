@@ -3,11 +3,11 @@ package io.github.vhoyon.vramework;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import io.github.vhoyon.vramework.abstracts.Module;
+import io.github.vhoyon.vramework.exceptions.ModuleLoaderException;
 import io.github.vhoyon.vramework.modules.*;
 
 import java.awt.GraphicsEnvironment;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +21,11 @@ public class Framework {
 	private static String RUNNABLE_SYSTEM_PATH;
 	private static Date BUILD_STARTED_AT;
 	private static boolean IS_DEBUGGING;
+	
+	private static Class[] defaultModules = new Class[]
+	{
+		Environment.class, Logger.class, Metrics.class, Audit.class
+	};
 	
 	private Framework(){}
 	
@@ -40,18 +45,14 @@ public class Framework {
 		return IS_DEBUGGING;
 	}
 	
-	private static Class[] defaultModules = new Class[]
-	{
-		Environment.class, Logger.class, Metrics.class, Audit.class
-	};
-	
 	public static void build(Class<? extends Module>... modulesToLoad)
-			throws Exception{
+			throws ModuleLoaderException{
 		Framework.build(false, modulesToLoad);
 	}
 	
 	public static void build(boolean isDebugging,
-			Class<? extends Module>... modulesToLoad) throws Exception{
+			Class<? extends Module>... modulesToLoad)
+			throws ModuleLoaderException{
 		Framework.build(isDebugging, true, modulesToLoad);
 	}
 	
@@ -61,13 +62,15 @@ public class Framework {
 	}
 	
 	public static void buildClean(boolean isDebugging,
-			Class<? extends Module>... modulesToLoad) throws Exception{
+			Class<? extends Module>... modulesToLoad)
+			throws ModuleLoaderException{
 		Framework.build(isDebugging, false, modulesToLoad);
 	}
 	
 	public static void build(boolean isDebugging,
 			boolean shouldLoadDefaultModules,
-			Class<? extends Module>... modulesToLoad) throws Exception{
+			Class<? extends Module>... modulesToLoad)
+			throws ModuleLoaderException{
 		
 		final StackTraceElement[] stackElements = Thread.currentThread()
 				.getStackTrace();
@@ -80,8 +83,16 @@ public class Framework {
 			if(!stackElement.getClassName().equals(
 					Framework.class.getCanonicalName())){
 				
-				Framework.classRunIn = Class.forName(stackElement
-						.getClassName());
+				try{
+					Framework.classRunIn = Class.forName(stackElement
+							.getClassName());
+				}
+				catch(ClassNotFoundException e){
+					// This error should never happen.
+					throw new IllegalStateException(
+							"Unexpected error in StackTrace handling. Please review the state of your java installation.");
+				}
+				
 				break;
 				
 			}
@@ -102,7 +113,7 @@ public class Framework {
 			
 			List<String> allErrors = new ArrayList<>();
 			
-			if(shouldLoadDefaultModules){
+			if(defaultModuleErrors != null){
 				allErrors.addAll(defaultModuleErrors);
 			}
 			allErrors.addAll(autoModuleErrors);
@@ -114,7 +125,7 @@ public class Framework {
 				sb.append(error).append("\n");
 			}
 			
-			throw new RuntimeException(sb.toString());
+			throw new ModuleLoaderException(sb.toString());
 			
 		}
 		
