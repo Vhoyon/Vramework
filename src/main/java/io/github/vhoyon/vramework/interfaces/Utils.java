@@ -28,7 +28,7 @@ public interface Utils {
 	}
 	
 	default boolean isDebugging(){
-		return env("DEBUG", false) || Framework.isDebugging();
+		return Framework.isDebugging() || env("DEBUG", false);
 	}
 	
 	default <EnvVar> EnvVar env(String key, EnvVar defaultValue){
