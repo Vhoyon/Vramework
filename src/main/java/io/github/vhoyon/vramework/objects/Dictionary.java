@@ -30,7 +30,6 @@ public class Dictionary implements Utils {
 	public Dictionary(){
 		this.directory = DEFAULT_DIRECTORY;
 		this.fileName = DEFAULT_FILE_NAME;
-		this.resources = getDefaultLanguageResources();
 	}
 	
 	private String getDirectory(){
@@ -49,6 +48,14 @@ public class Dictionary implements Utils {
 	private void setFileName(String fileName){
 		if(!getFileName().equals(fileName))
 			this.fileName = fileName;
+	}
+	
+	private ResourceBundle getResources(){
+		if(this.resources == null){
+			this.resources = getDefaultLanguageResources();
+		}
+		
+		return this.resources;
 	}
 	
 	private String getResourcePath(){
@@ -104,7 +111,7 @@ public class Dictionary implements Utils {
 		try{
 			try{
 				
-				string = tryGetString(resources, key, possiblePrefix);
+				string = tryGetString(getResources(), key, possiblePrefix);
 				
 				if(string == null || string.length() == 0)
 					throw new NullPointerException();
