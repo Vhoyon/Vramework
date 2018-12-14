@@ -299,7 +299,12 @@ public class Dictionary implements Utils {
 	}
 	
 	private ResourceBundle getLanguageResources(Locale locale){
-		return ResourceBundle.getBundle(this.getResourcePath(), locale);
+		if(locale == null){
+			return getDefaultLanguageResources();
+		}
+		else{
+			return ResourceBundle.getBundle(this.getResourcePath(), locale);
+		}
 	}
 	
 }

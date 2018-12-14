@@ -6,7 +6,7 @@
 
     <groupId>io.github.vhoyon</groupId>
     <artifactId>vramework</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 
     <name>Vramework</name>
     <description>Framework to create bots easily for Discord!</description>
@@ -171,7 +171,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.5.1_345</version>
+            <version>3.8.1_448</version>
         </dependency>
 
         <dependency>

@@ -29,7 +29,7 @@ public class FrameworkTemplate {
 			try{
 				
 				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
-						.buildBlocking();
+						.build().awaitReady();
 				jda.addEventListener(messageListener);
 				jda.setAutoReconnect(true);
 				
