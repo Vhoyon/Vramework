@@ -6,7 +6,7 @@
 
     <groupId>io.github.vhoyon</groupId>
     <artifactId>vramework</artifactId>
-    <version>0.3.1</version>
+    <version>0.4.0-SNAPSHOT</version>
 
     <name>Vramework</name>
     <description>Framework to create bots easily for Discord!</description>
