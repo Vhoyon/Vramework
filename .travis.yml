@@ -7,7 +7,7 @@ sudo: false
 
 env:
   global:
-  - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+    - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -17,8 +17,10 @@ script:
 
 before_deploy:
   - cp .travis.settings.xml $HOME/.m2/settings.xml
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - if [[ $TRAVIS_TAG ]]; then
+      echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import &&
+      echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust;
+    fi
 
 deploy:
   - provider: script
