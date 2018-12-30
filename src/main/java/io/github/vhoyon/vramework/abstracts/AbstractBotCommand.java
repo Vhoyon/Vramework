@@ -244,7 +244,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getUserName();
 	}
 	
-	protected TextChannel getTextContext(){
+	public TextChannel getTextContext(){
 		return getEventDigger().getChannel();
 	}
 	

@@ -3,7 +3,7 @@ package io.github.vhoyon.vramework.objects;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.utilities.KeyBuilder;
 
 public class MessageEventDigger {
 	
@@ -22,19 +22,19 @@ public class MessageEventDigger {
 	}
 	
 	public String getGuildKey(){
-		return Utils.buildKey(getGuildId());
+		return KeyBuilder.buildGuildKey(getGuild());
 	}
 	
 	public String getChannelKey(){
-		return Utils.buildKey(getGuildKey(), getChannelId());
+		return KeyBuilder.buildTextChannelKey(getChannel());
 	}
 	
 	public String getUserKey(){
-		return Utils.buildKey(getUserName(), getUserId());
+		return KeyBuilder.buildUserKey(getUser());
 	}
 	
 	public String getCommandKey(String commandName){
-		return Utils.buildKey(getChannelKey(), commandName);
+		return KeyBuilder.buildCommandKey(getChannel(), commandName);
 	}
 	
 	public Guild getGuild(){
