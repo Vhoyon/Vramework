@@ -2,7 +2,7 @@ package io.github.vhoyon.vramework.utilities.settings;
 
 import io.github.ved.jsanitizers.CharSanitizer;
 
-public class CharField extends SettingField<Character> {
+public class CharField extends Setting<Character> {
 	
 	public CharField(String name, String env, char defaultValue){
 		super(name, env, defaultValue);

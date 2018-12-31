@@ -2,7 +2,7 @@ package io.github.vhoyon.vramework.utilities.settings;
 
 import io.github.ved.jsanitizers.IntegerSanitizer;
 
-public class IntegerField extends SettingField<Integer> {
+public class IntegerField extends Setting<Integer> {
 	
 	protected int min;
 	protected int max;
