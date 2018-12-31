@@ -37,6 +37,23 @@ public class MessageEventDigger {
 		return KeyBuilder.buildCommandKey(getChannel(), commandName);
 	}
 	
+	public String getGuildKey(Object object){
+		return KeyBuilder.buildGuildObjectKey(getGuild(), object);
+	}
+	
+	public String getChannelKey(Object object){
+		return KeyBuilder.buildTextChannelObjectKey(getChannel(), object);
+	}
+	
+	public String getUserKey(Object object){
+		return KeyBuilder.buildUserObjectKey(getUser(), object);
+	}
+	
+	public String getCommandKey(String commandName, Object object){
+		return KeyBuilder.buildCommandObjectKey(getChannel(), commandName,
+				object);
+	}
+	
 	public Guild getGuild(){
 		return event.getGuild();
 	}
