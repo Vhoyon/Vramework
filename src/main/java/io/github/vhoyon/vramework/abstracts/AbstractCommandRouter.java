@@ -1,12 +1,15 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.vramework.exceptions.NoCommandException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.interfaces.Translatable;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.res.FrameworkResources;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
 		DiscordUtils, Translatable, FrameworkResources {
@@ -208,5 +211,65 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	public boolean isDead(){
 		return this.isDead;
 	}
+	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from the Buffer for the TextChannel of this Router or create it if
+	 * there is currently none in the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository}
+	 * Buffer.
+	 *
+	 * @return The
+	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 *         object from the current TextChannel-associated buffer.
+	 * @since 0.14.0
+	 */
+	public SettingRepository getSettings(){
+		return getSettings(BufferLevel.CHANNEL);
+	}
+	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from the Buffer for the TextChannel or Guild, depending on the
+	 * level provided by the {@code level} parameter, of this Router or create
+	 * it if there is currently none in the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository}
+	 * Buffer.
+	 *
+	 * @param level
+	 *            The level at which the SettingRepository must be taken from.
+	 * @return The
+	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 *         object from the associated buffer.
+	 * @since 0.14.0
+	 */
+	public SettingRepository getSettings(BufferLevel level){
+		
+		SettingRepository repo;
+		
+		Setting<Object>[] defaultSettings = this.getDefaultSettings();
+		
+		switch(level){
+		default:
+		case USER:
+		case CHANNEL:
+			repo = SettingRepositoryRepository.getSettingRepository(
+					getEventDigger().getChannel(), defaultSettings);
+		case SERVER:
+			repo = SettingRepositoryRepository.getSettingRepository(
+					getEventDigger().getGuild(), defaultSettings);
+		}
+		
+		return repo;
+		
+	}
+	
+	/**
+	 * @return The initial settings when using the methods
+	 *         {@link #getSettings()} and {@link #getSettings(BufferLevel)}.
+	 */
+	protected abstract Setting<Object>[] getDefaultSettings();
 	
 }

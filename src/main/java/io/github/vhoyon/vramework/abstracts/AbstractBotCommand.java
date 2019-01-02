@@ -1,11 +1,17 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.function.Consumer;
+
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.Buffer;
@@ -15,11 +21,8 @@ import io.github.vhoyon.vramework.objects.Request;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.Consumer;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 
 /**
  * Class that implements all the logic to execute actions for a Discord command
@@ -40,31 +43,6 @@ import java.util.function.Consumer;
 public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
 		DiscordUtils {
-	
-	/**
-	 * Enum that defines which level should the Buffer saves the object given in
-	 * appropriate methods.
-	 * <p>
-	 * Here's the meaning of the possibilities :
-	 * </p>
-	 * <ul>
-	 * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning
-	 * other channels in the same server may not have access to the data stored
-	 * in here (DEFAULT);</li>
-	 * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in
-	 * Discord's terms), meaning this data could apply to every TextChannel in
-	 * the same server;</li>
-	 * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this
-	 * data is only accessible when this user calls a command.</li>
-	 * </ul>
-	 *
-	 * @version 1.0
-	 * @since v0.7.0
-	 * @see AbstractBotCommand#DEFAULT_BUFFER_LEVEL
-	 */
-	public enum BufferLevel{
-		CHANNEL, SERVER, USER
-	}
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
@@ -539,6 +517,228 @@ public abstract class AbstractBotCommand extends Translatable implements
 		command.putStateFromCommand(this);
 		
 		command.action();
+	}
+	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from this command's router.
+	 *
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *         object of this
+	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
+	 *         Router}.
+	 * @since v0.14.0
+	 * @see AbstractCommandRouter#getSettings(BufferLevel)
+	 */
+	public SettingRepository getSettings(){
+		return this.getSettings(DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from this command's router.
+	 *
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *         object of this
+	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
+	 *         Router}.
+	 * @since v0.14.0
+	 * @see AbstractCommandRouter#getSettings()
+	 */
+	public SettingRepository getSettings(BufferLevel level){
+		return this.getRouter().getSettings(level);
+	}
+	
+	/**
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * object from this router.
+	 *
+	 * @param settingName
+	 *            The name of the setting to get from the SettingRepository of
+	 *            this Router.
+	 * @return The Setting object, generalized to Object to include all Fields
+	 *         possible. The burden of casting to the right type goes to you.<br>
+	 *         If you want to get the value and have it casted automatically to
+	 *         your own return value, please see {@link #setting(String)}.
+	 * @since v0.14.0
+	 * @see #setting(String)
+	 */
+	public Setting<Object> getSetting(String settingName){
+		return this.getSetting(settingName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * object from this router.
+	 *
+	 * @param settingName
+	 *            The name of the setting to get from the SettingRepository of
+	 *            this Router.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @return The Setting object, generalized to Object to include all Fields
+	 *         possible. The burden of casting to the right type goes to you.<br>
+	 *         If you want to get the value and have it casted automatically to
+	 *         your own return value, please see {@link #setting(String)}.
+	 * @since v0.14.0
+	 * @see #setting(String)
+	 */
+	public Setting<Object> getSetting(String settingName, BufferLevel level){
+		return this.getSettings(level).getField(settingName);
+	}
+	
+	/**
+	 * Gets the value of the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * to the name of the parameter {@code settingName}.
+	 *
+	 * @param settingName
+	 *            The name of the Setting to get the value from.
+	 * @param <SettingValue>
+	 *            The type of the value to be casted automatically to.
+	 * @return The value of the Setting with the name {@code settingName}.
+	 * @since v0.14.0
+	 */
+	public <SettingValue> SettingValue setting(String settingName){
+		return this.setting(settingName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the value of the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * to the name of the parameter {@code settingName}.
+	 *
+	 * @param settingName
+	 *            The name of the Setting to get the value from.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @param <SettingValue>
+	 *            The type of the value to be casted automatically to.
+	 * @return The value of the Setting with the name {@code settingName}.
+	 * @since v0.14.0
+	 */
+	public <SettingValue> SettingValue setting(String settingName,
+			BufferLevel level){
+		Object value = this.getSetting(settingName, level).getValue();
+		return (SettingValue)value;
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value}.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 * @see #setSetting(String, Object, Consumer)
+	 */
+	public void setSetting(String settingName, Object value)
+			throws BadFormatException{
+		this.setSetting(settingName, value, DEFAULT_BUFFER_LEVEL, null);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value}.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 * @see #setSetting(String, Object, Consumer)
+	 */
+	public void setSetting(String settingName, Object value, BufferLevel level)
+			throws BadFormatException{
+		this.setSetting(settingName, value, level, null);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value} and
+	 * runs arbitrary code after a successful change.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param onChange
+	 *            Arbitrary code to run when the setting has been changed using
+	 *            a {@link java.util.function.Consumer} and the
+	 *            {@link java.util.function.Consumer#accept(Object)} method, in
+	 *            which the validated value is sent to. Can be {@code null} (or
+	 *            use {@link #setSetting(String, Object)}) to not run anything
+	 *            on change success.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 */
+	public void setSetting(String settingName, Object value,
+			Consumer<Object> onChange) throws BadFormatException{
+		this.setSetting(settingName, value, DEFAULT_BUFFER_LEVEL, onChange);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value} and
+	 * runs arbitrary code after a successful change.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @param onChange
+	 *            Arbitrary code to run when the setting has been changed using
+	 *            a {@link java.util.function.Consumer} and the
+	 *            {@link java.util.function.Consumer#accept(Object)} method, in
+	 *            which the validated value is sent to. Can be {@code null} (or
+	 *            use {@link #setSetting(String, Object)}) to not run anything
+	 *            on change success.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 */
+	public void setSetting(String settingName, Object value, BufferLevel level,
+			Consumer<Object> onChange) throws BadFormatException{
+		
+		SettingRepository settings = this.getSettings(level);
+		
+		settings.save(settingName, value, onChange);
+		
 	}
 	
 	public void log(String message){
