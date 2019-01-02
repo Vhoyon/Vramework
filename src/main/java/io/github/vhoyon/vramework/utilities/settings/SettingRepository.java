@@ -52,4 +52,9 @@ public class SettingRepository {
 		return (SettingValue)this.getField(name).getValue();
 	}
 	
+	SettingRepository duplicate(){
+		return new SettingRepository(getFieldsMap().values().toArray(
+				new Setting[0]));
+	}
+	
 }
