@@ -1,14 +1,13 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.abstracts.Translatable;
+import java.util.function.Consumer;
+
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 
-import java.util.function.Consumer;
-
-public abstract class Setting<E> extends Translatable implements Cloneable {
+public abstract class Setting<E> {
 	
 	protected E value;
 	private E defaultValue;
@@ -102,18 +101,17 @@ public abstract class Setting<E> extends Translatable implements Cloneable {
 		return envValue;
 	}
 	
-	@Override
-	protected Setting<E> clone() throws CloneNotSupportedException{
-		Setting<E> settingClone = new Setting<E>(name, env,
-				defaultValue){
+	Setting duplicate(){
+		
+		return new Setting<E>(Setting.this.name, Setting.this.env,
+				Setting.this.defaultValue){
 			@Override
-			protected E sanitizeValue(Object value)
+			protected E sanitizeValue(Object value1)
 					throws IllegalArgumentException{
-				return Setting.this.sanitizeValue(value);
+				return Setting.this.sanitizeValue(value1);
 			}
 		};
 		
-		return settingClone;
 	}
 	
 }

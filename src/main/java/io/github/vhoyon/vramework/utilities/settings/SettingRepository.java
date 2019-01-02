@@ -4,29 +4,17 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.vhoyon.vramework.objects.Dictionary;
 
 public class SettingRepository {
 	
 	private HashMap<String, Setting<Object>> fields;
 	
 	public SettingRepository(Setting<Object>... fields){
-		this(new Dictionary(), fields);
-	}
-	
-	public SettingRepository(Dictionary dict, Setting<Object>... fields){
 		
 		this.fields = new HashMap<>();
 		
 		for(Setting<Object> field : fields){
-			Setting<Object> clonedField = field;
-			
-			try{
-				clonedField = field.clone();
-			}
-			catch(CloneNotSupportedException e){}
-			
-			clonedField.setDictionary(dict);
+			Setting<Object> clonedField = field.duplicate();
 			
 			this.getFieldsMap().put(clonedField.getName(), clonedField);
 		}
