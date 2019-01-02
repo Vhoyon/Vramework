@@ -1,16 +1,10 @@
-/target/
-/out/
-/bin/
-
-/.idea/workspace.xml
-
-Vramework.iml
 
 ### Eclipse ###
 
 .metadata
 bin/
 tmp/
+/target/
 *.tmp
 *.bak
 *.swp
