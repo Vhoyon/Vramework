@@ -1,8 +1,8 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.interfaces.Utils;
-
 import java.util.HashMap;
+
+import io.github.vhoyon.vramework.interfaces.Utils;
 
 public class Buffer {
 	
@@ -57,11 +57,7 @@ public class Buffer {
 					+ fullKey + "\" was found in the Buffer.");
 		}
 		else{
-			
-			Object memoryObject = memory.get(fullKey);
-			
-			return memoryObject;
-			
+			return memory.get(fullKey);
 		}
 		
 	}
@@ -70,9 +66,15 @@ public class Buffer {
 		
 		String objectKey = Utils.buildKey(key, associatedName);
 		
-		boolean hasRemovedObject = memory.containsKey(objectKey);
+		return remove(objectKey);
 		
-		memory.remove(objectKey);
+	}
+	
+	public boolean remove(String fullKey){
+		
+		boolean hasRemovedObject = memory.containsKey(fullKey);
+		
+		memory.remove(fullKey);
 		
 		return hasRemovedObject;
 		
