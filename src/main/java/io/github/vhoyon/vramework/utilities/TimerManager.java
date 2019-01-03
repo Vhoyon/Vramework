@@ -19,8 +19,7 @@ public final class TimerManager {
 		}
 		
 		public int getTimeRemaining(){
-			return delay
-					- ((int)(System.currentTimeMillis() - timeStarted));
+			return delay - ((int)(System.currentTimeMillis() - timeStarted));
 		}
 	}
 	
@@ -48,11 +47,12 @@ public final class TimerManager {
 	 * @param action
 	 *            Action to do after the delay was finished, without being
 	 *            called again, which resets the delay
-	 * @param handler
-	 *            Handler object that gets notified when the delay is over
+	 * @param doFinally
+	 *            Action to do when everything is done (including when
+	 *            stopping this timer).
 	 */
 	public static void schedule(final String timerName, final int delay,
-			Runnable action, final Object handler){
+			Runnable action, Runnable doFinally){
 		
 		if(timers == null)
 			timers = new HashMap<>();
@@ -62,13 +62,22 @@ public final class TimerManager {
 			public void run(){
 				action.run();
 				
-				stopTimer(timerName, handler);
+				stopTimer(timerName, doFinally);
 			}
 		};
 		
 		stopTimer(timerName);
 		
-		TimerWrapper timer = new TimerWrapper(timerName, delay);
+		TimerWrapper timer = new TimerWrapper(timerName, delay){
+			@Override
+			public void cancel(){
+				super.cancel();
+				
+				if(doFinally != null){
+					doFinally.run();
+				}
+			}
+		};
 		
 		timer.schedule(task, delay);
 		
@@ -80,16 +89,10 @@ public final class TimerManager {
 		stopTimer(timerName, null);
 	}
 	
-	public static void stopTimer(String timerName, Object handler){
+	public static void stopTimer(String timerName, Runnable doFinally){
 		
 		if(timers != null && timers.containsKey(timerName)){
 			timers.remove(timerName).cancel();
-			
-			if(handler != null){
-				synchronized(handler){
-					handler.notifyAll();
-				}
-			}
 		}
 		
 	}
