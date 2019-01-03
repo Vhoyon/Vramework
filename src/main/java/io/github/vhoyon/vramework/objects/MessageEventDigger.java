@@ -1,24 +1,17 @@
 package io.github.vhoyon.vramework.objects;
 
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import io.github.vhoyon.vramework.utilities.KeyBuilder;
 
-public class MessageEventDigger {
-	
-	private MessageReceivedEvent event;
+public class MessageEventDigger extends EventDigger {
 	
 	public MessageEventDigger(MessageReceivedEvent event){
-		this.event = event;
+		super(event);
 	}
 	
 	public MessageReceivedEvent getEvent(){
-		return this.event;
-	}
-	
-	public JDA getJDA(){
-		return this.getEvent().getJDA();
+		return (MessageReceivedEvent)super.getEvent();
 	}
 	
 	public String getGuildKey(){
@@ -55,7 +48,7 @@ public class MessageEventDigger {
 	}
 	
 	public Guild getGuild(){
-		return event.getGuild();
+		return this.getEvent().getGuild();
 	}
 	
 	public String getGuildId(){
@@ -63,7 +56,7 @@ public class MessageEventDigger {
 	}
 	
 	public TextChannel getChannel(){
-		return event.getTextChannel();
+		return this.getEvent().getTextChannel();
 	}
 	
 	public String getChannelId(){
@@ -71,11 +64,11 @@ public class MessageEventDigger {
 	}
 	
 	public Member getMember(){
-		return event.getMember();
+		return this.getEvent().getMember();
 	}
 	
 	public User getUser(){
-		return event.getAuthor();
+		return this.getEvent().getAuthor();
 	}
 	
 	public String getUserId(){

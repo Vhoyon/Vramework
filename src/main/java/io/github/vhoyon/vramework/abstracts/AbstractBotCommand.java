@@ -14,10 +14,7 @@ import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.Buffer;
-import io.github.vhoyon.vramework.objects.Mention;
-import io.github.vhoyon.vramework.objects.MessageEventDigger;
-import io.github.vhoyon.vramework.objects.Request;
+import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
@@ -345,26 +342,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean hasHumansLeftConnected(){
-		
-		if(!this.isConnectedToVoiceChannelBot()){
-			return false;
-		}
-		else{
-			
-			VoiceChannel channel = getConnectedVoiceChannelBot();
-			
-			for(Member member : channel.getMembers()){
-				
-				if(!(member.getUser().isBot() || member.getUser().isFake())){
-					return true;
-				}
-				
-			}
-			
-			return false;
-			
-		}
-		
+		return EventDigger.doesConnectedChannelHasHumansLeft(getGuild());
 	}
 	
 	public void disconnect(){
