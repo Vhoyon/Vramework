@@ -60,7 +60,7 @@ public class KeyBuilder {
 				command.getDefaultCall());
 	}
 	
-	public static String buildCOmmandObjectKey(AbstractBotCommand command,
+	public static String buildCommandObjectKey(AbstractBotCommand command,
 			Object object){
 		return Utils.buildKey(buildCommandKey(command), object.toString());
 	}
