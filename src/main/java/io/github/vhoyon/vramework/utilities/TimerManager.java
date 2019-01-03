@@ -60,7 +60,8 @@ public final class TimerManager {
 		TimerTask task = new TimerTask(){
 			@Override
 			public void run(){
-				action.run();
+				if(action != null)
+					action.run();
 				
 				stopTimer(timerName, doFinally);
 			}
