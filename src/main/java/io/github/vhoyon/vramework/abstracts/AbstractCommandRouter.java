@@ -247,6 +247,9 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	 */
 	public SettingRepository getSettings(BufferLevel level){
 		
+		if(level == null)
+			level = AbstractBotCommand.DEFAULT_BUFFER_LEVEL;
+		
 		SettingRepository repo;
 		
 		Setting<Object>[] defaultSettings = this.getDefaultSettings();
