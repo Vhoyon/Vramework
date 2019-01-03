@@ -625,7 +625,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 */
 	public void setSetting(String settingName, Object value)
 			throws BadFormatException{
-		this.setSetting(settingName, value, DEFAULT_BUFFER_LEVEL, null);
+		this.setSetting(settingName, value, null, null);
 	}
 	
 	/**
@@ -680,7 +680,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 */
 	public void setSetting(String settingName, Object value,
 			Consumer<Object> onChange) throws BadFormatException{
-		this.setSetting(settingName, value, DEFAULT_BUFFER_LEVEL, onChange);
+		this.setSetting(settingName, value, null, onChange);
 	}
 	
 	/**
@@ -712,6 +712,9 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 */
 	public void setSetting(String settingName, Object value, BufferLevel level,
 			Consumer<Object> onChange) throws BadFormatException{
+		
+		if(level == null)
+			level = DEFAULT_BUFFER_LEVEL;
 		
 		SettingRepository settings = this.getSettings(level);
 		
