@@ -1,14 +1,14 @@
 package io.github.vhoyon.vramework.modules;
 
-import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
-import io.github.vhoyon.vramework.interfaces.Loggable;
-import io.github.vhoyon.vramework.utilities.ThreadPool;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
+import io.github.vhoyon.vramework.interfaces.Loggable;
 
 public class Logger extends ModuleOutputtable {
 	
@@ -137,10 +137,6 @@ public class Logger extends ModuleOutputtable {
 		}
 	}
 	
-	public static void log(Exception e){
-		log(e.getMessage(), LogType.ERROR);
-	}
-	
 	public static void log(String message){
 		log(message, (String)null, true);
 	}
@@ -157,8 +153,18 @@ public class Logger extends ModuleOutputtable {
 		log(message, logType.toString(), appendDate);
 	}
 	
+	public static void log(Exception e){
+		log(e.getMessage(), LogType.ERROR.toString(), true, e.getStackTrace());
+	}
+	
 	public static void log(String message, final String logType,
 			final boolean appendDate){
+		log(message, logType, appendDate, Thread.currentThread()
+				.getStackTrace());
+	}
+	
+	private static void log(String message, String logType,
+			final boolean appendDate, StackTraceElement[] stackElements){
 		
 		if(message == null || message.length() == 0){
 			log("[tried to log empty message]", LogType.ERROR, true);
@@ -166,9 +172,6 @@ public class Logger extends ModuleOutputtable {
 		else{
 			
 			final ArrayList<Loggable> outputs = getOutputs();
-			
-			final StackTraceElement[] stackElements = Thread.currentThread()
-					.getStackTrace();
 			
 			final String logText = buildLogMessage(message, logType,
 					appendDate, stackElements);
@@ -249,7 +252,7 @@ public class Logger extends ModuleOutputtable {
 		
 		builder.append(message);
 		
-		if("ERROR".equalsIgnoreCase(logType)){
+		if(LogType.ERROR.toString().equalsIgnoreCase(logType)){
 			
 			String className = null;
 			String methodName = null;
@@ -272,8 +275,8 @@ public class Logger extends ModuleOutputtable {
 			}
 			
 			String errorMessage = String.format(
-					"Error in %1$s at line %2$s (in method %3$s).", className,
-					lineNumber, methodName);
+					"Error in %1$s at line %2$s (in method `%3$s`).",
+					className, lineNumber, methodName);
 			
 			builder.append("\n\t").append(errorMessage);
 			
@@ -282,4 +285,5 @@ public class Logger extends ModuleOutputtable {
 		return builder.toString();
 		
 	}
+	
 }
