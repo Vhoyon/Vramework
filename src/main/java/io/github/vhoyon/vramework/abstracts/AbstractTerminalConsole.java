@@ -1,16 +1,17 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import io.github.vhoyon.vramework.utils.UpdatableOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.interfaces.Loggable;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.TerminalCommandsLinker;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import io.github.vhoyon.vramework.utils.UpdatableOutputStream;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
@@ -88,34 +89,43 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
-		this.sendLog(logText);
-		
-		// logToChannel(logText, logType);
-	}
-	
-	protected void sendLog(String log){
-		this.sendLog(log, true);
-	}
-	
-	protected void sendLog(String log, boolean appendNewLine){
-		if(appendNewLine)
-			System.out.println(log);
-		else
-			System.out.print(log);
+		logToChannel(logText, logType, true);
 	}
 	
 	/**
 	 * @deprecated
-	 * @param logText
-	 * @param logType
+	 * @param log
+	 *            Log message.
 	 */
-	@SuppressWarnings("unused")
-	private void logToChannel(String logText, String logType){
+	protected void sendLog(String log){
+		this.sendLog(log, true);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param log
+	 *            Log message.
+	 * @param appendNewLine
+	 *            If the output should add a new line after the text.
+	 */
+	protected void sendLog(String log, boolean appendNewLine){
+		logToChannel(log, null, appendNewLine);
+	}
+	
+	private void logToChannel(String logText, String logType,
+			boolean appendNewLine){
 		
-		if("ERROR".equals(logType))
-			System.err.println(logText);
+		PrintStream stream;
+		
+		if(LogType.ERROR.toString().equalsIgnoreCase(logType))
+			stream = System.err;
 		else
-			System.out.println(logText);
+			stream = System.out;
+		
+		if(appendNewLine)
+			stream.println(logText);
+		else
+			stream.print(logText);
 		
 	}
 	

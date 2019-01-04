@@ -21,4 +21,5 @@ public class NotificationLogger implements Loggable {
 	public void log(String logText, String logType, boolean hasAppendedDate){
 		JOptionPane.showMessageDialog(frame, logText);
 	}
+	
 }
