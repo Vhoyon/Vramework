@@ -10,9 +10,11 @@ public class Buffer {
 	private static Buffer buffer;
 	
 	private HashMap<String, Object> memory;
+	private HashMap<Class<?>, Object> singletonMemory;
 	
 	private Buffer(){
 		memory = new HashMap<>();
+		singletonMemory = new HashMap<>();
 	}
 	
 	public static Buffer get(){
@@ -31,12 +33,10 @@ public class Buffer {
 					"The desiredClass parameter cannot be null!");
 		}
 		
-		String classKey = createSingletonClassKey(desiredClass);
-		
 		Buffer buffer = Buffer.get();
 		
-		if(buffer.has(classKey)){
-			return (E)buffer.get(classKey);
+		if(buffer.singletonMemory.containsKey(desiredClass)){
+			return (E)buffer.singletonMemory.get(desiredClass);
 		}
 		else{
 			
@@ -51,7 +51,7 @@ public class Buffer {
 						e);
 			}
 			
-			buffer.push(newClassSingleton, classKey);
+			buffer.singletonMemory.put(desiredClass, newClassSingleton);
 			
 			return newClassSingleton;
 			
@@ -59,16 +59,12 @@ public class Buffer {
 		
 	}
 	
-	public static boolean removeSingleton(Class<?> singletonClass){
-		return Buffer.get().remove(createSingletonClassKey(singletonClass));
+	public static <E> E removeSingleton(Class<E> singletonClass){
+		return (E)Buffer.get().singletonMemory.remove(singletonClass);
 	}
 	
 	public static boolean hasSingleton(Class<?> singletonClass){
-		return Buffer.get().has(createSingletonClassKey(singletonClass));
-	}
-	
-	private static String createSingletonClassKey(Class<?> singletonClass){
-		return Utils.buildKey("SINGLETON", singletonClass.getCanonicalName());
+		return Buffer.get().singletonMemory.containsKey(singletonClass);
 	}
 	
 	public boolean push(Object object, String associatedName, String key){
