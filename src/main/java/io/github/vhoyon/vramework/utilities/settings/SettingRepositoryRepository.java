@@ -9,8 +9,6 @@ import io.github.vhoyon.vramework.utilities.KeyBuilder;
 
 public class SettingRepositoryRepository {
 	
-	public final static String SETTINGS_BUFFER_KEY = "VRAMEWORK_SETTINGS_REPOSITORIES";
-	
 	private HashMap<String, SettingRepository> repositories;
 	
 	private SettingRepositoryRepository(){
@@ -38,17 +36,16 @@ public class SettingRepositoryRepository {
 		
 		String channelKey = KeyBuilder.buildTextChannelKey(channel);
 		
-		if(!hasSettingRepository(SETTINGS_BUFFER_KEY, channelKey)){
+		if(!hasSettingRepository(channelKey)){
 			
 			String guildKey = KeyBuilder.buildGuildKey(channel.getGuild());
 			
-			if(hasSettingRepository(SETTINGS_BUFFER_KEY, guildKey)){
+			if(hasSettingRepository(guildKey)){
 				
 				SettingRepository guildSettingRepoCopy = getSettingRepository(
 						channel.getGuild()).duplicate();
 				
-				getReposRepo(SETTINGS_BUFFER_KEY).getRepos().put(channelKey,
-						guildSettingRepoCopy);
+				getReposRepo().getRepos().put(channelKey, guildSettingRepoCopy);
 				
 				return guildSettingRepoCopy;
 				
@@ -64,16 +61,8 @@ public class SettingRepositoryRepository {
 	@SafeVarargs
 	public static SettingRepository getSettingRepository(String repositoryKey,
 			Setting<Object>... settingsIfNew){
-		return SettingRepositoryRepository.getSettingRepository(
-				SETTINGS_BUFFER_KEY, repositoryKey, settingsIfNew);
-	}
-	
-	@SafeVarargs
-	public static SettingRepository getSettingRepository(
-			String settingRepositoryRepositoryKey, String repositoryKey,
-			Setting<Object>... settingsIfNew){
 		
-		SettingRepositoryRepository repositoryRepository = getReposRepo(settingRepositoryRepositoryKey);
+		SettingRepositoryRepository repositoryRepository = getReposRepo();
 		
 		SettingRepository repository;
 		
@@ -90,38 +79,21 @@ public class SettingRepositoryRepository {
 		
 	}
 	
-	protected static SettingRepositoryRepository getReposRepo(
-			String settingRepositoryRepositoryKey){
-		
-		Buffer buffer = Buffer.get();
-		
-		SettingRepositoryRepository repositoryRepository;
-		
-		if(buffer.has(settingRepositoryRepositoryKey)){
-			repositoryRepository = (SettingRepositoryRepository)buffer
-					.get(settingRepositoryRepositoryKey);
-		}
-		else{
-			repositoryRepository = new SettingRepositoryRepository();
-			
-			buffer.push(repositoryRepository, settingRepositoryRepositoryKey);
-		}
-		
-		return repositoryRepository;
-		
+	protected static SettingRepositoryRepository getReposRepo(){
+		return Buffer.getSingleton(SettingRepositoryRepository.class,
+				SettingRepositoryRepository::new);
 	}
 	
-	protected static boolean hasSettingRepository(
-			String settingRepositoryRepositoryKey, String repositoryKey){
+	protected static boolean hasSettingRepository(String repositoryKey){
 		
 		Buffer buffer = Buffer.get();
 		
-		if(!buffer.has(settingRepositoryRepositoryKey)){
+		if(!Buffer.hasSingleton(SettingRepositoryRepository.class)){
 			return false;
 		}
 		else{
-			SettingRepositoryRepository repositoryRepository = (SettingRepositoryRepository)buffer
-					.get(settingRepositoryRepositoryKey);
+			SettingRepositoryRepository repositoryRepository = Buffer
+					.getSingleton(SettingRepositoryRepository.class, null);
 			
 			return repositoryRepository.getRepos().containsKey(repositoryKey);
 		}
