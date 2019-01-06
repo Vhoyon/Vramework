@@ -1,14 +1,14 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.interfaces.Utils;
-import io.github.vhoyon.vramework.modules.Logger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+
+import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.modules.Logger;
 
 public class Request implements Utils {
 	

@@ -1,12 +1,5 @@
 package io.github.vhoyon.vramework.modules;
 
-import io.github.vhoyon.vramework.Framework;
-import io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole;
-import io.github.vhoyon.vramework.abstracts.Module;
-import io.github.vhoyon.vramework.exceptions.BadFileContentException;
-import io.github.vhoyon.vramework.interfaces.Console;
-import io.github.vhoyon.vramework.ui.NotificationUI;
-
 import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.vhoyon.vramework.Framework;
+import io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole;
+import io.github.vhoyon.vramework.abstracts.Module;
+import io.github.vhoyon.vramework.exceptions.BadFileContentException;
+import io.github.vhoyon.vramework.interfaces.Console;
+import io.github.vhoyon.vramework.ui.NotificationUI;
 
 public class Environment extends Module {
 	

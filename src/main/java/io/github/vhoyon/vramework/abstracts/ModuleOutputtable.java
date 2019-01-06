@@ -1,9 +1,9 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import io.github.vhoyon.vramework.interfaces.Outputtable;
-
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import io.github.vhoyon.vramework.interfaces.Outputtable;
 
 public abstract class ModuleOutputtable extends Module {
 	

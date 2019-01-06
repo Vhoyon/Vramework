@@ -1,13 +1,13 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.ved.jsanitizers.EnumSanitizer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.ved.jsanitizers.EnumSanitizer;
+import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
 class LangAmountManager {
 	

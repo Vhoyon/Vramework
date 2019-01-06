@@ -1,12 +1,12 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import java.util.HashMap;
+import java.util.TreeMap;
+
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
-
-import java.util.HashMap;
-import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
 	

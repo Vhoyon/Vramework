@@ -1,8 +1,8 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.interfaces.Loggable;
-
 import javax.swing.*;
+
+import io.github.vhoyon.vramework.interfaces.Loggable;
 
 public class NotificationLogger implements Loggable {
 	

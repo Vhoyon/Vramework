@@ -1,9 +1,5 @@
 package io.github.vhoyon.vramework.modules;
 
-import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
-import io.github.vhoyon.vramework.interfaces.Auditable;
-import io.github.vhoyon.vramework.utilities.ThreadPool;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +7,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.vhoyon.vramework.abstracts.ModuleOutputtable;
+import io.github.vhoyon.vramework.interfaces.Auditable;
+import io.github.vhoyon.vramework.utilities.ThreadPool;
 
 public class Audit extends ModuleOutputtable {
 	

@@ -1,16 +1,16 @@
 package io.github.vhoyon.vramework.utilities;
 
+import javax.security.auth.login.LoginException;
+
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import io.github.vhoyon.vramework.abstracts.AbstractMessageListener;
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.modules.Metrics;
+import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.Buffer;
-
-import javax.security.auth.login.LoginException;
 
 public class FrameworkTemplate {
 	

@@ -40,7 +40,7 @@ public class Buffer {
 		}
 		else{
 			
-			E newClassSingleton = null;
+			E newClassSingleton;
 			
 			try{
 				newClassSingleton = createInstanceIfNew.call();

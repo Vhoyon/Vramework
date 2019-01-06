@@ -1,8 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 import io.github.vhoyon.vramework.interfaces.Loggable;
 

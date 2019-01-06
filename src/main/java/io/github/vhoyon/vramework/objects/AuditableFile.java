@@ -1,11 +1,11 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.io.*;
+import java.nio.file.Files;
+
 import io.github.vhoyon.vramework.interfaces.Auditable;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.res.FrameworkResources;
-
-import java.io.*;
-import java.nio.file.Files;
 
 public class AuditableFile implements Auditable {
 	
