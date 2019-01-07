@@ -1,6 +1,7 @@
 package io.github.vhoyon.vramework.objects;
 
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
+import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 
 public class Link {
 	
@@ -10,17 +11,25 @@ public class Link {
 		this.classToLink = command;
 	}
 	
-	public LinkableCommand getInstance() throws Exception{
-		return getClassToLink().newInstance();
+	public LinkableCommand getInstance() throws IllegalStateException{
+		try{
+			return getClassToLink().newInstance();
+		}
+		catch(IllegalAccessException | InstantiationException e){
+			throw new IllegalStateException(
+					"The class to link is not accessible nor instantiable!", e);
+		}
 	}
 	
 	public boolean hasCall(String call){
 		
 		if(call != null && call.length() != 0){
 			
-			if(getCalls() instanceof String[]){
+			LinkableCommand instance = getInstance();
+			
+			if(instance instanceof LinkableMultiCommand){
 				
-				String[] calls = (String[])getCalls();
+				String[] calls = ((LinkableMultiCommand)instance).getCalls();
 				
 				for(String definedCall : calls)
 					if(definedCall.equals(call))
@@ -29,7 +38,7 @@ public class Link {
 			}
 			else{
 				
-				String linkCall = getCalls().toString();
+				String linkCall = instance.getCall();
 				
 				return call.equals(linkCall);
 				
@@ -41,9 +50,9 @@ public class Link {
 		
 	}
 	
-	public Object getCalls(){
+	public String getCall(){
 		try{
-			return getInstance().getCalls();
+			return getInstance().getCall();
 		}
 		catch(Exception e){
 			return null;
@@ -51,12 +60,7 @@ public class Link {
 	}
 	
 	public String getDefaultCall(){
-		try{
-			return getInstance().getDefaultCall();
-		}
-		catch(Exception e){
-			return null;
-		}
+		return this.getCall();
 	}
 	
 	public Class<? extends LinkableCommand> getClassToLink(){

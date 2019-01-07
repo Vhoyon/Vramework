@@ -6,11 +6,8 @@ import io.github.vhoyon.vramework.modules.Logger;
 public class TerminalCommandRestart extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			"restart"
-		};
+	public String getCall(){
+		return "restart";
 	}
 	
 	@Override

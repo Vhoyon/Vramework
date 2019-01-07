@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
+import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
 
@@ -46,22 +47,17 @@ public abstract class CommandsLinker extends Translatable {
 		
 		linksMap.forEach((key, link) -> {
 			
-			try{
-				
-				LinkableCommand command = link.getInstance();
-				
-				boolean isSubstitute = defaultCommands.containsKey(link
-						.getDefaultCall());
-				
-				boolean isHidden = (command instanceof Hidden)
-						&& ((Hidden)command).hiddenCondition();
-				
-				if(!isSubstitute && !isHidden){
-					defaultCommands.put(link.getDefaultCall(), command);
-				}
-				
+			LinkableCommand command = link.getInstance();
+			
+			boolean isSubstitute = defaultCommands.containsKey(link
+					.getDefaultCall());
+			
+			boolean isHidden = (command instanceof Hidden)
+					&& ((Hidden)command).hiddenCondition();
+			
+			if(!isSubstitute && !isHidden){
+				defaultCommands.put(link.getDefaultCall(), command);
 			}
-			catch(Exception e){}
 			
 		});
 		
@@ -101,11 +97,10 @@ public abstract class CommandsLinker extends Translatable {
 			
 			builder.append("\n");
 			
-			Object calls = command.getCalls();
-			
-			if(calls instanceof String[]){
+			if(command instanceof LinkableMultiCommand){
 				
-				String[] callsArray = (String[])calls;
+				String[] callsArray = ((LinkableMultiCommand)command)
+						.getCalls();
 				
 				// Add all of the non default calls of a link as a variant
 				for(int i = 1; i < callsArray.length; i++){

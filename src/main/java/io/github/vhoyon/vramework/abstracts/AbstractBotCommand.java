@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -82,26 +83,29 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
+	@Override
+	public String getActualCall(){
+		return getRequest().getCommand();
+	}
+	
 	public String getCommandName(){
 		
-		String requestName = getRequest().getCommand();
+		String requestName = getActualCall();
 		
-		Object calls = getCalls();
-		
-		if(calls instanceof String[]){
+		if(this instanceof LinkableMultiCommand){
 			
-			if(Arrays.asList((String[])calls).contains(requestName))
-				return requestName;
+			LinkableMultiCommand thisAsMulti = (LinkableMultiCommand)this;
 			
-		}
-		else{
+			String[] calls = thisAsMulti.getCalls();
 			
-			if(calls.equals(requestName))
-				return requestName;
+			if(!Arrays.stream(calls).collect(Collectors.toList())
+					.contains(requestName)){
+				return thisAsMulti.getDefaultCall();
+			}
 			
 		}
 		
-		return getDefaultCall();
+		return requestName;
 		
 	}
 	

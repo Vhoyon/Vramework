@@ -57,10 +57,11 @@ public abstract class AbstractCommandConfirmed extends AbstractBotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		if(inceptionCommand == null)
 			return null;
 		
-		return inceptionCommand.getCalls();
+		return inceptionCommand.getCall();
 	}
+	
 }

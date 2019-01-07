@@ -18,7 +18,7 @@ public class TerminalCommandsLinker extends CommandsLinker {
 				
 				return new AbstractTerminalCommand(){
 					@Override
-					public String[] getCalls(){
+					public String getCall(){
 						return null;
 					}
 					

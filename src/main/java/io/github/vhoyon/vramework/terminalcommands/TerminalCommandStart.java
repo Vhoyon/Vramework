@@ -6,11 +6,8 @@ import io.github.vhoyon.vramework.modules.Logger;
 public class TerminalCommandStart extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			"start"
-		};
+	public String getCall(){
+		return "start";
 	}
 	
 	@Override

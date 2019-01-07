@@ -1,6 +1,8 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 
@@ -15,18 +17,24 @@ public class LinkParams extends Link {
 	}
 	
 	@Override
-	public LinkableCommand getInstance() throws Exception{
+	public LinkableCommand getInstance() throws IllegalStateException{
 		
-		@SuppressWarnings("rawtypes")
-		ArrayList<Class> classes = new ArrayList<>();
+		List<Class<?>> classes = new ArrayList<>();
 		
 		for(Object object : params){
 			classes.add(object.getClass());
 		}
 		
-		return getClassToLink().getDeclaredConstructor(
-				(Class[])classes.toArray(new Class[classes.size()]))
-				.newInstance(params);
+		try{
+			return getClassToLink().getDeclaredConstructor(
+					(Class<?>[])classes.toArray(new Class<?>[0])).newInstance(
+					params);
+		}
+		catch(InstantiationException | IllegalAccessException
+				| InvocationTargetException | NoSuchMethodException e){
+			throw new IllegalStateException(
+					"The command to link is not accessible nor instantiable!");
+		}
 		
 	}
 	

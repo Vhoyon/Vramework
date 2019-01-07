@@ -7,6 +7,7 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import io.github.vhoyon.vramework.exceptions.CommandNotFoundException;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
+import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 import io.github.vhoyon.vramework.modules.Logger;
 
 public abstract class CommandLinksContainer {
@@ -62,23 +63,21 @@ public abstract class CommandLinksContainer {
 		
 		for(Link link : links){
 			
-			Object calls = link.getCalls();
-			
-			if(calls != null){
+			if(link.getClassToLink().isAssignableFrom(
+					LinkableMultiCommand.class)){
 				
-				if(calls instanceof String[]){
-					
-					String[] callsArray = (String[])calls;
-					
-					for(String call : callsArray)
-						linkMap.put(call, link);
-					
-				}
-				else{
-					
-					linkMap.put(calls.toString(), link);
-					
-				}
+				String[] calls = ((LinkableMultiCommand)link.getInstance())
+						.getCalls();
+				
+				for(String call : calls)
+					linkMap.put(call, link);
+				
+			}
+			else{
+				
+				String call = link.getCall();
+				
+				linkMap.put(call, link);
 				
 			}
 			
@@ -113,7 +112,8 @@ public abstract class CommandLinksContainer {
 		return getLinkMap().get(commandName);
 	}
 	
-	public LinkableCommand findCommand(String commandName) throws Exception{
+	public LinkableCommand findCommand(String commandName)
+			throws CommandNotFoundException{
 		
 		Link link = findLink(commandName);
 		
@@ -121,9 +121,7 @@ public abstract class CommandLinksContainer {
 			throw new CommandNotFoundException(commandName);
 		}
 		else{
-			
 			return link.getInstance();
-			
 		}
 		
 	}

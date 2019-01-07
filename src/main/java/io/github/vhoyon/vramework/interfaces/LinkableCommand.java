@@ -1,26 +1,14 @@
 package io.github.vhoyon.vramework.interfaces;
 
-import io.github.vhoyon.vramework.objects.Request;
 import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.objects.Request;
 
 public interface LinkableCommand extends Command {
 	
-	Object getCalls();
+	String getCall();
 	
-	default String getDefaultCall(){
-		Object calls = getCalls();
-		
-		if(calls == null)
-			return null;
-		
-		String call;
-		
-		if(calls instanceof String[])
-			call = ((String[])calls)[0];
-		else
-			call = calls.toString();
-		
-		return call;
+	default String getActualCall(){
+		return this.getCall();
 	}
 	
 	default String getCommandDescription(){
