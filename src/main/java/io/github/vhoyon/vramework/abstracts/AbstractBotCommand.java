@@ -3,6 +3,7 @@ package io.github.vhoyon.vramework.abstracts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.dv8tion.jda.core.entities.*;
@@ -117,7 +118,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		if(!this.hasContent())
 			return null;
 		
-		ArrayList<String> possibleContent = splitSpacesExcludeQuotesMaxed(
+		List<String> possibleContent = splitSpacesExcludeQuotesMaxed(
 				this.getContent(), maxSize);
 		
 		return possibleContent.toArray(new String[0]);

@@ -1,9 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -259,7 +256,7 @@ public class Request implements Utils {
 		// in double quotes and put all what's found in the
 		// possibleParams ArrayList.
 		// Necessary since .split() removes the wanted Strings.
-		ArrayList<String> possibleParams = splitSpacesExcludeQuotes(content);
+		List<String> possibleParams = splitSpacesExcludeQuotes(content);
 		
 		duplicateParams = new ArrayList<>();
 		
@@ -307,7 +304,7 @@ public class Request implements Utils {
 	}
 	
 	private boolean tryGetParamContent(Parameter newParameter,
-			PossibleParam possibleParam, ArrayList<String> possibleParamList){
+			PossibleParam possibleParam, List<String> possibleParamList){
 		
 		String possibleParamContent;
 		
@@ -344,7 +341,7 @@ public class Request implements Utils {
 	}
 	
 	private boolean handleParameterCreation(PossibleParam possibleParam,
-			ArrayList<String> possibleParamsList){
+			List<String> possibleParamsList){
 		
 		boolean canRoll = true;
 		

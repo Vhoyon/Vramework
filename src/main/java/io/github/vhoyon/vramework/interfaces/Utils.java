@@ -52,8 +52,8 @@ public interface Utils {
 		return keyBuilder.toString();
 	}
 	
-	default ArrayList<String> splitSpacesExcludeQuotes(String string){
-		ArrayList<String> possibleStrings = new ArrayList<>();
+	default List<String> splitSpacesExcludeQuotes(String string){
+		List<String> possibleStrings = new ArrayList<>();
 		Matcher matcher = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'")
 				.matcher(string);
 		while(matcher.find()){
@@ -63,7 +63,7 @@ public interface Utils {
 		return possibleStrings;
 	}
 	
-	default ArrayList<String> splitSpacesExcludeQuotesMaxed(String string,
+	default List<String> splitSpacesExcludeQuotesMaxed(String string,
 			int maxSize){
 		
 		if(maxSize == 0){
@@ -73,7 +73,7 @@ public interface Utils {
 			return singleEntry;
 		}
 		
-		ArrayList<String> fullSplit = splitSpacesExcludeQuotes(string);
+		List<String> fullSplit = splitSpacesExcludeQuotes(string);
 		
 		if(maxSize < 0 || fullSplit.size() <= maxSize){
 			return fullSplit;
@@ -83,8 +83,7 @@ public interface Utils {
 		List<String> allOthers = fullSplit.subList(maxSize,
 				fullSplit.size() - 1);
 		
-		ArrayList<String> allAndTruncated = new ArrayList<>();
-		allAndTruncated.addAll(splittedUpTo);
+		List<String> allAndTruncated = new ArrayList<>(splittedUpTo);
 		allAndTruncated.add(String.join(" ", allOthers));
 		
 		return allAndTruncated;
