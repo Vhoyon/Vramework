@@ -48,14 +48,13 @@ public abstract class CommandsLinker extends Translatable {
 			
 			LinkableCommand command = link.getInstance();
 			
-			boolean isSubstitute = defaultCommands.containsKey(link
-					.getDefaultCall());
+			boolean isSubstitute = defaultCommands.containsKey(link.getCall());
 			
 			boolean isHidden = (command instanceof Hidden)
 					&& ((Hidden)command).hiddenCondition();
 			
 			if(!isSubstitute && !isHidden){
-				defaultCommands.put(link.getDefaultCall(), command);
+				defaultCommands.put(link.getCall(), command);
 			}
 			
 		});

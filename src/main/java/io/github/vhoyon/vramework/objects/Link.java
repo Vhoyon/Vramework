@@ -45,10 +45,6 @@ public class Link {
 		}
 	}
 	
-	public String getDefaultCall(){
-		return this.getCall();
-	}
-	
 	public Class<? extends LinkableCommand> getClassToLink(){
 		return this.classToLink;
 	}

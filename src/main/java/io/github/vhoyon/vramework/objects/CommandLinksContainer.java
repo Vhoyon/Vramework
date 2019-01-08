@@ -65,23 +65,17 @@ public abstract class CommandLinksContainer {
 			String[] calls = link.getInstance().getAllCalls();
 			
 			for(String call : calls)
-				addNewLink(call, link);
+				this.getLinkMap().put(call, link);
 			
 		}
 		
 	}
 	
-	private void addNewLink(String call, Link link){
+	public LinkedHashMap<String, Link> getLinkMap(){
+		if(this.linkMap == null)
+			this.linkMap = new LinkedHashMap<>();
 		
-		if(call != null){
-			
-			if(this.linkMap == null)
-				linkMap = new LinkedHashMap<>();
-			
-			linkMap.put(call, link);
-			
-		}
-		
+		return this.linkMap;
 	}
 	
 	public LinkableCommand initiateLink(String commandName){
@@ -102,10 +96,6 @@ public abstract class CommandLinksContainer {
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
-	
-	public LinkedHashMap<String, Link> getLinkMap(){
-		return this.linkMap;
-	}
 	
 	public Link findLink(String commandName){
 		return getLinkMap().get(commandName);

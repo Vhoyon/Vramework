@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -94,8 +93,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		String[] calls = this.getAllCalls();
 		
-		if(!Arrays.stream(calls).collect(Collectors.toList())
-				.contains(requestName)){
+		if(!Arrays.asList(calls).contains(requestName)){
 			return this.getCall();
 		}
 		

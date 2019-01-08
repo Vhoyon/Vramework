@@ -18,11 +18,16 @@ public interface LinkableCommand extends Command {
 	}
 	
 	default String[] getAllCalls(){
-		String[] allCalls = new String[getAliases().length + 1];
+		String call = getCall();
 		
-		allCalls[0] = getCall();
+		if(call == null)
+			return new String[0];
 		
 		String[] aliases = getAliases();
+		
+		String[] allCalls = new String[aliases.length + 1];
+		
+		allCalls[0] = call;
 		
 		for(int i = 0; i < aliases.length; i++){
 			allCalls[i + 1] = aliases[i];
@@ -31,9 +36,15 @@ public interface LinkableCommand extends Command {
 		return allCalls;
 	}
 	
-	default String[] getCallsExceptActual(){
-		return Arrays.stream(getAllCalls())
-				.filter(o -> !getActualCall().equals(o)).toArray(String[]::new);
+	default String[] getCallsExceptActual() throws IllegalStateException{
+		String actualCall = getActualCall();
+		
+		if(actualCall == null)
+			throw new IllegalStateException(
+					"The actual call should not be null. Maybe this method was called in a class not meant to be called?");
+		
+		return Arrays.stream(getAllCalls()).filter(o -> !actualCall.equals(o))
+				.toArray(String[]::new);
 	}
 	
 	default String getCommandDescription(){
