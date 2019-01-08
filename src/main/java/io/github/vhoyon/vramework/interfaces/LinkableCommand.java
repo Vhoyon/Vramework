@@ -1,26 +1,50 @@
 package io.github.vhoyon.vramework.interfaces;
 
-import io.github.vhoyon.vramework.objects.Request;
+import java.util.Arrays;
+
 import io.github.vhoyon.vramework.objects.ParametersHelp;
+import io.github.vhoyon.vramework.objects.Request;
 
 public interface LinkableCommand extends Command {
 	
-	Object getCalls();
+	String getCall();
 	
-	default String getDefaultCall(){
-		Object calls = getCalls();
+	default String getActualCall(){
+		return this.getCall();
+	}
+	
+	default String[] getAliases(){
+		return new String[0];
+	}
+	
+	default String[] getAllCalls(){
+		String call = getCall();
 		
-		if(calls == null)
-			return null;
+		if(call == null)
+			return new String[0];
 		
-		String call;
+		String[] aliases = getAliases();
 		
-		if(calls instanceof String[])
-			call = ((String[])calls)[0];
-		else
-			call = calls.toString();
+		String[] allCalls = new String[aliases.length + 1];
 		
-		return call;
+		allCalls[0] = call;
+		
+		for(int i = 0; i < aliases.length; i++){
+			allCalls[i + 1] = aliases[i];
+		}
+		
+		return allCalls;
+	}
+	
+	default String[] getCallsExceptActual() throws IllegalStateException{
+		String actualCall = getActualCall();
+		
+		if(actualCall == null)
+			throw new IllegalStateException(
+					"The actual call should not be null. Maybe this method was called in a class not meant to be called?");
+		
+		return Arrays.stream(getAllCalls()).filter(o -> !actualCall.equals(o))
+				.toArray(String[]::new);
 	}
 	
 	default String getCommandDescription(){

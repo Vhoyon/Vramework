@@ -38,7 +38,7 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return null;
 	}
 	

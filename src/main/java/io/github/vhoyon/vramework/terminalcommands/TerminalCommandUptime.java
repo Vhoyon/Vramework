@@ -7,11 +7,8 @@ import io.github.vhoyon.vramework.modules.Metrics;
 public class TerminalCommandUptime extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			"uptime"
-		};
+	public String getCall(){
+		return "uptime";
 	}
 	
 	@Override

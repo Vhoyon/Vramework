@@ -1,5 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,13 +26,12 @@ public abstract class CommandLinksContainer {
 	 */
 	@SafeVarargs
 	public CommandLinksContainer(Class<? extends LinkableCommand>... commands){
-		Link[] links = new Link[commands.length];
 		
-		for(int i = 0; i < commands.length; i++){
-			links[i] = new Link(commands[i]);
-		}
+		Link[] linksArray = Arrays.stream(commands).map(Link::new)
+				.toArray(Link[]::new);
 		
-		initializeContainer(links);
+		initializeContainer(linksArray);
+		
 	}
 	
 	public CommandLinksContainer(String linksPackage){
@@ -44,11 +44,8 @@ public abstract class CommandLinksContainer {
 							LinkableCommand.class.getCanonicalName())
 					.loadClasses(LinkableCommand.class);
 			
-			Link[] links = new Link[linkableCommands.size()];
-			
-			for(int i = 0; i < linkableCommands.size(); i++){
-				links[i] = new Link(linkableCommands.get(i));
-			}
+			Link[] links = linkableCommands.stream().map(Link::new)
+					.toArray(Link[]::new);
 			
 			initializeContainer(links);
 			
@@ -58,32 +55,27 @@ public abstract class CommandLinksContainer {
 	
 	private void initializeContainer(Link[] links){
 		
-		linkMap = new LinkedHashMap<>();
-		
 		for(Link link : links){
 			
-			Object calls = link.getCalls();
-			
-			if(calls != null){
+			try{
 				
-				if(calls instanceof String[]){
-					
-					String[] callsArray = (String[])calls;
-					
-					for(String call : callsArray)
-						linkMap.put(call, link);
-					
-				}
-				else{
-					
-					linkMap.put(calls.toString(), link);
-					
-				}
+				String[] calls = link.getInstance().getAllCalls();
+				
+				for(String call : calls)
+					this.getLinkMap().put(call, link);
 				
 			}
+			catch(IllegalStateException e){}
 			
 		}
 		
+	}
+	
+	public LinkedHashMap<String, Link> getLinkMap(){
+		if(this.linkMap == null)
+			this.linkMap = new LinkedHashMap<>();
+		
+		return this.linkMap;
 	}
 	
 	public LinkableCommand initiateLink(String commandName){
@@ -105,15 +97,12 @@ public abstract class CommandLinksContainer {
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
 	
-	public LinkedHashMap<String, Link> getLinkMap(){
-		return this.linkMap;
-	}
-	
 	public Link findLink(String commandName){
 		return getLinkMap().get(commandName);
 	}
 	
-	public LinkableCommand findCommand(String commandName) throws Exception{
+	public LinkableCommand findCommand(String commandName)
+			throws CommandNotFoundException{
 		
 		Link link = findLink(commandName);
 		
@@ -121,9 +110,7 @@ public abstract class CommandLinksContainer {
 			throw new CommandNotFoundException(commandName);
 		}
 		else{
-			
 			return link.getInstance();
-			
 		}
 		
 	}

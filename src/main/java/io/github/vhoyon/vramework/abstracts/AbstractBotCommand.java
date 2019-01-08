@@ -82,26 +82,22 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
+	@Override
+	public String getActualCall(){
+		return getRequest().getCommand();
+	}
+	
 	public String getCommandName(){
 		
-		String requestName = getRequest().getCommand();
+		String requestName = getActualCall();
 		
-		Object calls = getCalls();
+		String[] calls = this.getAllCalls();
 		
-		if(calls instanceof String[]){
-			
-			if(Arrays.asList((String[])calls).contains(requestName))
-				return requestName;
-			
-		}
-		else{
-			
-			if(calls.equals(requestName))
-				return requestName;
-			
+		if(!Arrays.asList(calls).contains(requestName)){
+			return this.getCall();
 		}
 		
-		return getDefaultCall();
+		return requestName;
 		
 	}
 	

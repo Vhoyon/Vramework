@@ -56,8 +56,7 @@ public class KeyBuilder {
 	}
 	
 	public static String buildCommandKey(AbstractBotCommand command){
-		return buildCommandKey(command.getTextContext(),
-				command.getDefaultCall());
+		return buildCommandKey(command.getTextContext(), command.getCall());
 	}
 	
 	public static String buildCommandObjectKey(AbstractBotCommand command,
