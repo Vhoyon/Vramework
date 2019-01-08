@@ -11,11 +11,16 @@ public final class TimerManager {
 	private static class TimerWrapper extends Timer {
 		public int delay;
 		public long timeStarted;
+		public Runnable action;
+		public Runnable doFinally;
 		
-		public TimerWrapper(String timerName, int delay){
+		public TimerWrapper(String timerName, int delay, Runnable action,
+				Runnable doFinally){
 			super(timerName);
 			this.delay = delay;
 			timeStarted = System.currentTimeMillis();
+			this.action = action;
+			this.doFinally = doFinally;
 		}
 		
 		public int getTimeRemaining(){
@@ -63,22 +68,14 @@ public final class TimerManager {
 				if(action != null)
 					action.run();
 				
-				stopTimer(timerName, doFinally);
+				stopTimer(timerName);
 			}
 		};
 		
-		stopTimer(timerName);
+		stopTimer(timerName, false);
 		
-		TimerWrapper timer = new TimerWrapper(timerName, delay){
-			@Override
-			public void cancel(){
-				super.cancel();
-				
-				if(doFinally != null){
-					doFinally.run();
-				}
-			}
-		};
+		TimerWrapper timer = new TimerWrapper(timerName, delay, action,
+				doFinally);
 		
 		timer.schedule(task, delay);
 		
@@ -86,14 +83,35 @@ public final class TimerManager {
 		
 	}
 	
-	public static void stopTimer(String timerName){
-		stopTimer(timerName, null);
-	}
-	
-	public static void stopTimer(String timerName, Runnable doFinally){
+	public static boolean resetTimer(String timerName){
 		
 		if(timers != null && timers.containsKey(timerName)){
-			timers.remove(timerName).cancel();
+			TimerWrapper timer = timers.get(timerName);
+			
+			TimerManager.schedule(timerName, timer.delay, timer.action,
+					timer.doFinally);
+			
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
+	public static void stopTimer(String timerName){
+		stopTimer(timerName, true);
+	}
+	
+	private static void stopTimer(String timerName, boolean shouldDoFinally){
+		
+		if(timers != null && timers.containsKey(timerName)){
+			TimerWrapper timer = timers.remove(timerName);
+			
+			timer.cancel();
+			
+			if(shouldDoFinally && timer.doFinally != null){
+				timer.doFinally.run();
+			}
 		}
 		
 	}
