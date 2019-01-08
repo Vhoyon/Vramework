@@ -1,5 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,13 +26,12 @@ public abstract class CommandLinksContainer {
 	 */
 	@SafeVarargs
 	public CommandLinksContainer(Class<? extends LinkableCommand>... commands){
-		Link[] links = new Link[commands.length];
 		
-		for(int i = 0; i < commands.length; i++){
-			links[i] = new Link(commands[i]);
-		}
+		Link[] linksArray = Arrays.stream(commands).map(Link::new)
+				.toArray(Link[]::new);
 		
-		initializeContainer(links);
+		initializeContainer(linksArray);
+		
 	}
 	
 	public CommandLinksContainer(String linksPackage){
