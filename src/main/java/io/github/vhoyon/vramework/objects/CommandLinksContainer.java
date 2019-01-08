@@ -7,7 +7,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import io.github.vhoyon.vramework.exceptions.CommandNotFoundException;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
-import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 import io.github.vhoyon.vramework.modules.Logger;
 
 public abstract class CommandLinksContainer {
@@ -63,22 +62,10 @@ public abstract class CommandLinksContainer {
 			if(linkClass.isInterface())
 				continue;
 			
-			if(linkClass.isAssignableFrom(LinkableMultiCommand.class)){
-				
-				String[] calls = ((LinkableMultiCommand)link.getInstance())
-						.getCalls();
-				
-				for(String call : calls)
-					addNewLink(call, link);
-				
-			}
-			else{
-				
-				String call = link.getCall();
-				
+			String[] calls = link.getInstance().getAllCalls();
+			
+			for(String call : calls)
 				addNewLink(call, link);
-				
-			}
 			
 		}
 		

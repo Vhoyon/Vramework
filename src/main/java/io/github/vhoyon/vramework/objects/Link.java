@@ -1,7 +1,6 @@
 package io.github.vhoyon.vramework.objects;
 
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
-import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 
 public class Link {
 	
@@ -25,24 +24,11 @@ public class Link {
 		
 		if(call != null && call.length() != 0){
 			
-			LinkableCommand instance = getInstance();
+			String[] calls = getInstance().getAllCalls();
 			
-			if(instance instanceof LinkableMultiCommand){
-				
-				String[] calls = ((LinkableMultiCommand)instance).getCalls();
-				
-				for(String definedCall : calls)
-					if(definedCall.equals(call))
-						return true;
-				
-			}
-			else{
-				
-				String linkCall = instance.getCall();
-				
-				return call.equals(linkCall);
-				
-			}
+			for(String definedCall : calls)
+				if(definedCall.equals(call))
+					return true;
 			
 		}
 		
@@ -54,7 +40,7 @@ public class Link {
 		try{
 			return getInstance().getCall();
 		}
-		catch(Exception e){
+		catch(IllegalStateException e){
 			return null;
 		}
 	}

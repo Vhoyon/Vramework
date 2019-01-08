@@ -5,7 +5,6 @@ import java.util.TreeMap;
 
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
-import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
 
@@ -97,16 +96,14 @@ public abstract class CommandsLinker extends Translatable {
 			
 			builder.append("\n");
 			
-			if(command instanceof LinkableMultiCommand){
+			String[] aliases = command.getAliases();
+			
+			if(aliases.length > 0){
 				
-				String[] callsArray = ((LinkableMultiCommand)command)
-						.getCalls();
-				
-				// Add all of the non default calls of a link as a variant
-				for(int i = 1; i < callsArray.length; i++){
+				for(String alias : aliases){
 					
-					builder.append(formatVariant(formatWholeCommand(
-							prependCharsVariants, callsArray[i])));
+					builder.append(formatAlias(formatWholeCommand(
+							prependCharsVariants, alias)));
 					
 					builder.append("\n");
 					
@@ -153,8 +150,8 @@ public abstract class CommandsLinker extends Translatable {
 		return helpString;
 	}
 	
-	public String formatVariant(String variant){
-		return "\t" + variant;
+	public String formatAlias(String alias){
+		return "\t" + alias;
 	}
 	
 	public String getPrependChars(){

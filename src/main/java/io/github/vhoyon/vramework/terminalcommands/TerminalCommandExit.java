@@ -1,17 +1,20 @@
 package io.github.vhoyon.vramework.terminalcommands;
 
 import io.github.vhoyon.vramework.abstracts.AbstractTerminalCommand;
-import io.github.vhoyon.vramework.interfaces.LinkableMultiCommand;
 import io.github.vhoyon.vramework.modules.Logger;
 
-public class TerminalCommandExit extends AbstractTerminalCommand implements
-		LinkableMultiCommand {
+public class TerminalCommandExit extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
+	public String getCall(){
+		return "exit";
+	}
+	
+	@Override
+	public String[] getAliases(){
 		return new String[]
 		{
-			"exit", "off"
+			"off"
 		};
 	}
 	

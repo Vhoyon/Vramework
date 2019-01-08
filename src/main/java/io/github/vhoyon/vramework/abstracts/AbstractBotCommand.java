@@ -92,17 +92,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		String requestName = getActualCall();
 		
-		if(this instanceof LinkableMultiCommand){
-			
-			LinkableMultiCommand thisAsMulti = (LinkableMultiCommand)this;
-			
-			String[] calls = thisAsMulti.getCalls();
-			
-			if(!Arrays.stream(calls).collect(Collectors.toList())
-					.contains(requestName)){
-				return thisAsMulti.getDefaultCall();
-			}
-			
+		String[] calls = this.getAllCalls();
+		
+		if(!Arrays.stream(calls).collect(Collectors.toList())
+				.contains(requestName)){
+			return this.getCall();
 		}
 		
 		return requestName;

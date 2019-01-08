@@ -1,5 +1,7 @@
 package io.github.vhoyon.vramework.interfaces;
 
+import java.util.Arrays;
+
 import io.github.vhoyon.vramework.objects.ParametersHelp;
 import io.github.vhoyon.vramework.objects.Request;
 
@@ -9,6 +11,29 @@ public interface LinkableCommand extends Command {
 	
 	default String getActualCall(){
 		return this.getCall();
+	}
+	
+	default String[] getAliases(){
+		return new String[0];
+	}
+	
+	default String[] getAllCalls(){
+		String[] allCalls = new String[getAliases().length + 1];
+		
+		allCalls[0] = getCall();
+		
+		String[] aliases = getAliases();
+		
+		for(int i = 0; i < aliases.length; i++){
+			allCalls[i + 1] = aliases[i];
+		}
+		
+		return allCalls;
+	}
+	
+	default String[] getCallsExceptActual(){
+		return Arrays.stream(getAllCalls())
+				.filter(o -> !getActualCall().equals(o)).toArray(String[]::new);
 	}
 	
 	default String getCommandDescription(){
