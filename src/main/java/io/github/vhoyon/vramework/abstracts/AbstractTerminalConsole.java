@@ -27,8 +27,6 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
 		
-		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
-		
 		this.setInputPrefix(">");
 		
 		this.outputStream = new UpdatableOutputStream(System.out){
@@ -58,7 +56,16 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	public CommandsRepository getCommandsRepo(){
+		if(commandsRepo == null){
+			this.setCommandsRepo(new CommandsRepository(
+					new TerminalCommandsLinker()));
+		}
+		
 		return commandsRepo;
+	}
+	
+	public void setCommandsRepo(CommandsRepository repository){
+		this.commandsRepo = repository;
 	}
 	
 	public void setInputPrefix(String inputPrefix){
@@ -142,7 +149,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			return false;
 		}
 		
-		AbstractTerminalCommand command = (AbstractTerminalCommand)commandsRepo
+		AbstractTerminalCommand command = (AbstractTerminalCommand)getCommandsRepo()
 				.getContainer().initiateLink(input);
 		
 		command.setConsole(this);
