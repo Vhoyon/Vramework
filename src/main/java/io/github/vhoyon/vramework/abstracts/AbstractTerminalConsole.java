@@ -100,16 +100,14 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	/**
-	 * @deprecated
 	 * @param log
 	 *            Log message.
 	 */
 	protected void sendLog(String log){
-		this.sendLog(log, true);
+		this.sendLog(log, false);
 	}
 	
 	/**
-	 * @deprecated
 	 * @param log
 	 *            Log message.
 	 * @param appendNewLine
