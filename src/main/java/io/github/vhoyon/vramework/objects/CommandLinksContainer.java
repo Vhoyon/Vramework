@@ -45,11 +45,8 @@ public abstract class CommandLinksContainer {
 							LinkableCommand.class.getCanonicalName())
 					.loadClasses(LinkableCommand.class);
 			
-			Link[] links = new Link[linkableCommands.size()];
-			
-			for(int i = 0; i < linkableCommands.size(); i++){
-				links[i] = new Link(linkableCommands.get(i));
-			}
+			Link[] links = linkableCommands.stream().map(Link::new)
+					.toArray(Link[]::new);
 			
 			initializeContainer(links);
 			
@@ -59,27 +56,42 @@ public abstract class CommandLinksContainer {
 	
 	private void initializeContainer(Link[] links){
 		
-		linkMap = new LinkedHashMap<>();
-		
 		for(Link link : links){
 			
-			if(link.getClassToLink().isAssignableFrom(
-					LinkableMultiCommand.class)){
+			Class<? extends LinkableCommand> linkClass = link.getClassToLink();
+			
+			if(linkClass.isInterface())
+				continue;
+			
+			if(linkClass.isAssignableFrom(LinkableMultiCommand.class)){
 				
 				String[] calls = ((LinkableMultiCommand)link.getInstance())
 						.getCalls();
 				
 				for(String call : calls)
-					linkMap.put(call, link);
+					addNewLink(call, link);
 				
 			}
 			else{
 				
 				String call = link.getCall();
 				
-				linkMap.put(call, link);
+				addNewLink(call, link);
 				
 			}
+			
+		}
+		
+	}
+	
+	private void addNewLink(String call, Link link){
+		
+		if(call != null){
+			
+			if(this.linkMap == null)
+				linkMap = new LinkedHashMap<>();
+			
+			linkMap.put(call, link);
 			
 		}
 		
