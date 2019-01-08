@@ -762,6 +762,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	@Override
+	public String formatCommand(String commandToFormat){
+		return buildVCommand(commandToFormat);
+	}
+	
+	@Override
 	public String formatParameter(String parameterToFormat){
 		return buildParameter(parameterToFormat);
 	}

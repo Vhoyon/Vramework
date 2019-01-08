@@ -55,8 +55,22 @@ public interface LinkableCommand extends Command {
 		return null;
 	}
 	
-	default String getHelp(String textWhenParametersAvailable,
-			String textHeader, String textWhenNoParameters){
+	default String getHelp(String textHeader,
+			String textWhenParametersAvailable, String textWhenNoParameters){
+		return this.getHelp(textHeader, textWhenParametersAvailable,
+				textWhenNoParameters, "Aliases :");
+	}
+	
+	default String getHelp(String textHeader,
+			String textWhenParametersAvailable, String textWhenNoParameters,
+			String textWhenAliasesAvailable){
+		return this.getHelp(textHeader, textWhenParametersAvailable,
+				textWhenNoParameters, textWhenAliasesAvailable, null);
+	}
+	
+	default String getHelp(String textHeader,
+			String textWhenParametersAvailable, String textWhenNoParameters,
+			String textWhenAliasesAvailable, String textWhenNoAliases){
 		
 		String commandDescription = getCommandDescription();
 		ParametersHelp[] parametersHelp = getParametersDescriptions();
@@ -81,9 +95,11 @@ public interface LinkableCommand extends Command {
 		
 		if(parametersHelp == null){
 			if(textWhenNoParameters != null)
-				builder.append("\n\t").append(textWhenNoParameters);
+				builder.append("\n\n").append(textWhenNoParameters);
 		}
 		else{
+			
+			builder.append("\n");
 			
 			String paramsSeparator = ", ";
 			
@@ -109,8 +125,31 @@ public interface LinkableCommand extends Command {
 			
 		}
 		
+		String[] aliases = this.getAliases();
+		
+		if(aliases.length == 0){
+			if(textWhenNoAliases != null)
+				builder.append("\n\n").append(textWhenNoAliases);
+		}
+		else{
+			
+			builder.append("\n");
+			
+			if(textWhenAliasesAvailable != null)
+				builder.append("\n").append(textWhenAliasesAvailable);
+			
+			for(String alias : aliases){
+				builder.append("\n").append("\t").append(formatCommand(alias));
+			}
+			
+		}
+		
 		return builder.toString();
 		
+	}
+	
+	default String formatCommand(String commandToFormat){
+		return Request.DEFAULT_COMMAND_PREFIX + commandToFormat;
 	}
 	
 	default String formatParameter(String parameterToFormat){
