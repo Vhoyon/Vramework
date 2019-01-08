@@ -57,15 +57,15 @@ public abstract class CommandLinksContainer {
 		
 		for(Link link : links){
 			
-			Class<? extends LinkableCommand> linkClass = link.getClassToLink();
-			
-			if(linkClass.isInterface())
-				continue;
-			
-			String[] calls = link.getInstance().getAllCalls();
-			
-			for(String call : calls)
-				this.getLinkMap().put(call, link);
+			try{
+				
+				String[] calls = link.getInstance().getAllCalls();
+				
+				for(String call : calls)
+					this.getLinkMap().put(call, link);
+				
+			}
+			catch(IllegalStateException e){}
 			
 		}
 		
