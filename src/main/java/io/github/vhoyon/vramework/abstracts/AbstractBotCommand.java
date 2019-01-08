@@ -18,6 +18,7 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
@@ -43,6 +44,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		DiscordUtils {
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
+	
+	public static final String TYPING_TIMER_NAME = "TYPING_TIMER";
 	
 	protected AbstractCommandRouter router;
 	
@@ -81,6 +84,28 @@ public abstract class AbstractBotCommand extends Translatable implements
 		this.isCopy = true;
 		
 	}
+	
+	@Override
+	public void action(){
+		
+		boolean shouldDisplayTypingIndicator = this.displayTypingIndicator();
+		
+		if(shouldDisplayTypingIndicator){
+			
+			TimerManager.schedule(TYPING_TIMER_NAME, 7500,
+					() -> getTextContext().sendTyping().queue(),
+					() -> TimerManager.resetTimer(TYPING_TIMER_NAME));
+			
+		}
+		
+		actions();
+		
+		if(shouldDisplayTypingIndicator)
+			TimerManager.stopTimer(TYPING_TIMER_NAME);
+		
+	}
+	
+	protected abstract void actions();
 	
 	public String getCommandName(){
 		
@@ -721,6 +746,14 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		settings.save(settingName, value, onChange);
 		
+	}
+	
+	public boolean displayTypingIndicator(){
+		return true;
+	}
+	
+	public void stopTypingIndicator(){
+		TimerManager.stopTimer(TYPING_TIMER_NAME);
 	}
 	
 	public void log(String message){
