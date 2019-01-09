@@ -56,7 +56,7 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 	}
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		String messageToSend = getEmoji() + " " + bold(getMessage());
 		

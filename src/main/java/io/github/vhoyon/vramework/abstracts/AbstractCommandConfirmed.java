@@ -17,7 +17,7 @@ public abstract class AbstractCommandConfirmed extends AbstractBotCommand {
 	public abstract String getConfMessage();
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		if(!hasMemory(BUFFER_CONFIRMATION)){
 			
