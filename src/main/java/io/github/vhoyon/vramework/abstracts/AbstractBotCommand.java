@@ -18,6 +18,7 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
+import io.github.vhoyon.vramework.utilities.KeyBuilder;
 import io.github.vhoyon.vramework.utilities.TimerManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
@@ -45,7 +46,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
-	public static final String TYPING_TIMER_NAME = "TYPING_TIMER";
+	public static final String TYPING_TIMER_NAME = "VRAMEWORK_BOT_TYPING_TIMER";
 	
 	protected AbstractCommandRouter router;
 	
@@ -92,16 +93,25 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		if(shouldDisplayTypingIndicator){
 			
-			TimerManager.schedule(TYPING_TIMER_NAME, 7500,
-					() -> getTextContext().sendTyping().queue(),
-					() -> TimerManager.resetTimer(TYPING_TIMER_NAME));
+			TextChannel channel = this.getTextContext();
+			
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					channel, TYPING_TIMER_NAME);
+			
+			TimerManager.schedule(typingTimerName, 7500, () -> channel
+					.sendTyping().queue(), () -> TimerManager
+					.resetTimer(typingTimerName));
 			
 		}
 		
 		actions();
 		
-		if(shouldDisplayTypingIndicator)
-			TimerManager.stopTimer(TYPING_TIMER_NAME);
+		if(shouldDisplayTypingIndicator){
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					getTextContext(), TYPING_TIMER_NAME);
+			
+			TimerManager.stopTimer(typingTimerName);
+		}
 		
 	}
 	
@@ -753,7 +763,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public void stopTypingIndicator(){
-		TimerManager.stopTimer(TYPING_TIMER_NAME);
+		TimerManager.stopTimer(KeyBuilder.buildTextChannelObjectKey(
+				getTextContext(), TYPING_TIMER_NAME));
 	}
 	
 	public void log(String message){
