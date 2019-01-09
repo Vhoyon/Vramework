@@ -492,9 +492,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public String groupAndSendMessages(ArrayList<String> messages){
-		return groupAndSendMessages(messages
-				.toArray(new String[messages.size()]));
+	public String groupAndSendMessages(List<String> messages){
+		return groupAndSendMessages(messages.toArray(new String[0]));
 	}
 	
 	public String editMessage(String messageId, String newMessage){
