@@ -18,6 +18,8 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
+import io.github.vhoyon.vramework.utilities.KeyBuilder;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
@@ -43,6 +45,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		DiscordUtils {
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
+	
+	public static final String TYPING_TIMER_NAME = "VRAMEWORK_BOT_TYPING_TIMER";
 	
 	protected AbstractCommandRouter router;
 	
@@ -81,6 +85,37 @@ public abstract class AbstractBotCommand extends Translatable implements
 		this.isCopy = true;
 		
 	}
+	
+	@Override
+	public void action(){
+		
+		boolean shouldDisplayTypingIndicator = this.displayTypingIndicator();
+		
+		if(shouldDisplayTypingIndicator){
+			
+			TextChannel channel = this.getTextContext();
+			
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					channel, TYPING_TIMER_NAME);
+			
+			TimerManager.schedule(typingTimerName, 7500, () -> channel
+					.sendTyping().queue(), () -> TimerManager
+					.resetTimer(typingTimerName));
+			
+		}
+		
+		actions();
+		
+		if(shouldDisplayTypingIndicator){
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					getTextContext(), TYPING_TIMER_NAME);
+			
+			TimerManager.stopTimer(typingTimerName);
+		}
+		
+	}
+	
+	protected abstract void actions();
 	
 	@Override
 	public String getActualCall(){
@@ -717,6 +752,15 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		settings.save(settingName, value, onChange);
 		
+	}
+	
+	public boolean displayTypingIndicator(){
+		return true;
+	}
+	
+	public void stopTypingIndicator(){
+		TimerManager.stopTimer(KeyBuilder.buildTextChannelObjectKey(
+				getTextContext(), TYPING_TIMER_NAME));
 	}
 	
 	public void log(String message){
