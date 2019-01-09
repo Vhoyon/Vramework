@@ -98,7 +98,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
 					channel, TYPING_TIMER_NAME);
 			
-			Runnable sendTypingIndicator = () -> channel.sendTyping().queue();
+			Runnable sendTypingIndicator = () -> channel.sendTyping()
+					.complete();
 			
 			sendTypingIndicator.run();
 			
