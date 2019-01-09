@@ -432,8 +432,7 @@ public class Request implements Utils {
 	
 	public boolean isCommand(){
 		return this.hasCommand()
-				&& this.getCommandNoFormat().matches(
-						"^" + Pattern.quote(getCommandPrefix()) + ".+$");
+				&& this.getCommandNoFormat().startsWith(getCommandPrefix());
 	}
 	
 	public boolean isOnlyCommandPrefix(){
