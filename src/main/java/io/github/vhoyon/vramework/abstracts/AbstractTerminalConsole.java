@@ -104,7 +104,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	 *            Log message.
 	 */
 	protected void sendLog(String log){
-		this.sendLog(log, false);
+		this.sendLog(log, true);
 	}
 	
 	/**
