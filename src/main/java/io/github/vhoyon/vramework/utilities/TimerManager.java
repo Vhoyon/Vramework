@@ -85,7 +85,7 @@ public final class TimerManager {
 	
 	public static boolean resetTimer(String timerName){
 		
-		if(timers != null && timers.containsKey(timerName)){
+		if(hasTimer(timerName)){
 			TimerWrapper timer = timers.get(timerName);
 			
 			TimerManager.schedule(timerName, timer.delay, timer.action,
@@ -104,7 +104,7 @@ public final class TimerManager {
 	
 	private static void stopTimer(String timerName, boolean shouldDoFinally){
 		
-		if(timers != null && timers.containsKey(timerName)){
+		if(hasTimer(timerName)){
 			TimerWrapper timer = timers.remove(timerName);
 			
 			timer.cancel();
@@ -113,6 +113,21 @@ public final class TimerManager {
 				timer.doFinally.run();
 			}
 		}
+		
+	}
+	
+	public static boolean hasTimer(String timerName){
+		return timers != null && timers.containsKey(timerName);
+	}
+	
+	public static void stopAllTimers(){
+		
+		if(timers == null)
+			return;
+		
+		timers.forEach((s, timer) -> timer.cancel());
+		
+		timers = null;
 		
 	}
 	
