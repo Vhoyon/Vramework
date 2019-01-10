@@ -193,12 +193,12 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getBuffer().push(object, associatedName, getKey(level));
 	}
 	
-	public Object getMemory(String associatedName) throws NullPointerException{
+	public <E> E getMemory(String associatedName) throws IllegalStateException{
 		return getMemory(associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
-	public Object getMemory(String associatedName, BufferLevel level)
-			throws NullPointerException{
+	public <E> E getMemory(String associatedName, BufferLevel level)
+			throws IllegalStateException{
 		return getBuffer().get(associatedName, getKey(level));
 	}
 	

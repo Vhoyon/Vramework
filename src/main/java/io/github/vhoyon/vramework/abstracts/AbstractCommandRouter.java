@@ -40,7 +40,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			setDictionary((Dictionary)bufferedDict);
 			
 		}
-		catch(NullPointerException e){
+		catch(IllegalStateException e){
 			
 			setDictionary(new Dictionary());
 			
