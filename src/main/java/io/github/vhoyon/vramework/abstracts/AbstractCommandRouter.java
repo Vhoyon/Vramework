@@ -197,9 +197,13 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	public abstract Command commandWhenFromServerIsOnlyPrefix();
 	
-	public abstract String getCommandPrefix();
+	public String getCommandPrefix(){
+		return Request.DEFAULT_COMMAND_PREFIX;
+	}
 	
-	public abstract char getCommandParameterPrefix();
+	public char getCommandParameterPrefix(){
+		return Request.DEFAULT_PARAMETER_PREFIX;
+	}
 	
 	public LinkableCommand getLinkableCommand(String commandName){
 		return this.getCommandsRepo().getContainer().initiateLink(commandName);

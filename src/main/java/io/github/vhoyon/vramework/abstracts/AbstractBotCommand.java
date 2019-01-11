@@ -637,6 +637,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	public <SettingValue> SettingValue setting(String settingName,
 			BufferLevel level){
 		Object value = this.getSetting(settingName, level).getValue();
+		//noinspection unchecked
 		return (SettingValue)value;
 	}
 	
