@@ -14,6 +14,10 @@ public class MessageEventDigger extends EventDigger {
 		return (MessageReceivedEvent)super.getEvent();
 	}
 	
+	public String getMessageContent(){
+		return this.getEvent().getMessage().getContentRaw();
+	}
+	
 	public String getGuildKey(){
 		return KeyBuilder.buildGuildKey(getGuild());
 	}

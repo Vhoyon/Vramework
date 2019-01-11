@@ -23,8 +23,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	private boolean isDead;
 	
-	public AbstractCommandRouter(MessageReceivedEvent event,
-			String receivedMessage, Buffer buffer,
+	public AbstractCommandRouter(MessageReceivedEvent event, Buffer buffer,
 			CommandsRepository commandsRepo){
 		
 		this.isDead = false;
@@ -56,11 +55,18 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		this.commandsRepo = commandsRepo;
 		
-		this.request = createRequest(receivedMessage);
+		this.request = createRequest(eventDigger.getMessageContent());
 		
 	}
 	
 	protected abstract Request createRequest(String receivedMessage);
+	
+	public abstract void route();
+	
+	@Override
+	public void run(){
+		this.route();
+	}
 	
 	public Command getCommand(){
 		return this.command;
@@ -137,30 +143,28 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	 */
 	protected Command validateMessage() throws NoCommandException{
 		
-		MessageReceivedEvent event = getEvent();
-		
 		boolean isOnlyBotMention = false;
 		
-		String message = event.getMessage().getContentRaw();
+		String message = this.getEventDigger().getMessageContent();
 		
 		if(isStringMention(message)){
 			
-			String botId = event.getJDA().getSelfUser().getId();
+			String botId = this.getEventDigger().getRunningBot().getId();
 			
-			isOnlyBotMention = event.getMessage().getMentionedUsers().get(0)
-					.getId().equals(botId);
+			isOnlyBotMention = this.getEvent().getMessage().getMentionedUsers()
+					.get(0).getId().equals(botId);
 			
 		}
 		
 		if(isOnlyBotMention){
 			return commandWhenBotMention();
 		}
-		else if(event.isFromType(ChannelType.PRIVATE)){
+		else if(this.getEvent().isFromType(ChannelType.PRIVATE)){
 			return commandWhenFromPrivate();
 		}
-		else if(event.isFromType(ChannelType.TEXT)){
+		else if(this.getEvent().isFromType(ChannelType.TEXT)){
 			
-			Request request = getRequest();
+			Request request = this.getRequest();
 			
 			if(!request.isCommand()){
 				throw new NoCommandException();
