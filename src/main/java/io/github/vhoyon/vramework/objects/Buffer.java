@@ -50,6 +50,10 @@ public class Buffer {
 		Buffer.setSingletonMemoryImplementation(implementation);
 	}
 	
+	public static <E> E getSingleton(Class<E> desiredClass){
+		return getSingleton(desiredClass, null);
+	}
+	
 	public static <E> E getSingleton(Class<E> desiredClass,
 			Callable<E> createInstanceIfNew)
 			throws UnsupportedOperationException{
