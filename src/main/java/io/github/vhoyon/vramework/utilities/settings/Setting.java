@@ -101,14 +101,14 @@ public abstract class Setting<E> {
 		return envValue;
 	}
 	
-	Setting duplicate(){
+	Setting<E> duplicate(){
 		
 		return new Setting<E>(Setting.this.name, Setting.this.env,
 				Setting.this.defaultValue){
 			@Override
-			protected E sanitizeValue(Object value1)
+			protected E sanitizeValue(Object value)
 					throws IllegalArgumentException{
-				return Setting.this.sanitizeValue(value1);
+				return Setting.this.sanitizeValue(value);
 			}
 		};
 		

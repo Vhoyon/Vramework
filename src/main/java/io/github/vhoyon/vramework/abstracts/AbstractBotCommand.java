@@ -601,7 +601,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	 * @see #setting(String)
 	 */
 	public Setting<Object> getSetting(String settingName, BufferLevel level){
-		return this.getSettings(level).getField(settingName);
+		return this.getSettings(level).getSetting(settingName);
 	}
 	
 	/**

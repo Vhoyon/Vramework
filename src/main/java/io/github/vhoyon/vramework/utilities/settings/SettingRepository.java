@@ -1,59 +1,63 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
 public class SettingRepository {
 	
-	private HashMap<String, Setting<Object>> fields;
+	private Map<String, Setting<Object>> settings;
 	
-	public SettingRepository(Setting<Object>... fields){
+	public SettingRepository(Setting<Object>... settings){
 		
-		this.fields = new HashMap<>();
+		this.settings = new HashMap<>();
 		
-		for(Setting<Object> field : fields){
-			Setting<Object> clonedField = field.duplicate();
+		for(Setting<Object> setting : settings){
+			Setting<Object> clonedSetting = setting.duplicate();
 			
-			this.getFieldsMap().put(clonedField.getName(), clonedField);
+			this.getSettingsMap().put(clonedSetting.getName(), clonedSetting);
 		}
 		
 	}
 	
-	public boolean save(String settingName, Object value,
-			Consumer<Object> onChange) throws BadFormatException{
+	public <E> boolean save(String settingName, E value, Consumer<E> onChange)
+			throws BadFormatException{
 		
-		if(!hasField(settingName)){
+		if(!hasSetting(settingName)){
 			return false;
 		}
 		
-		Setting<Object> field = getField(settingName);
+		//noinspection unchecked
+		Setting<E> setting = (Setting<E>)this.getSetting(settingName);
 		
-		field.setValue(value, onChange);
+		setting.setValue(value, onChange);
 		
 		return true;
 		
 	}
 	
-	public boolean hasField(String name){
-		return this.getFieldsMap().containsKey(name);
+	public boolean hasSetting(String name){
+		return this.getSettingsMap().containsKey(name);
 	}
 	
-	public Setting<Object> getField(String name){
-		return this.getFieldsMap().get(name);
+	public Setting<Object> getSetting(String name){
+		return this.getSettingsMap().get(name);
 	}
 	
-	public HashMap<String, Setting<Object>> getFieldsMap(){
-		return this.fields;
+	public Map<String, Setting<Object>> getSettingsMap(){
+		return this.settings;
 	}
 	
-	public <SettingValue> SettingValue getFieldValue(String name){
-		return (SettingValue)this.getField(name).getValue();
+	public <SettingValue> SettingValue getSettingValue(String name){
+		//noinspection unchecked
+		return (SettingValue)this.getSetting(name).getValue();
 	}
 	
 	SettingRepository duplicate(){
-		return new SettingRepository(getFieldsMap().values().toArray(
+		//noinspection unchecked
+		return new SettingRepository(getSettingsMap().values().toArray(
 				new Setting[0]));
 	}
 	
