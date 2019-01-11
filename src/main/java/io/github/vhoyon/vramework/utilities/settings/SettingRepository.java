@@ -22,6 +22,11 @@ public class SettingRepository {
 		
 	}
 	
+	public <E> boolean save(String settingName, E value)
+			throws BadFormatException{
+		return this.save(settingName, value, null);
+	}
+	
 	public <E> boolean save(String settingName, E value, Consumer<E> onChange)
 			throws BadFormatException{
 		
