@@ -1,6 +1,8 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -79,6 +81,19 @@ public class SettingRepositoryRepository {
 		
 	}
 	
+	public static List<SettingRepository> getReposOfGuildTextChannels(
+			Guild guild){
+		
+		return guild
+				.getTextChannels()
+				.stream()
+				.filter(t -> hasSettingRepository(KeyBuilder
+						.buildTextChannelKey(t)))
+				.map(SettingRepositoryRepository::getSettingRepository)
+				.collect(Collectors.toList());
+		
+	}
+	
 	protected static SettingRepositoryRepository getReposRepo(){
 		return Buffer.getSingleton(SettingRepositoryRepository.class,
 				SettingRepositoryRepository::new);
@@ -94,6 +109,9 @@ public class SettingRepositoryRepository {
 		else{
 			SettingRepositoryRepository repositoryRepository = Buffer
 					.getSingleton(SettingRepositoryRepository.class, null);
+			
+			if(repositoryRepository == null)
+				return false;
 			
 			return repositoryRepository.getRepos().containsKey(repositoryKey);
 		}
