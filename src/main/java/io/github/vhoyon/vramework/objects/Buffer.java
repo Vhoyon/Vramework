@@ -69,6 +69,9 @@ public class Buffer {
 		}
 		else{
 			
+			if(createInstanceIfNew == null)
+				return null;
+			
 			E newClassSingleton;
 			
 			try{
