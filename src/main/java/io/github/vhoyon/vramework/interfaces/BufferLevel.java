@@ -12,7 +12,7 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
  * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning other
  * channels in the same server may not have access to the data stored in here
  * (DEFAULT);</li>
- * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in Discord's
+ * <li>BufferLevel.GUILD : Saves the object for a Server (Guild, in Discord's
  * terms), meaning this data could apply to every TextChannel in the same
  * server;</li>
  * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this data is
@@ -24,5 +24,5 @@ import io.github.vhoyon.vramework.abstracts.AbstractBotCommand;
  * @see AbstractBotCommand#DEFAULT_BUFFER_LEVEL
  */
 public enum BufferLevel{
-	CHANNEL, SERVER, USER
+	CHANNEL, GUILD, USER
 }

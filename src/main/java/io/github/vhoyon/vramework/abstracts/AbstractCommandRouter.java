@@ -269,7 +269,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			repo = SettingRepositoryRepository.getSettingRepository(
 					getEventDigger().getChannel(), defaultSettings);
 			break;
-		case SERVER:
+		case GUILD:
 			repo = SettingRepositoryRepository.getSettingRepository(
 					getEventDigger().getGuild(), defaultSettings);
 			break;

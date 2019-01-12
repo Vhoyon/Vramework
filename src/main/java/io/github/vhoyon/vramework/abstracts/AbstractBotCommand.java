@@ -285,7 +285,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getKey(BufferLevel level){
 		switch(level){
-		case SERVER:
+		case GUILD:
 			return getEventDigger().getGuildKey();
 		case USER:
 			return getEventDigger().getUserKey();
