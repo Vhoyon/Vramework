@@ -16,7 +16,10 @@ public class KeyBuilder {
 	}
 	
 	public static String buildGuildObjectKey(Guild guild, Object object){
-		return Utils.buildKey(buildGuildKey(guild), object.toString());
+		String guildKey = buildGuildKey(guild);
+		
+		return object == null ? guildKey : Utils.buildKey(guildKey,
+				object.toString());
 	}
 	
 	public static String buildTextChannelKey(TextChannel channel){
@@ -26,7 +29,10 @@ public class KeyBuilder {
 	
 	public static String buildTextChannelObjectKey(TextChannel channel,
 			Object object){
-		return Utils.buildKey(buildTextChannelKey(channel), object.toString());
+		String channelKey = buildTextChannelKey(channel);
+		
+		return object == null ? channelKey : Utils.buildKey(channelKey,
+				object.toString());
 	}
 	
 	public static String buildUserKey(User user){
@@ -34,7 +40,10 @@ public class KeyBuilder {
 	}
 	
 	public static String buildUserObjectKey(User user, Object object){
-		return Utils.buildKey(buildUserKey(user), object.toString());
+		String userKey = buildUserKey(user);
+		
+		return object == null ? userKey : Utils.buildKey(userKey,
+				object.toString());
 	}
 	
 	public static String buildUserKey(Member member){

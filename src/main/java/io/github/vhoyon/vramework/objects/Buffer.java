@@ -3,7 +3,6 @@ package io.github.vhoyon.vramework.objects;
 import java.util.concurrent.Callable;
 
 import io.github.vhoyon.vramework.interfaces.BufferImplementation;
-import io.github.vhoyon.vramework.interfaces.Utils;
 
 public class Buffer {
 	
@@ -119,25 +118,8 @@ public class Buffer {
 				.has(singletonClass.getName());
 	}
 	
-	public boolean push(Object object, String associatedName, String key){
-		
-		String objectKey = Utils.buildKey(key, associatedName);
-		
-		return this.push(object, objectKey);
-		
-	}
-	
 	public boolean push(Object object, String fullKey){
 		return this.getMemoryImpl().store(fullKey, object);
-	}
-	
-	public <E> E get(String associatedName, String key)
-			throws IllegalStateException{
-		
-		String objectKey = Utils.buildKey(key, associatedName);
-		
-		return this.get(objectKey);
-		
 	}
 	
 	public <E> E get(String fullKey) throws IllegalStateException{
@@ -149,14 +131,6 @@ public class Buffer {
 			throw new IllegalStateException("No object with the key \""
 					+ fullKey + "\" was found in the Buffer.");
 		}
-	}
-	
-	public boolean remove(String associatedName, String key){
-		
-		String objectKey = Utils.buildKey(key, associatedName);
-		
-		return remove(objectKey);
-		
 	}
 	
 	public boolean remove(String fullKey){

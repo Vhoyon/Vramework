@@ -190,7 +190,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean remember(Object object, String associatedName,
 			BufferLevel level){
-		return getBuffer().push(object, associatedName, getKey(level));
+		return getBuffer().push(object, getKey(associatedName, level));
 	}
 	
 	public <E> E getMemory(String associatedName) throws IllegalStateException{
@@ -199,7 +199,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public <E> E getMemory(String associatedName, BufferLevel level)
 			throws IllegalStateException{
-		return getBuffer().get(associatedName, getKey(level));
+		return getBuffer().get(getKey(associatedName, level));
 	}
 	
 	public boolean forget(String associatedName){
@@ -207,7 +207,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean forget(String associatedName, BufferLevel level){
-		return getBuffer().remove(associatedName, getKey(level));
+		return getBuffer().remove(getKey(associatedName, level));
 	}
 	
 	public boolean hasMemory(String associatedName){
@@ -276,23 +276,27 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String getKey(){
-		return getKey(BufferLevel.CHANNEL);
+		return getKey(DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public MessageEventDigger getEventDigger(){
 		return getRouter().getEventDigger();
 	}
 	
-	public String getKey(BufferLevel level){
+	public String getKey(String name, BufferLevel level){
 		switch(level){
 		case GUILD:
-			return getEventDigger().getGuildKey();
+			return getEventDigger().getGuildKey(name);
 		case USER:
-			return getEventDigger().getUserKey();
+			return getEventDigger().getUserKey(name);
 		case CHANNEL:
 		default:
-			return getEventDigger().getChannelKey();
+			return getEventDigger().getChannelKey(name);
 		}
+	}
+	
+	public String getKey(BufferLevel level){
+		return getKey(null, level);
 	}
 	
 	public Request getRequest(){
