@@ -8,7 +8,7 @@ sudo: false
 env:
   global:
     - MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-    - IS_SNAPSHOT="mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep .*SNAPSHOT$"
+    - IS_SNAPSHOT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep .*SNAPSHOT$)
 
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
