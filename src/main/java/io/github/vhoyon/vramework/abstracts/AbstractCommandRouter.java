@@ -2,10 +2,14 @@ package io.github.vhoyon.vramework.abstracts;
 
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import io.github.ved.jrequester.Request;
 import io.github.vhoyon.vramework.exceptions.NoCommandException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.interfaces.Translatable;
-import io.github.vhoyon.vramework.objects.*;
+import io.github.vhoyon.vramework.objects.Buffer;
+import io.github.vhoyon.vramework.objects.CommandsRepository;
+import io.github.vhoyon.vramework.objects.Dictionary;
+import io.github.vhoyon.vramework.objects.MessageEventDigger;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 import io.github.vhoyon.vramework.utilities.settings.Setting;
 import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
@@ -201,8 +205,8 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		return Request.DEFAULT_COMMAND_PREFIX;
 	}
 	
-	public char getCommandParameterPrefix(){
-		return Request.DEFAULT_PARAMETER_PREFIX;
+	public char getCommandOptionPrefix(){
+		return Request.DEFAULT_OPTION_PREFIX;
 	}
 	
 	public LinkableCommand getLinkableCommand(String commandName){

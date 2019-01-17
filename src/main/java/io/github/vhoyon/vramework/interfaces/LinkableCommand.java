@@ -2,8 +2,8 @@ package io.github.vhoyon.vramework.interfaces;
 
 import java.util.Arrays;
 
-import io.github.vhoyon.vramework.objects.ParametersHelp;
-import io.github.vhoyon.vramework.objects.Request;
+import io.github.ved.jrequester.Option;
+import io.github.ved.jrequester.Request;
 
 public interface LinkableCommand extends Command {
 	
@@ -51,29 +51,28 @@ public interface LinkableCommand extends Command {
 		return null;
 	}
 	
-	default ParametersHelp[] getParametersDescriptions(){
+	default Option[] getOptions(){
 		return null;
 	}
 	
-	default String getHelp(String textHeader,
-			String textWhenParametersAvailable, String textWhenNoParameters){
-		return this.getHelp(textHeader, textWhenParametersAvailable,
-				textWhenNoParameters, "Aliases :");
+	default String getHelp(String textHeader, String textWhenOptionsAvailable,
+			String textWhenNoOptions){
+		return this.getHelp(textHeader, textWhenOptionsAvailable,
+				textWhenNoOptions, "Aliases :");
 	}
 	
-	default String getHelp(String textHeader,
-			String textWhenParametersAvailable, String textWhenNoParameters,
-			String textWhenAliasesAvailable){
-		return this.getHelp(textHeader, textWhenParametersAvailable,
-				textWhenNoParameters, textWhenAliasesAvailable, null);
+	default String getHelp(String textHeader, String textWhenOptionsAvailable,
+			String textWhenNoOptions, String textWhenAliasesAvailable){
+		return this.getHelp(textHeader, textWhenOptionsAvailable,
+				textWhenNoOptions, textWhenAliasesAvailable, null);
 	}
 	
-	default String getHelp(String textHeader,
-			String textWhenParametersAvailable, String textWhenNoParameters,
-			String textWhenAliasesAvailable, String textWhenNoAliases){
+	default String getHelp(String textHeader, String textWhenOptionsAvailable,
+			String textWhenNoOptions, String textWhenAliasesAvailable,
+			String textWhenNoAliases){
 		
 		String commandDescription = getCommandDescription();
-		ParametersHelp[] parametersHelp = getParametersDescriptions();
+		Option[] options = getOptions();
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -93,33 +92,32 @@ public interface LinkableCommand extends Command {
 			
 		}
 		
-		if(parametersHelp == null){
-			if(textWhenNoParameters != null)
-				builder.append("\n\n").append(textWhenNoParameters);
+		if(options == null){
+			if(textWhenNoOptions != null)
+				builder.append("\n\n").append(textWhenNoOptions);
 		}
 		else{
 			
 			builder.append("\n");
 			
-			String paramsSeparator = ", ";
+			String optionSeparator = ", ";
 			
-			if(textWhenParametersAvailable != null)
-				builder.append("\n").append(textWhenParametersAvailable);
+			if(textWhenOptionsAvailable != null)
+				builder.append("\n").append(textWhenOptionsAvailable);
 			
-			for(ParametersHelp paramHelp : parametersHelp){
+			for(Option option : options){
 				
 				builder.append("\n").append("\t")
-						.append(formatParameter(paramHelp.getParam()));
+						.append(formatOption(option.getName()));
 				
-				for(String param : paramHelp.getParamVariants()){
-					builder.append(paramsSeparator).append(
-							formatParameter(param));
+				for(String variant : option.getVariants()){
+					builder.append(optionSeparator).append(
+							formatOption(variant));
 				}
 				
-				String paramHelpDescription = paramHelp
-						.getParameterDescription();
-				if(paramHelpDescription != null)
-					builder.append(" : ").append(paramHelpDescription);
+				String optionDescription = option.getDescription();
+				if(optionDescription != null)
+					builder.append(" : ").append(optionDescription);
 				
 			}
 			
@@ -152,8 +150,8 @@ public interface LinkableCommand extends Command {
 		return Request.DEFAULT_COMMAND_PREFIX + commandToFormat;
 	}
 	
-	default String formatParameter(String parameterToFormat){
-		return Request.DEFAULT_PARAMETER_PREFIX + parameterToFormat;
+	default String formatOption(String optionToFormat){
+		return Request.DEFAULT_OPTION_PREFIX + optionToFormat;
 	}
 	
 }

@@ -1,9 +1,8 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import net.dv8tion.jda.core.entities.*;
@@ -11,12 +10,16 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import io.github.ved.jrequester.OptionData;
+import io.github.ved.jrequester.Request;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.*;
-import io.github.vhoyon.vramework.objects.Request.Parameter;
+import io.github.vhoyon.vramework.objects.Buffer;
+import io.github.vhoyon.vramework.objects.EventDigger;
+import io.github.vhoyon.vramework.objects.Mention;
+import io.github.vhoyon.vramework.objects.MessageEventDigger;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 import io.github.vhoyon.vramework.utilities.KeyBuilder;
 import io.github.vhoyon.vramework.utilities.TimerManager;
@@ -142,22 +145,6 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public String getContent(){
 		return getRequest().getContent();
-	}
-	
-	public String[] getContentParsed(){
-		return this.getContentParsedMaxed(-1);
-	}
-	
-	public String[] getContentParsedMaxed(int maxSize){
-		
-		if(!this.hasContent())
-			return null;
-		
-		List<String> possibleContent = splitSpacesExcludeQuotesMaxed(
-				this.getContent(), maxSize);
-		
-		return possibleContent.toArray(new String[0]);
-		
 	}
 	
 	public Mention getContentAsMention() throws BadContentException{
@@ -321,42 +308,42 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public HashMap<String, Parameter> getParameters(){
-		return this.getRequest().getParameters();
+	public Map<String, OptionData> getParameters(){
+		return this.getRequest().getOptionsData();
 	}
 	
-	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
-		return this.getRequest().getParametersLinks();
+	public Map<OptionData, List<String>> getParametersLinks(){
+		return this.getRequest().getOptionsLinks();
 	}
 	
-	public Parameter getParameter(String... parameterNames){
-		return this.getRequest().getParameter(parameterNames);
+	public OptionData getOption(String... optionNames){
+		return this.getRequest().getOption(optionNames);
 	}
 	
-	public Mention getParameterAsMention(String... parametersNames)
+	public Mention getParameterAsMention(String... optionNames)
 			throws BadContentException{
 		
-		Parameter paramFound = getParameter(parametersNames);
+		OptionData optionFound = this.getOption(optionNames);
 		
-		if(!isStringMention(paramFound.getContent()))
-			throw new BadContentException("Parameter content is not a mention.");
+		if(!isStringMention(optionFound.getContent()))
+			throw new BadContentException("Option content is not a mention.");
 		
-		return new Mention(getIdFromStringMention(paramFound.getContent()),
+		return new Mention(getIdFromStringMention(optionFound.getContent()),
 				getEventDigger());
 		
 	}
 	
-	public boolean hasParameter(String parameterName){
-		return this.getRequest().hasParameter(parameterName);
+	public boolean hasParameter(String optionName){
+		return this.getRequest().hasOption(optionName);
 	}
 	
-	public boolean hasParameter(String... parameterNames){
-		return this.getRequest().hasParameter(parameterNames);
+	public boolean hasParameter(String... optionNames){
+		return this.getRequest().hasOption(optionNames);
 	}
 	
-	public void onParameterPresent(String parameterName,
-			Consumer<Parameter> onParamPresent){
-		this.getRequest().onParameterPresent(parameterName, onParamPresent);
+	public void onParameterPresent(String optionName,
+			Consumer<OptionData> onOptionPresent){
+		this.getRequest().onOptionPresent(optionName, onOptionPresent);
 	}
 	
 	public void connect(VoiceChannel voiceChannel){
@@ -797,20 +784,21 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
+	 * @return A String that starts with the option prefix of the current
+	 *         Request's setting, doubled if it's a short option.
 	 */
-	public String buildParameter(String parameter){
-		char p = getRequest().getParametersPrefix();
-		return (parameter.length() > 1 ? p + "" + p : p) + parameter;
+	public String buildOption(String option){
+		char p = getRequest().getOptionsPrefix();
+		return (option.length() > 1 ? p + "" + p : p) + option;
 	}
 	
 	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
+	 * @return A String that starts with the option prefix of the current
+	 *         Request's setting, doubled if it's a short option, surrounded by
+	 *         backticks through the {@link #code(Object)} method.
 	 */
-	public String buildVParameter(String parameter){
-		return code(buildParameter(parameter));
+	public String buildVOption(String option){
+		return code(buildOption(option));
 	}
 	
 	@Override
@@ -819,8 +807,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	@Override
-	public String formatParameter(String parameterToFormat){
-		return buildParameter(parameterToFormat);
+	public String formatOption(String optionToFormat){
+		return buildOption(optionToFormat);
 	}
 	
 	/**
