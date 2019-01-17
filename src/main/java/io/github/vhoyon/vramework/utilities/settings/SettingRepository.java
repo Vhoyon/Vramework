@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 
 public class SettingRepository {
 	

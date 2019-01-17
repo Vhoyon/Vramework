@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
 public class DictionaryTest {
 	

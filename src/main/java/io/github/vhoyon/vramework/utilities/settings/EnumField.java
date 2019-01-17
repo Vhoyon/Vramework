@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.ved.jsanitizers.EnumSanitizer;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 
 public class EnumField extends TextField {
 	

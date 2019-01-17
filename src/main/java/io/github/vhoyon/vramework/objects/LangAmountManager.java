@@ -6,8 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.github.ved.jsanitizers.EnumSanitizer;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
 class LangAmountManager {
 	

@@ -2,7 +2,7 @@ package io.github.vhoyon.vramework.utilities.settings;
 
 import java.util.function.Consumer;
 
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
