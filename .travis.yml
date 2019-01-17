@@ -10,6 +10,8 @@ env:
     - MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
     - IS_SNAPSHOT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep .*SNAPSHOT$)
 
+before_install: if [[ $TRAVIS_TAG && $IS_SNAPSHOT ]]; then echo -e "\nTrying to deploy a new release while still being in a SNAPSHOT version - update your pom.xml file!" >&2; exit 2; fi
+
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
