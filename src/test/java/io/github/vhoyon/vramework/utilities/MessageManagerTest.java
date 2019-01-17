@@ -1,16 +1,16 @@
 package io.github.vhoyon.vramework.utilities;
 
-import io.github.vhoyon.vramework.interfaces.Utils;
-import io.github.vhoyon.vramework.objects.Dictionary;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doReturn;
+import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.objects.Dictionary;
 
 public class MessageManagerTest implements Utils {
 	

@@ -1,16 +1,17 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
+import io.github.vhoyon.vramework.exceptions.BadFormatException;
 
 public class DictionaryTest {
 	
