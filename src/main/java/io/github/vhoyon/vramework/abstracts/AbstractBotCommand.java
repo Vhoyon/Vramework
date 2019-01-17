@@ -341,7 +341,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getRequest().hasOption(optionNames);
 	}
 	
-	public void onParameterPresent(String optionName,
+	public void onOptionPresent(String optionName,
 			Consumer<OptionData> onOptionPresent){
 		this.getRequest().onOptionPresent(optionName, onOptionPresent);
 	}
