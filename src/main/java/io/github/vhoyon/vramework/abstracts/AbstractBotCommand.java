@@ -308,11 +308,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public Map<String, OptionData> getParameters(){
+	public Map<String, OptionData> getOptionsData(){
 		return this.getRequest().getOptionsData();
 	}
 	
-	public Map<OptionData, List<String>> getParametersLinks(){
+	public Map<OptionData, List<String>> getOptionsLinks(){
 		return this.getRequest().getOptionsLinks();
 	}
 	
@@ -320,7 +320,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return this.getRequest().getOption(optionNames);
 	}
 	
-	public Mention getParameterAsMention(String... optionNames)
+	public Mention getOptionAsMention(String... optionNames)
 			throws BadContentException{
 		
 		OptionData optionFound = this.getOption(optionNames);
@@ -333,11 +333,11 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public boolean hasParameter(String optionName){
+	public boolean hasOption(String optionName){
 		return this.getRequest().hasOption(optionName);
 	}
 	
-	public boolean hasParameter(String... optionNames){
+	public boolean hasOption(String... optionNames){
 		return this.getRequest().hasOption(optionNames);
 	}
 	
