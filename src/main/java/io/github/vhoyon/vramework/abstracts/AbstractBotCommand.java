@@ -1,25 +1,31 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.managers.AccountManager;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import io.github.ved.jrequester.OptionData;
+import io.github.ved.jrequester.Request;
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.objects.Buffer;
+import io.github.vhoyon.vramework.objects.EventDigger;
 import io.github.vhoyon.vramework.objects.Mention;
 import io.github.vhoyon.vramework.objects.MessageEventDigger;
-import io.github.vhoyon.vramework.objects.Request;
-import io.github.vhoyon.vramework.objects.Request.Parameter;
 import io.github.vhoyon.vramework.res.FrameworkResources;
+import io.github.vhoyon.vramework.utilities.KeyBuilder;
+import io.github.vhoyon.vramework.utilities.TimerManager;
 import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.Consumer;
+import io.github.vhoyon.vramework.utilities.settings.Setting;
+import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
 
 /**
  * Class that implements all the logic to execute actions for a Discord command
@@ -41,32 +47,9 @@ public abstract class AbstractBotCommand extends Translatable implements
 		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
 		DiscordUtils {
 	
-	/**
-	 * Enum that defines which level should the Buffer saves the object given in
-	 * appropriate methods.
-	 * <p>
-	 * Here's the meaning of the possibilities :
-	 * </p>
-	 * <ul>
-	 * <li>BufferLevel.CHANNEL : Saves the object for a TextChannel, meaning
-	 * other channels in the same server may not have access to the data stored
-	 * in here (DEFAULT);</li>
-	 * <li>BufferLevel.SERVER : Saves the object for a Server (Guild, in
-	 * Discord's terms), meaning this data could apply to every TextChannel in
-	 * the same server;</li>
-	 * <li>BufferLevel.USER : Saves the object for a User's ID, meaning this
-	 * data is only accessible when this user calls a command.</li>
-	 * </ul>
-	 *
-	 * @version 1.0
-	 * @since v0.7.0
-	 * @see AbstractBotCommand#DEFAULT_BUFFER_LEVEL
-	 */
-	public enum BufferLevel{
-		CHANNEL, SERVER, USER
-	}
-	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
+	
+	public static final String TYPING_TIMER_NAME = "VRAMEWORK_BOT_TYPING_TIMER";
 	
 	protected AbstractCommandRouter router;
 	
@@ -106,47 +89,62 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
+	@Override
+	public void action(){
+		
+		boolean shouldDisplayTypingIndicator = this.displayTypingIndicator();
+		
+		if(shouldDisplayTypingIndicator){
+			
+			TextChannel channel = this.getTextContext();
+			
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					channel, TYPING_TIMER_NAME);
+			
+			Runnable sendTypingIndicator = () -> channel.sendTyping()
+					.complete();
+			
+			sendTypingIndicator.run();
+			
+			TimerManager.schedule(typingTimerName, 7500, sendTypingIndicator,
+					() -> TimerManager.resetTimer(typingTimerName));
+			
+		}
+		
+		actions();
+		
+		if(shouldDisplayTypingIndicator){
+			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
+					getTextContext(), TYPING_TIMER_NAME);
+			
+			TimerManager.stopTimer(typingTimerName);
+		}
+		
+	}
+	
+	protected abstract void actions();
+	
+	@Override
+	public String getActualCall(){
+		return getRequest().getCommand();
+	}
+	
 	public String getCommandName(){
 		
-		String requestName = getRequest().getCommand();
+		String requestName = getActualCall();
 		
-		Object calls = getCalls();
+		String[] calls = this.getAllCalls();
 		
-		if(calls instanceof String[]){
-			
-			if(Arrays.asList((String[])calls).contains(requestName))
-				return requestName;
-			
-		}
-		else{
-			
-			if(calls.equals(requestName))
-				return requestName;
-			
+		if(!Arrays.asList(calls).contains(requestName)){
+			return this.getCall();
 		}
 		
-		return getDefaultCall();
+		return requestName;
 		
 	}
 	
 	public String getContent(){
 		return getRequest().getContent();
-	}
-	
-	public String[] getContentParsed(){
-		return this.getContentParsedMaxed(-1);
-	}
-	
-	public String[] getContentParsedMaxed(int maxSize){
-		
-		if(!this.hasContent())
-			return null;
-		
-		ArrayList<String> possibleContent = splitSpacesExcludeQuotesMaxed(
-				this.getContent(), maxSize);
-		
-		return possibleContent.toArray(new String[0]);
-		
 	}
 	
 	public Mention getContentAsMention() throws BadContentException{
@@ -179,16 +177,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 	
 	public boolean remember(Object object, String associatedName,
 			BufferLevel level){
-		return getBuffer().push(object, associatedName, getKey(level));
+		return getBuffer().push(object, getKey(associatedName, level));
 	}
 	
-	public Object getMemory(String associatedName) throws NullPointerException{
+	public <E> E getMemory(String associatedName) throws IllegalStateException{
 		return getMemory(associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
-	public Object getMemory(String associatedName, BufferLevel level)
-			throws NullPointerException{
-		return getBuffer().get(associatedName, getKey(level));
+	public <E> E getMemory(String associatedName, BufferLevel level)
+			throws IllegalStateException{
+		return getBuffer().get(getKey(associatedName, level));
 	}
 	
 	public boolean forget(String associatedName){
@@ -196,7 +194,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean forget(String associatedName, BufferLevel level){
-		return getBuffer().remove(associatedName, getKey(level));
+		return getBuffer().remove(getKey(associatedName, level));
 	}
 	
 	public boolean hasMemory(String associatedName){
@@ -244,7 +242,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 		return getEventDigger().getUserName();
 	}
 	
-	protected TextChannel getTextContext(){
+	public TextChannel getTextContext(){
 		return getEventDigger().getChannel();
 	}
 	
@@ -265,23 +263,27 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public String getKey(){
-		return getKey(BufferLevel.CHANNEL);
+		return getKey(DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public MessageEventDigger getEventDigger(){
 		return getRouter().getEventDigger();
 	}
 	
-	public String getKey(BufferLevel level){
+	public String getKey(String name, BufferLevel level){
 		switch(level){
-		case SERVER:
-			return getEventDigger().getGuildKey();
+		case GUILD:
+			return getEventDigger().getGuildKey(name);
 		case USER:
-			return getEventDigger().getUserKey();
+			return getEventDigger().getUserKey(name);
 		case CHANNEL:
 		default:
-			return getEventDigger().getChannelKey();
+			return getEventDigger().getChannelKey(name);
 		}
+	}
+	
+	public String getKey(BufferLevel level){
+		return getKey(null, level);
 	}
 	
 	public Request getRequest(){
@@ -306,42 +308,42 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public HashMap<String, Parameter> getParameters(){
-		return this.getRequest().getParameters();
+	public Map<String, OptionData> getOptionsData(){
+		return this.getRequest().getOptionsData();
 	}
 	
-	public HashMap<Parameter, ArrayList<String>> getParametersLinks(){
-		return this.getRequest().getParametersLinks();
+	public Map<OptionData, List<String>> getOptionsLinks(){
+		return this.getRequest().getOptionsLinks();
 	}
 	
-	public Parameter getParameter(String... parameterNames){
-		return this.getRequest().getParameter(parameterNames);
+	public OptionData getOption(String... optionNames){
+		return this.getRequest().getOption(optionNames);
 	}
 	
-	public Mention getParameterAsMention(String... parametersNames)
+	public Mention getOptionAsMention(String... optionNames)
 			throws BadContentException{
 		
-		Parameter paramFound = getParameter(parametersNames);
+		OptionData optionFound = this.getOption(optionNames);
 		
-		if(!isStringMention(paramFound.getContent()))
-			throw new BadContentException("Parameter content is not a mention.");
+		if(!isStringMention(optionFound.getContent()))
+			throw new BadContentException("Option content is not a mention.");
 		
-		return new Mention(getIdFromStringMention(paramFound.getContent()),
+		return new Mention(getIdFromStringMention(optionFound.getContent()),
 				getEventDigger());
 		
 	}
 	
-	public boolean hasParameter(String parameterName){
-		return this.getRequest().hasParameter(parameterName);
+	public boolean hasOption(String optionName){
+		return this.getRequest().hasOption(optionName);
 	}
 	
-	public boolean hasParameter(String... parameterNames){
-		return this.getRequest().hasParameter(parameterNames);
+	public boolean hasOption(String... optionNames){
+		return this.getRequest().hasOption(optionNames);
 	}
 	
-	public void onParameterPresent(String parameterName,
-			Consumer<Parameter> onParamPresent){
-		this.getRequest().onParameterPresent(parameterName, onParamPresent);
+	public void onOptionPresent(String optionName,
+			Consumer<OptionData> onOptionPresent){
+		this.getRequest().onOptionPresent(optionName, onOptionPresent);
 	}
 	
 	public void connect(VoiceChannel voiceChannel){
@@ -367,26 +369,7 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	public boolean hasHumansLeftConnected(){
-		
-		if(!this.isConnectedToVoiceChannelBot()){
-			return false;
-		}
-		else{
-			
-			VoiceChannel channel = getConnectedVoiceChannelBot();
-			
-			for(Member member : channel.getMembers()){
-				
-				if(!(member.getUser().isBot() || member.getUser().isFake())){
-					return true;
-				}
-				
-			}
-			
-			return false;
-			
-		}
-		
+		return EventDigger.doesConnectedChannelHasHumansLeft(getGuild());
 	}
 	
 	public void disconnect(){
@@ -500,9 +483,8 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 	}
 	
-	public String groupAndSendMessages(ArrayList<String> messages){
-		return groupAndSendMessages(messages
-				.toArray(new String[messages.size()]));
+	public String groupAndSendMessages(List<String> messages){
+		return groupAndSendMessages(messages.toArray(new String[0]));
 	}
 	
 	public String editMessage(String messageId, String newMessage){
@@ -541,6 +523,241 @@ public abstract class AbstractBotCommand extends Translatable implements
 		command.action();
 	}
 	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from this command's router.
+	 *
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *         object of this
+	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
+	 *         Router}.
+	 * @since v0.14.0
+	 * @see AbstractCommandRouter#getSettings(BufferLevel)
+	 */
+	public SettingRepository getSettings(){
+		return this.getSettings(DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * object from this command's router.
+	 *
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *         object of this
+	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
+	 *         Router}.
+	 * @since v0.14.0
+	 * @see AbstractCommandRouter#getSettings()
+	 */
+	public SettingRepository getSettings(BufferLevel level){
+		return this.getRouter().getSettings(level);
+	}
+	
+	/**
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * object from this router.
+	 *
+	 * @param settingName
+	 *            The name of the setting to get from the SettingRepository of
+	 *            this Router.
+	 * @return The Setting object, generalized to Object to include all Fields
+	 *         possible. The burden of casting to the right type goes to you.<br>
+	 *         If you want to get the value and have it casted automatically to
+	 *         your own return value, please see {@link #setting(String)}.
+	 * @since v0.14.0
+	 * @see #setting(String)
+	 */
+	public Setting<Object> getSetting(String settingName){
+		return this.getSetting(settingName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * object from this router.
+	 *
+	 * @param settingName
+	 *            The name of the setting to get from the SettingRepository of
+	 *            this Router.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @return The Setting object, generalized to Object to include all Fields
+	 *         possible. The burden of casting to the right type goes to you.<br>
+	 *         If you want to get the value and have it casted automatically to
+	 *         your own return value, please see {@link #setting(String)}.
+	 * @since v0.14.0
+	 * @see #setting(String)
+	 */
+	public Setting<Object> getSetting(String settingName, BufferLevel level){
+		return this.getSettings(level).getSetting(settingName);
+	}
+	
+	/**
+	 * Gets the value of the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * to the name of the parameter {@code settingName}.
+	 *
+	 * @param settingName
+	 *            The name of the Setting to get the value from.
+	 * @param <SettingValue>
+	 *            The type of the value to be casted automatically to.
+	 * @return The value of the Setting with the name {@code settingName}.
+	 * @since v0.14.0
+	 */
+	public <SettingValue> SettingValue setting(String settingName){
+		return this.setting(settingName, DEFAULT_BUFFER_LEVEL);
+	}
+	
+	/**
+	 * Gets the value of the
+	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * to the name of the parameter {@code settingName}.
+	 *
+	 * @param settingName
+	 *            The name of the Setting to get the value from.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @param <SettingValue>
+	 *            The type of the value to be casted automatically to.
+	 * @return The value of the Setting with the name {@code settingName}.
+	 * @since v0.14.0
+	 */
+	public <SettingValue> SettingValue setting(String settingName,
+			BufferLevel level){
+		Object value = this.getSetting(settingName, level).getValue();
+		//noinspection unchecked
+		return (SettingValue)value;
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value}.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 * @see #setSetting(String, Object, Consumer)
+	 */
+	public void setSetting(String settingName, Object value)
+			throws BadFormatException{
+		this.setSetting(settingName, value, null, null);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value}.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 * @see #setSetting(String, Object, Consumer)
+	 */
+	public void setSetting(String settingName, Object value, BufferLevel level)
+			throws BadFormatException{
+		this.setSetting(settingName, value, level, null);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value} and
+	 * runs arbitrary code after a successful change.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param onChange
+	 *            Arbitrary code to run when the setting has been changed using
+	 *            a {@link java.util.function.Consumer} and the
+	 *            {@link java.util.function.Consumer#accept(Object)} method, in
+	 *            which the validated value is sent to. Can be {@code null} (or
+	 *            use {@link #setSetting(String, Object)}) to not run anything
+	 *            on change success.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 */
+	public void setSetting(String settingName, Object value,
+			Consumer<Object> onChange) throws BadFormatException{
+		this.setSetting(settingName, value, null, onChange);
+	}
+	
+	/**
+	 * Sets the setting with the associated name from the parameter
+	 * {@code settingName} to the value from the parameter {@code value} and
+	 * runs arbitrary code after a successful change.
+	 *
+	 * @param settingName
+	 *            Name of the setting to change
+	 * @param value
+	 *            {@code Object} value to be set to this setting.
+	 * @param level
+	 *            The level at which the settings will be retrieved from.
+	 * @param onChange
+	 *            Arbitrary code to run when the setting has been changed using
+	 *            a {@link java.util.function.Consumer} and the
+	 *            {@link java.util.function.Consumer#accept(Object)} method, in
+	 *            which the validated value is sent to. Can be {@code null} (or
+	 *            use {@link #setSetting(String, Object)}) to not run anything
+	 *            on change success.
+	 * @throws IllegalArgumentException
+	 *             {@code value} parameter is not the type of the
+	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             associated with the {@code name} provided.
+	 * @throws BadFormatException
+	 *             Thrown if the {@code value} parameter is not the right type
+	 *             for the setting searched for.
+	 * @since v0.14.0
+	 */
+	public void setSetting(String settingName, Object value, BufferLevel level,
+			Consumer<Object> onChange) throws BadFormatException{
+		
+		if(level == null)
+			level = DEFAULT_BUFFER_LEVEL;
+		
+		SettingRepository settings = this.getSettings(level);
+		
+		settings.save(settingName, value, onChange);
+		
+	}
+	
+	public boolean displayTypingIndicator(){
+		return true;
+	}
+	
+	public void stopTypingIndicator(){
+		TimerManager.stopTimer(KeyBuilder.buildTextChannelObjectKey(
+				getTextContext(), TYPING_TIMER_NAME));
+	}
+	
 	public void log(String message){
 		Logger.log(message);
 	}
@@ -567,25 +784,31 @@ public abstract class AbstractBotCommand extends Translatable implements
 	}
 	
 	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
+	 * @return A String that starts with the option prefix of the current
+	 *         Request's setting, doubled if it's a short option.
 	 */
-	public String buildParameter(String parameter){
-		char p = getRequest().getParametersPrefix();
-		return (parameter.length() > 1 ? p + "" + p : p) + parameter;
+	public String buildOption(String option){
+		char p = getRequest().getOptionsPrefix();
+		return (option.length() > 1 ? p + "" + p : p) + option;
 	}
 	
 	/**
-	 * @return A String that starts with the <i>PARAMETER_PREFIX</i> found in
-	 *         Ressources followed by the <i>parameter</i> parameter.
+	 * @return A String that starts with the option prefix of the current
+	 *         Request's setting, doubled if it's a short option, surrounded by
+	 *         backticks through the {@link #code(Object)} method.
 	 */
-	public String buildVParameter(String parameter){
-		return code(buildParameter(parameter));
+	public String buildVOption(String option){
+		return code(buildOption(option));
 	}
 	
 	@Override
-	public String formatParameter(String parameterToFormat){
-		return buildParameter(parameterToFormat);
+	public String formatCommand(String commandToFormat){
+		return buildVCommand(commandToFormat);
+	}
+	
+	@Override
+	public String formatOption(String optionToFormat){
+		return buildOption(optionToFormat);
 	}
 	
 	/**

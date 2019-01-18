@@ -1,12 +1,12 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import java.util.HashMap;
+import java.util.TreeMap;
+
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
-
-import java.util.HashMap;
-import java.util.TreeMap;
 
 public abstract class CommandsLinker extends Translatable {
 	
@@ -46,22 +46,16 @@ public abstract class CommandsLinker extends Translatable {
 		
 		linksMap.forEach((key, link) -> {
 			
-			try{
-				
-				LinkableCommand command = link.getInstance();
-				
-				boolean isSubstitute = defaultCommands.containsKey(link
-						.getDefaultCall());
-				
-				boolean isHidden = (command instanceof Hidden)
-						&& ((Hidden)command).hiddenCondition();
-				
-				if(!isSubstitute && !isHidden){
-					defaultCommands.put(link.getDefaultCall(), command);
-				}
-				
+			LinkableCommand command = link.getInstance();
+			
+			boolean isSubstitute = defaultCommands.containsKey(link.getCall());
+			
+			boolean isHidden = (command instanceof Hidden)
+					&& ((Hidden)command).hiddenCondition();
+			
+			if(!isSubstitute && !isHidden){
+				defaultCommands.put(link.getCall(), command);
 			}
-			catch(Exception e){}
 			
 		});
 		
@@ -101,17 +95,14 @@ public abstract class CommandsLinker extends Translatable {
 			
 			builder.append("\n");
 			
-			Object calls = command.getCalls();
+			String[] aliases = command.getAliases();
 			
-			if(calls instanceof String[]){
+			if(aliases.length > 0){
 				
-				String[] callsArray = (String[])calls;
-				
-				// Add all of the non default calls of a link as a variant
-				for(int i = 1; i < callsArray.length; i++){
+				for(String alias : aliases){
 					
-					builder.append(formatVariant(formatWholeCommand(
-							prependCharsVariants, callsArray[i])));
+					builder.append(formatAlias(formatWholeCommand(
+							prependCharsVariants, alias)));
 					
 					builder.append("\n");
 					
@@ -158,8 +149,8 @@ public abstract class CommandsLinker extends Translatable {
 		return helpString;
 	}
 	
-	public String formatVariant(String variant){
-		return "\t" + variant;
+	public String formatAlias(String alias){
+		return "\t" + alias;
 	}
 	
 	public String getPrependChars(){

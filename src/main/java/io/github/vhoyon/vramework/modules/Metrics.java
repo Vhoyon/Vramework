@@ -1,10 +1,10 @@
 package io.github.vhoyon.vramework.modules;
 
+import java.util.Date;
+
 import net.dv8tion.jda.core.JDA;
 import io.github.vhoyon.vramework.abstracts.Module;
 import io.github.vhoyon.vramework.exceptions.JDANotSetException;
-
-import java.util.Date;
 
 public class Metrics extends Module {
 	

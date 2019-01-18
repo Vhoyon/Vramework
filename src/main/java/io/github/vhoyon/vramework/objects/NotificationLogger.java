@@ -1,8 +1,8 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.interfaces.Loggable;
-
 import javax.swing.*;
+
+import io.github.vhoyon.vramework.interfaces.Loggable;
 
 public class NotificationLogger implements Loggable {
 	
@@ -21,4 +21,5 @@ public class NotificationLogger implements Loggable {
 	public void log(String logText, String logType, boolean hasAppendedDate){
 		JOptionPane.showMessageDialog(frame, logText);
 	}
+	
 }

@@ -8,11 +8,8 @@ import io.github.vhoyon.vramework.modules.Metrics;
 public class TerminalCommandNumberOfServers extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
-		return new String[]
-		{
-			"connections"
-		};
+	public String getCall(){
+		return "connections";
 	}
 	
 	@Override

@@ -6,10 +6,15 @@ import io.github.vhoyon.vramework.modules.Logger;
 public class TerminalCommandExit extends AbstractTerminalCommand {
 	
 	@Override
-	public String[] getCalls(){
+	public String getCall(){
+		return "exit";
+	}
+	
+	@Override
+	public String[] getAliases(){
 		return new String[]
 		{
-			"exit"
+			"off"
 		};
 	}
 	

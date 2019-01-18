@@ -11,16 +11,20 @@ public final class TimerManager {
 	private static class TimerWrapper extends Timer {
 		public int delay;
 		public long timeStarted;
+		public Runnable action;
+		public Runnable doFinally;
 		
-		public TimerWrapper(String timerName, int delay){
+		public TimerWrapper(String timerName, int delay, Runnable action,
+				Runnable doFinally){
 			super(timerName);
 			this.delay = delay;
 			timeStarted = System.currentTimeMillis();
+			this.action = action;
+			this.doFinally = doFinally;
 		}
 		
 		public int getTimeRemaining(){
-			return delay
-					- ((int)(System.currentTimeMillis() - timeStarted));
+			return delay - ((int)(System.currentTimeMillis() - timeStarted));
 		}
 	}
 	
@@ -48,11 +52,12 @@ public final class TimerManager {
 	 * @param action
 	 *            Action to do after the delay was finished, without being
 	 *            called again, which resets the delay
-	 * @param handler
-	 *            Handler object that gets notified when the delay is over
+	 * @param doFinally
+	 *            Action to do when everything is done (including when
+	 *            stopping this timer).
 	 */
 	public static void schedule(final String timerName, final int delay,
-			Runnable action, final Object handler){
+			Runnable action, Runnable doFinally){
 		
 		if(timers == null)
 			timers = new HashMap<>();
@@ -60,15 +65,17 @@ public final class TimerManager {
 		TimerTask task = new TimerTask(){
 			@Override
 			public void run(){
-				action.run();
+				if(action != null)
+					action.run();
 				
-				stopTimer(timerName, handler);
+				stopTimer(timerName);
 			}
 		};
 		
-		stopTimer(timerName);
+		stopTimer(timerName, false);
 		
-		TimerWrapper timer = new TimerWrapper(timerName, delay);
+		TimerWrapper timer = new TimerWrapper(timerName, delay, action,
+				doFinally);
 		
 		timer.schedule(task, delay);
 		
@@ -76,21 +83,51 @@ public final class TimerManager {
 		
 	}
 	
-	public static void stopTimer(String timerName){
-		stopTimer(timerName, null);
+	public static boolean resetTimer(String timerName){
+		
+		if(hasTimer(timerName)){
+			TimerWrapper timer = timers.get(timerName);
+			
+			TimerManager.schedule(timerName, timer.delay, timer.action,
+					timer.doFinally);
+			
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
-	public static void stopTimer(String timerName, Object handler){
+	public static void stopTimer(String timerName){
+		stopTimer(timerName, true);
+	}
+	
+	private static void stopTimer(String timerName, boolean shouldDoFinally){
 		
-		if(timers != null && timers.containsKey(timerName)){
-			timers.remove(timerName).cancel();
+		if(hasTimer(timerName)){
+			TimerWrapper timer = timers.remove(timerName);
 			
-			if(handler != null){
-				synchronized(handler){
-					handler.notifyAll();
-				}
+			timer.cancel();
+			
+			if(shouldDoFinally && timer.doFinally != null){
+				timer.doFinally.run();
 			}
 		}
+		
+	}
+	
+	public static boolean hasTimer(String timerName){
+		return timers != null && timers.containsKey(timerName);
+	}
+	
+	public static void stopAllTimers(){
+		
+		if(timers == null)
+			return;
+		
+		timers.forEach((s, timer) -> timer.cancel());
+		
+		timers = null;
 		
 	}
 	

@@ -1,8 +1,8 @@
 package io.github.vhoyon.vramework.interfaces;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class UtilsTest implements Utils {
 	

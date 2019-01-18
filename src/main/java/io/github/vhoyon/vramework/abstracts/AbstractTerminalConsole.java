@@ -1,16 +1,17 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import io.github.vhoyon.vramework.utils.UpdatableOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.interfaces.Loggable;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.TerminalCommandsLinker;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import io.github.vhoyon.vramework.utils.UpdatableOutputStream;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
@@ -25,8 +26,6 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	public AbstractTerminalConsole(){
 		reader = new BufferedReader(new InputStreamReader(System.in));
-		
-		this.commandsRepo = new CommandsRepository(new TerminalCommandsLinker());
 		
 		this.setInputPrefix(">");
 		
@@ -57,7 +56,16 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	}
 	
 	public CommandsRepository getCommandsRepo(){
+		if(commandsRepo == null){
+			this.setCommandsRepo(new CommandsRepository(
+					new TerminalCommandsLinker()));
+		}
+		
 		return commandsRepo;
+	}
+	
+	public void setCommandsRepo(CommandsRepository repository){
+		this.commandsRepo = repository;
 	}
 	
 	public void setInputPrefix(String inputPrefix){
@@ -88,34 +96,41 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
-		this.sendLog(logText);
-		
-		// logToChannel(logText, logType);
+		logToChannel(logText, logType, true);
 	}
 	
+	/**
+	 * @param log
+	 *            Log message.
+	 */
 	protected void sendLog(String log){
 		this.sendLog(log, true);
 	}
 	
+	/**
+	 * @param log
+	 *            Log message.
+	 * @param appendNewLine
+	 *            If the output should add a new line after the text.
+	 */
 	protected void sendLog(String log, boolean appendNewLine){
-		if(appendNewLine)
-			System.out.println(log);
-		else
-			System.out.print(log);
+		logToChannel(log, null, appendNewLine);
 	}
 	
-	/**
-	 * @deprecated
-	 * @param logText
-	 * @param logType
-	 */
-	@SuppressWarnings("unused")
-	private void logToChannel(String logText, String logType){
+	private void logToChannel(String logText, String logType,
+			boolean appendNewLine){
 		
-		if("ERROR".equals(logType))
-			System.err.println(logText);
+		PrintStream stream;
+		
+		if(LogType.ERROR.toString().equalsIgnoreCase(logType))
+			stream = System.err;
 		else
-			System.out.println(logText);
+			stream = System.out;
+		
+		if(appendNewLine)
+			stream.println(logText);
+		else
+			stream.print(logText);
 		
 	}
 	
@@ -132,7 +147,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 			return false;
 		}
 		
-		AbstractTerminalCommand command = (AbstractTerminalCommand)commandsRepo
+		AbstractTerminalCommand command = (AbstractTerminalCommand)getCommandsRepo()
 				.getContainer().initiateLink(input);
 		
 		command.setConsole(this);

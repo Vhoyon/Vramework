@@ -1,18 +1,17 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.interfaces.Utils;
+import java.util.concurrent.Callable;
 
-import java.util.HashMap;
+import io.github.vhoyon.vramework.interfaces.BufferImplementation;
 
 public class Buffer {
 	
 	private static Buffer buffer;
 	
-	private HashMap<String, Object> memory;
+	private BufferImplementation memoryImpl;
+	private BufferImplementation singletonImpl;
 	
-	private Buffer(){
-		memory = new HashMap<>();
-	}
+	private Buffer(){}
 	
 	public static Buffer get(){
 		if(buffer == null)
@@ -21,69 +20,129 @@ public class Buffer {
 		return buffer;
 	}
 	
-	public boolean push(Object object, String associatedName, String key){
+	protected final BufferImplementation getMemoryImpl(){
+		if(this.memoryImpl == null)
+			setMemoryImplementation(new DefaultBufferImplementation());
 		
-		String objectKey = Utils.buildKey(key, associatedName);
-		
-		return this.push(object, objectKey);
-		
+		return this.memoryImpl;
 	}
 	
-	public boolean push(Object object, String fullKey){
+	protected final BufferImplementation getSingletonMemoryImpl(){
+		if(this.singletonImpl == null)
+			setSingletonMemoryImplementation(new DefaultBufferImplementation());
 		
-		boolean isNewObject = !memory.containsKey(fullKey);
-		
-		memory.put(fullKey, object);
-		
-		return isNewObject;
-		
+		return this.singletonImpl;
 	}
 	
-	public Object get(String associatedName, String key)
-			throws NullPointerException{
-		
-		String objectKey = Utils.buildKey(key, associatedName);
-		
-		return this.get(objectKey);
-		
+	public static void setMemoryImplementation(
+			BufferImplementation implementation){
+		Buffer.get().memoryImpl = implementation;
 	}
 	
-	public Object get(String fullKey) throws NullPointerException{
+	public static void setSingletonMemoryImplementation(
+			BufferImplementation implementation){
+		Buffer.get().singletonImpl = implementation;
+	}
+	
+	public static void setImplementation(BufferImplementation implementation){
+		Buffer.setMemoryImplementation(implementation);
+		Buffer.setSingletonMemoryImplementation(implementation);
+	}
+	
+	public static <E> E getSingleton(Class<E> desiredClass){
+		return getSingleton(desiredClass, null);
+	}
+	
+	public static <E> E getSingleton(Class<E> desiredClass,
+			Callable<E> createInstanceIfNew)
+			throws UnsupportedOperationException{
 		
-		boolean hasObject = memory.containsKey(fullKey);
+		if(desiredClass == null){
+			throw new IllegalArgumentException(
+					"The desiredClass parameter cannot be null!");
+		}
 		
-		if(!hasObject){
-			throw new NullPointerException("No object with the key \""
-					+ fullKey + "\" was found in the Buffer.");
+		String classKey = desiredClass.getName();
+		
+		Buffer buffer = Buffer.get();
+		
+		if(buffer.getSingletonMemoryImpl().has(classKey)){
+			//noinspection unchecked
+			return (E)buffer.getSingletonMemoryImpl().retrieve(classKey);
 		}
 		else{
 			
-			Object memoryObject = memory.get(fullKey);
+			if(createInstanceIfNew == null)
+				return null;
 			
-			return memoryObject;
+			E newClassSingleton;
+			
+			try{
+				newClassSingleton = createInstanceIfNew.call();
+			}
+			catch(Exception e){
+				throw new UnsupportedOperationException(
+						"The code provided to create the new singleton instance threw an Exception.",
+						e);
+			}
+			
+			buffer.getSingletonMemoryImpl().store(classKey, newClassSingleton);
+			
+			return newClassSingleton;
 			
 		}
 		
 	}
 	
-	public boolean remove(String associatedName, String key){
+	public static <E> E removeSingleton(Class<E> singletonClass){
 		
-		String objectKey = Utils.buildKey(key, associatedName);
+		Buffer buffer = Buffer.get();
 		
-		boolean hasRemovedObject = memory.containsKey(objectKey);
+		String classKey = singletonClass.getName();
 		
-		memory.remove(objectKey);
+		if(!buffer.getSingletonMemoryImpl().has(classKey))
+			return null;
 		
-		return hasRemovedObject;
+		//noinspection unchecked
+		E singletonInstance = (E)buffer.getSingletonMemoryImpl().retrieve(
+				classKey);
 		
+		buffer.getSingletonMemoryImpl().remove(classKey);
+		
+		return singletonInstance;
+		
+	}
+	
+	public static boolean hasSingleton(Class<?> singletonClass){
+		return Buffer.get().getSingletonMemoryImpl()
+				.has(singletonClass.getName());
+	}
+	
+	public boolean push(Object object, String fullKey){
+		return this.getMemoryImpl().store(fullKey, object);
+	}
+	
+	public <E> E get(String fullKey) throws IllegalStateException{
+		try{
+			//noinspection unchecked
+			return (E)this.getMemoryImpl().retrieve(fullKey);
+		}
+		catch(IllegalStateException e){
+			throw new IllegalStateException("No object with the key \""
+					+ fullKey + "\" was found in the Buffer.");
+		}
+	}
+	
+	public boolean remove(String fullKey){
+		return this.getMemoryImpl().remove(fullKey);
 	}
 	
 	public void emptyMemory(){
-		memory = new HashMap<>();
+		this.getMemoryImpl().empty();
 	}
 	
 	public boolean has(String key){
-		return this.memory.containsKey(key);
+		return this.getMemoryImpl().has(key);
 	}
 	
 }

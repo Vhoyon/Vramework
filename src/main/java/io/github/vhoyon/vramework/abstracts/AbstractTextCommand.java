@@ -7,7 +7,7 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 	}
 	
 	@Override
-	public void action(){
+	public void actions(){
 		
 		String textToSend = getTextToSend();
 		Boolean isInfoOneLiner = isTextInfoOneLiner();
@@ -38,7 +38,7 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 	}
 	
 	@Override
-	public Object getCalls(){
+	public String getCall(){
 		return null;
 	}
 	

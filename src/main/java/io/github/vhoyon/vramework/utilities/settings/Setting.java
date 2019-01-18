@@ -1,73 +1,117 @@
 package io.github.vhoyon.vramework.utilities.settings;
 
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.vhoyon.vramework.objects.Dictionary;
-
-import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class Setting {
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.modules.Environment;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.modules.Logger.LogType;
+
+public abstract class Setting<E> {
 	
-	private HashMap<String, SettingField<Object>> fields;
+	protected E value;
+	private E defaultValue;
 	
-	public Setting(SettingField<Object>... fields){
-		this(new Dictionary(), fields);
+	private String name;
+	private String env;
+	
+	public Setting(String name, String env, E defaultValue){
+		
+		this.name = name;
+		this.defaultValue = defaultValue;
+		this.env = env;
+		
 	}
 	
-	public Setting(Dictionary dict, SettingField<Object>... fields){
-		this(dict, true, fields);
-	}
-	
-	public Setting(Dictionary dict, boolean doClone,
-			SettingField<Object>... fields){
-		
-		this.fields = new HashMap<>();
-		
-		for(SettingField<Object> field : fields){
-			SettingField<Object> clonedField = field;
-			
-			if(doClone)
-				try{
-					clonedField = field.clone();
-				}
-				catch(CloneNotSupportedException e){}
-			
-			clonedField.setDictionary(dict);
-			
-			this.getFieldsMap().put(clonedField.getName(), clonedField);
+	public E getValue(){
+		if(this.value != null){
+			return this.value;
 		}
 		
-	}
-	
-	public boolean save(String settingName, Object value,
-			Consumer<Object> onChange) throws BadFormatException{
-		
-		if(!hasField(settingName)){
-			return false;
+		try{
+			E envValue = null;
+			
+			try{
+				envValue = Environment.getVar(this.env);
+			}
+			catch(NullPointerException e){}
+			
+			if(envValue == null){
+				this.value = this.getDefaultValue();
+			}
+			else{
+				this.value = this.formatEnvironment(envValue);
+			}
+		}
+		catch(ClassCastException | BadFormatException e){
+			
+			Logger.log(
+					"Environment variable is not formatted correctly for its data type! Using default value.",
+					LogType.WARNING);
+			
+			this.value = this.getDefaultValue();
+			
 		}
 		
-		SettingField<Object> field = getField(settingName);
+		return this.value;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	protected String getEnv(){
+		return this.env;
+	}
+	
+	public E getDefaultValue(){
+		return this.defaultValue;
+	}
+	
+	public final void setValue(E value) throws BadFormatException{
+		this.setValue(value, null);
+	}
+	
+	public final void setToDefaultValue(){
+		this.setToDefaultValue(null);
+	}
+	
+	public final void setToDefaultValue(Consumer<E> onChange){
+		this.setValue(getDefaultValue(), onChange);
+	}
+	
+	public final void setValue(E value, Consumer<E> onChange)
+			throws BadFormatException{
 		
-		field.setValue(value, onChange);
+		if(value == null){
+			throw new BadFormatException("Value cannot be null!", 0);
+		}
 		
-		return true;
+		this.value = this.sanitizeValue(value);
+		
+		if(onChange != null)
+			onChange.accept(this.value);
 		
 	}
 	
-	public boolean hasField(String name){
-		return this.getFieldsMap().containsKey(name);
+	protected abstract E sanitizeValue(Object value)
+			throws IllegalArgumentException;
+	
+	protected E formatEnvironment(E envValue) throws BadFormatException{
+		return envValue;
 	}
 	
-	public SettingField<Object> getField(String name){
-		return this.getFieldsMap().get(name);
-	}
-	
-	public HashMap<String, SettingField<Object>> getFieldsMap(){
-		return this.fields;
-	}
-	
-	public <SettingValue> SettingValue getFieldValue(String name){
-		return (SettingValue)this.getField(name).getValue();
+	Setting<E> duplicate(){
+		
+		return new Setting<E>(Setting.this.name, Setting.this.env,
+				Setting.this.defaultValue){
+			@Override
+			protected E sanitizeValue(Object value)
+					throws IllegalArgumentException{
+				return Setting.this.sanitizeValue(value);
+			}
+		};
+		
 	}
 	
 }

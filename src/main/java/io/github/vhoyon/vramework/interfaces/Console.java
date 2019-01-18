@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.interfaces;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public interface Console {
 	

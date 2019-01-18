@@ -10,30 +10,25 @@ public class Link {
 		this.classToLink = command;
 	}
 	
-	public LinkableCommand getInstance() throws Exception{
-		return getClassToLink().newInstance();
+	public LinkableCommand getInstance() throws IllegalStateException{
+		try{
+			return getClassToLink().newInstance();
+		}
+		catch(IllegalAccessException | InstantiationException e){
+			throw new IllegalStateException(
+					"The class to link is not accessible nor instantiable!", e);
+		}
 	}
 	
 	public boolean hasCall(String call){
 		
 		if(call != null && call.length() != 0){
 			
-			if(getCalls() instanceof String[]){
-				
-				String[] calls = (String[])getCalls();
-				
-				for(String definedCall : calls)
-					if(definedCall.equals(call))
-						return true;
-				
-			}
-			else{
-				
-				String linkCall = getCalls().toString();
-				
-				return call.equals(linkCall);
-				
-			}
+			String[] calls = getInstance().getAllCalls();
+			
+			for(String definedCall : calls)
+				if(definedCall.equals(call))
+					return true;
 			
 		}
 		
@@ -41,20 +36,11 @@ public class Link {
 		
 	}
 	
-	public Object getCalls(){
+	public String getCall(){
 		try{
-			return getInstance().getCalls();
+			return getInstance().getCall();
 		}
-		catch(Exception e){
-			return null;
-		}
-	}
-	
-	public String getDefaultCall(){
-		try{
-			return getInstance().getDefaultCall();
-		}
-		catch(Exception e){
+		catch(IllegalStateException e){
 			return null;
 		}
 	}

@@ -1,9 +1,9 @@
 package io.github.vhoyon.vramework.utilities;
 
+import java.util.HashMap;
+
 import io.github.vhoyon.vramework.interfaces.Utils;
 import io.github.vhoyon.vramework.objects.Dictionary;
-
-import java.util.HashMap;
 
 public class MessageManager {
 	

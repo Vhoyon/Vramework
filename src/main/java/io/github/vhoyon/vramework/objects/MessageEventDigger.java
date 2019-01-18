@@ -1,44 +1,58 @@
 package io.github.vhoyon.vramework.objects;
 
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.utilities.KeyBuilder;
 
-public class MessageEventDigger {
-	
-	private MessageReceivedEvent event;
+public class MessageEventDigger extends EventDigger {
 	
 	public MessageEventDigger(MessageReceivedEvent event){
-		this.event = event;
+		super(event);
 	}
 	
 	public MessageReceivedEvent getEvent(){
-		return this.event;
+		return (MessageReceivedEvent)super.getEvent();
 	}
 	
-	public JDA getJDA(){
-		return this.getEvent().getJDA();
+	public String getMessageContent(){
+		return this.getEvent().getMessage().getContentRaw();
 	}
 	
 	public String getGuildKey(){
-		return Utils.buildKey(getGuildId());
+		return KeyBuilder.buildGuildKey(getGuild());
 	}
 	
 	public String getChannelKey(){
-		return Utils.buildKey(getGuildKey(), getChannelId());
+		return KeyBuilder.buildTextChannelKey(getChannel());
 	}
 	
 	public String getUserKey(){
-		return Utils.buildKey(getUserName(), getUserId());
+		return KeyBuilder.buildUserKey(getUser());
 	}
 	
 	public String getCommandKey(String commandName){
-		return Utils.buildKey(getChannelKey(), commandName);
+		return KeyBuilder.buildCommandKey(getChannel(), commandName);
+	}
+	
+	public String getGuildKey(Object object){
+		return KeyBuilder.buildGuildObjectKey(getGuild(), object);
+	}
+	
+	public String getChannelKey(Object object){
+		return KeyBuilder.buildTextChannelObjectKey(getChannel(), object);
+	}
+	
+	public String getUserKey(Object object){
+		return KeyBuilder.buildUserObjectKey(getUser(), object);
+	}
+	
+	public String getCommandKey(String commandName, Object object){
+		return KeyBuilder.buildCommandObjectKey(getChannel(), commandName,
+				object);
 	}
 	
 	public Guild getGuild(){
-		return event.getGuild();
+		return this.getEvent().getGuild();
 	}
 	
 	public String getGuildId(){
@@ -46,7 +60,7 @@ public class MessageEventDigger {
 	}
 	
 	public TextChannel getChannel(){
-		return event.getTextChannel();
+		return this.getEvent().getTextChannel();
 	}
 	
 	public String getChannelId(){
@@ -54,11 +68,11 @@ public class MessageEventDigger {
 	}
 	
 	public Member getMember(){
-		return event.getMember();
+		return this.getEvent().getMember();
 	}
 	
 	public User getUser(){
-		return event.getAuthor();
+		return this.getEvent().getAuthor();
 	}
 	
 	public String getUserId(){

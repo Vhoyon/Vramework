@@ -1,14 +1,14 @@
 package io.github.vhoyon.vramework.objects;
 
-import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
-import io.github.vhoyon.vramework.exceptions.BadFormatException;
-import io.github.vhoyon.vramework.interfaces.Utils;
-import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.modules.Logger.LogType;
-
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import io.github.ved.jsanitizers.exceptions.BadFormatException;
+import io.github.vhoyon.vramework.exceptions.AmountNotDefinedException;
+import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.modules.Logger;
+import io.github.vhoyon.vramework.modules.Logger.LogType;
 
 public class Dictionary implements Utils {
 	

@@ -3,9 +3,9 @@ package io.github.vhoyon.vramework.utilities.settings;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import io.github.ved.jsanitizers.TextRegexSanitizer;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
-import io.github.ved.jsanitizers.TextRegexSanitizer;
 
 public class TextRegexField extends TextField {
 	

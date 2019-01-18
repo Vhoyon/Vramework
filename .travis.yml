@@ -7,7 +7,10 @@ sudo: false
 
 env:
   global:
-  - export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+    - MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+    - IS_SNAPSHOT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | grep .*SNAPSHOT$)
+
+before_install: if [[ $TRAVIS_TAG && $IS_SNAPSHOT ]]; then echo -e "\nTrying to deploy a new release while still being in a SNAPSHOT version - update your pom.xml file!" >&2; exit 2; fi
 
 install:
   - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -17,20 +20,24 @@ script:
 
 before_deploy:
   - cp .travis.settings.xml $HOME/.m2/settings.xml
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - if [[ $TRAVIS_TAG ]]; then
+      echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import &&
+      echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust;
+    fi
 
 deploy:
   - provider: script
     script: mvn deploy -DskipTests -B -P release
     skip_cleanup: true
     on:
+      condition: -z $IS_SNAPSHOT
       tags: true
       repo: Vhoyon/Vramework
   - provider: script
     script: mvn deploy -DskipTests -B
     skip_cleanup: true
     on:
+      condition: $IS_SNAPSHOT
       branch: dev
       repo: Vhoyon/Vramework
 

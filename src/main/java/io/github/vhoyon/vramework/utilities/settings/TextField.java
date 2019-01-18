@@ -2,7 +2,7 @@ package io.github.vhoyon.vramework.utilities.settings;
 
 import io.github.ved.jsanitizers.TextSanitizer;
 
-public class TextField extends SettingField<String> {
+public class TextField extends Setting<String> {
 	
 	public TextField(String name, String env, String defaultValue){
 		super(name, env, defaultValue);

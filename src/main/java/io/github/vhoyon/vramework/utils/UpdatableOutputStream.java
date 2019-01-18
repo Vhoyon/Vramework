@@ -144,7 +144,22 @@ public abstract class UpdatableOutputStream extends PrintStream {
 							
 							if(isWaitingForInput()){
 								
-								super.print(formatLatestInputMessage(getLatestInputMessage()));
+								String latestInputMessage = formatLatestInputMessage(getLatestInputMessage());
+								
+								if(outputType == Type.ERR){
+									
+									if(System.out instanceof UpdatableOutputStream){
+										((UpdatableOutputStream)System.out)
+												.refreshLatestInputMessage(latestInputMessage);
+									}
+									else{
+										System.out.print(latestInputMessage);
+									}
+									
+								}
+								else{
+									super.print(latestInputMessage);
+								}
 								
 								setIsPrinting(false);
 								
@@ -158,6 +173,12 @@ public abstract class UpdatableOutputStream extends PrintStream {
 			
 		}
 		
+	}
+	
+	public void refreshLatestInputMessage(String latestInputMessage){
+		this.setIsWaitingForInput(false);
+		this.print(latestInputMessage);
+		this.setIsWaitingForInput(true);
 	}
 	
 	// Prints overrides to handle updates via default methods
