@@ -42,10 +42,13 @@ public class Language {
 		
 		String friendlyName = obj.toString();
 		
-		if(friendlyName != null)
-			for(String langFriendlyName : getFriendlyNames())
-				if(friendlyName.equals(langFriendlyName))
+		if(friendlyName != null){
+			for(String langFriendlyName : this.getFriendlyNames()){
+				if(friendlyName.equals(langFriendlyName)){
 					return true;
+				}
+			}
+		}
 		
 		return false;
 		

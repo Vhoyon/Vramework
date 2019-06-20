@@ -79,7 +79,7 @@ public abstract class AbstractBotCommand implements
 	 */
 	public AbstractBotCommand(AbstractBotCommand commandToCopy){
 		this();
-		putStateFromCommand(commandToCopy);
+		this.putStateFromCommand(commandToCopy);
 	}
 	
 	/**
@@ -92,8 +92,8 @@ public abstract class AbstractBotCommand implements
 	 */
 	public void putStateFromCommand(AbstractBotCommand commandToCopy){
 		
-		setRouter(commandToCopy.getRouter());
-		setDictionary(commandToCopy.getDictionary());
+		this.setRouter(commandToCopy.getRouter());
+		this.setDictionary(commandToCopy.getDictionary());
 		
 		this.isCopy = true;
 		
@@ -131,11 +131,11 @@ public abstract class AbstractBotCommand implements
 			
 		}
 		
-		actions();
+		this.actions();
 		
 		if(shouldDisplayTypingIndicator){
 			String typingTimerName = KeyBuilder.buildTextChannelObjectKey(
-					getTextContext(), TYPING_TIMER_NAME);
+					this.getTextContext(), TYPING_TIMER_NAME);
 			
 			TimerManager.stopTimer(typingTimerName);
 		}
@@ -146,7 +146,7 @@ public abstract class AbstractBotCommand implements
 	
 	@Override
 	public String getActualCall(){
-		return getRequest().getCommand();
+		return this.getRequest().getCommand();
 	}
 	
 	public String getCommandName(){
@@ -164,23 +164,23 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public String getContent(){
-		return getRequest().getContent();
+		return this.getRequest().getContent();
 	}
 	
 	public Mention getContentAsMention() throws BadContentException{
-		if(!isStringMention(getContent()))
+		if(!isStringMention(this.getContent()))
 			throw new BadContentException("Content is not a mention.");
 		
-		return new Mention(getIdFromStringMention(getContent()),
-				getEventDigger());
+		return new Mention(this.getIdFromStringMention(this.getContent()),
+				this.getEventDigger());
 	}
 	
 	public boolean hasContent(){
-		return getContent() != null;
+		return this.getContent() != null;
 	}
 	
 	public AbstractCommandRouter getRouter(){
-		return router;
+		return this.router;
 	}
 	
 	public void setRouter(AbstractCommandRouter router){
@@ -188,42 +188,42 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public Buffer getBuffer(){
-		return getRouter().getBuffer();
+		return this.getRouter().getBuffer();
 	}
 	
 	public boolean remember(Object object, String associatedName){
-		return remember(object, associatedName, DEFAULT_BUFFER_LEVEL);
+		return this.remember(object, associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public boolean remember(Object object, String associatedName,
 			BufferLevel level){
-		return getBuffer().push(object, getKey(associatedName, level));
+		return this.getBuffer().push(object, getKey(associatedName, level));
 	}
 	
 	public <E> E getMemory(String associatedName) throws IllegalStateException{
-		return getMemory(associatedName, DEFAULT_BUFFER_LEVEL);
+		return this.getMemory(associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public <E> E getMemory(String associatedName, BufferLevel level)
 			throws IllegalStateException{
-		return getBuffer().get(getKey(associatedName, level));
+		return this.getBuffer().get(getKey(associatedName, level));
 	}
 	
 	public boolean forget(String associatedName){
-		return forget(associatedName, DEFAULT_BUFFER_LEVEL);
+		return this.forget(associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public boolean forget(String associatedName, BufferLevel level){
-		return getBuffer().remove(getKey(associatedName, level));
+		return this.getBuffer().remove(getKey(associatedName, level));
 	}
 	
 	public boolean hasMemory(String associatedName){
-		return hasMemory(associatedName, DEFAULT_BUFFER_LEVEL);
+		return this.hasMemory(associatedName, DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public boolean hasMemory(String associatedName, BufferLevel level){
 		try{
-			return getMemory(associatedName, level) != null;
+			return this.getMemory(associatedName, level) != null;
 		}
 		catch(NullPointerException e){
 			return false;
@@ -231,43 +231,43 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	protected MessageReceivedEvent getEvent(){
-		return getEventDigger().getEvent();
+		return this.getEventDigger().getEvent();
 	}
 	
 	public Member getBotMember(){
-		return getGuild().getSelfMember();
+		return this.getGuild().getSelfMember();
 	}
 	
 	public SelfUser getBotUser(){
-		return getEventDigger().getRunningBot();
+		return this.getEventDigger().getRunningBot();
 	}
 	
 	public AccountManager getBotUserManager(){
-		return getBotUser().getManager();
+		return this.getBotUser().getManager();
 	}
 	
 	public Member getMember(){
-		return getEventDigger().getMember();
+		return this.getEventDigger().getMember();
 	}
 	
 	public User getUser(){
-		return getEventDigger().getUser();
+		return this.getEventDigger().getUser();
 	}
 	
 	public String getUserId(){
-		return getEventDigger().getUserId();
+		return this.getEventDigger().getUserId();
 	}
 	
 	public String getUserName(){
-		return getEventDigger().getUserName();
+		return this.getEventDigger().getUserName();
 	}
 	
 	public TextChannel getTextContext(){
-		return getEventDigger().getChannel();
+		return this.getEventDigger().getChannel();
 	}
 	
 	public String getTextChannelId(){
-		return getEventDigger().getChannelId();
+		return this.getEventDigger().getChannelId();
 	}
 	
 	public GuildController getGuildController(){
@@ -275,39 +275,39 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public Guild getGuild(){
-		return getEventDigger().getGuild();
+		return this.getEventDigger().getGuild();
 	}
 	
 	public String getGuildId(){
-		return getEventDigger().getGuildId();
+		return this.getEventDigger().getGuildId();
 	}
 	
 	public String getKey(){
-		return getKey(DEFAULT_BUFFER_LEVEL);
+		return this.getKey(DEFAULT_BUFFER_LEVEL);
 	}
 	
 	public MessageEventDigger getEventDigger(){
-		return getRouter().getEventDigger();
+		return this.getRouter().getEventDigger();
 	}
 	
 	public String getKey(String name, BufferLevel level){
 		switch(level){
 		case GUILD:
-			return getEventDigger().getGuildKey(name);
+			return this.getEventDigger().getGuildKey(name);
 		case USER:
-			return getEventDigger().getUserKey(name);
+			return this.getEventDigger().getUserKey(name);
 		case CHANNEL:
 		default:
-			return getEventDigger().getChannelKey(name);
+			return this.getEventDigger().getChannelKey(name);
 		}
 	}
 	
 	public String getKey(BufferLevel level){
-		return getKey(null, level);
+		return this.getKey(null, level);
 	}
 	
 	public Request getRequest(){
-		return getRouter().getRequest();
+		return this.getRouter().getRequest();
 	}
 	
 	public boolean isCopy(){
@@ -349,7 +349,7 @@ public abstract class AbstractBotCommand implements
 			throw new BadContentException("Option content is not a mention.");
 		
 		return new Mention(getIdFromStringMention(optionFound.getContent()),
-				getEventDigger());
+				this.getEventDigger());
 		
 	}
 	
@@ -367,13 +367,13 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public void connect(VoiceChannel voiceChannel){
-		getGuild().getAudioManager().openAudioConnection(voiceChannel);
+		this.getGuild().getAudioManager().openAudioConnection(voiceChannel);
 		
-		remember(voiceChannel, BUFFER_VOICE_CHANNEL);
+		this.remember(voiceChannel, BUFFER_VOICE_CHANNEL);
 	}
 	
 	public VoiceChannel getConnectedVoiceChannelBot(){
-		return getGuild().getAudioManager().getConnectedChannel();
+		return this.getGuild().getAudioManager().getConnectedChannel();
 	}
 	
 	public boolean isConnectedToVoiceChannelBot(){
@@ -381,7 +381,7 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public VoiceChannel getConnectedVoiceChannelMember(){
-		return getMember().getVoiceState().getChannel();
+		return this.getMember().getVoiceState().getChannel();
 	}
 	
 	public boolean isConnectedToVoiceChannelMember(){
@@ -395,10 +395,10 @@ public abstract class AbstractBotCommand implements
 	public void disconnect(){
 		
 		if(isConnectedToVoiceChannelBot()){
-			getGuild().getAudioManager().closeAudioConnection();
+			this.getGuild().getAudioManager().closeAudioConnection();
 		}
 		
-		forget(BUFFER_VOICE_CHANNEL);
+		this.forget(BUFFER_VOICE_CHANNEL);
 		
 	}
 	
@@ -476,20 +476,20 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public String sendInfoMessage(String messageToSend, boolean isOneLiner){
-		return sendMessage(createInfoMessage(messageToSend, isOneLiner));
+		return this.sendMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
 	public String sendInfoMessage(String messageToSend){
-		return sendInfoMessage(messageToSend, true);
+		return this.sendInfoMessage(messageToSend, true);
 	}
 	
 	public String sendInfoPrivateMessage(String messageToSend){
-		return sendInfoPrivateMessage(messageToSend, true);
+		return this.sendInfoPrivateMessage(messageToSend, true);
 	}
 	
 	public String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		return sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
+		return this.sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
 	}
 	
 	public String groupAndSendMessages(String... messages){
@@ -499,30 +499,30 @@ public abstract class AbstractBotCommand implements
 		for(int i = 1; i < messages.length; i++)
 			messageToSend.append("\n").append(messages[i]);
 		
-		return sendMessage(messageToSend.toString());
+		return this.sendMessage(messageToSend.toString());
 		
 	}
 	
 	public String groupAndSendMessages(List<String> messages){
-		return groupAndSendMessages(messages.toArray(new String[0]));
+		return this.groupAndSendMessages(messages.toArray(new String[0]));
 	}
 	
 	public String editMessage(String messageId, String newMessage){
-		return editMessageForChannel(getTextContext(), messageId, newMessage);
+		return this.editMessageForChannel(getTextContext(), messageId, newMessage);
 	}
 	
 	public void editMessageQueue(String messageId, String newMessage){
-		getTextContext().editMessageById(messageId, newMessage).queue();
+		this.getTextContext().editMessageById(messageId, newMessage).queue();
 	}
 	
 	protected String sendMessageForChannel(MessageChannel channel,
 			String message){
-		return messageActionComplete(channel.sendMessage(message));
+		return this.messageActionComplete(channel.sendMessage(message));
 	}
 	
 	protected String editMessageForChannel(MessageChannel channel,
 			String messageId, String newMessage){
-		return messageActionComplete(channel.editMessageById(messageId,
+		return this.messageActionComplete(channel.editMessageById(messageId,
 				newMessage));
 	}
 	
@@ -775,7 +775,7 @@ public abstract class AbstractBotCommand implements
 	
 	public void stopTypingIndicator(){
 		TimerManager.stopTimer(KeyBuilder.buildTextChannelObjectKey(
-				getTextContext(), TYPING_TIMER_NAME));
+				this.getTextContext(), TYPING_TIMER_NAME));
 	}
 	
 	public void log(String message){
@@ -791,7 +791,7 @@ public abstract class AbstractBotCommand implements
 	 *         followed by the <i>commandName</i> parameter.
 	 */
 	public String buildCommand(String command){
-		return getRequest().getCommandPrefix() + command;
+		return this.getRequest().getCommandPrefix() + command;
 	}
 	
 	/**
@@ -808,7 +808,7 @@ public abstract class AbstractBotCommand implements
 	 *         Request's setting, doubled if it's a short option.
 	 */
 	public String buildOption(String option){
-		char p = getRequest().getOptionsPrefix();
+		char p = this.getRequest().getOptionsPrefix();
 		return (option.length() > 1 ? p + "" + p : p) + option;
 	}
 	

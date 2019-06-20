@@ -22,7 +22,7 @@ public interface Console {
 	void onInitialized();
 	
 	default void initialize(){
-		initialize(false);
+		this.initialize(false);
 	}
 	
 	void initialize(boolean startImmediately);

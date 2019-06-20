@@ -96,7 +96,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	
 	@Override
 	public void log(String logText, String logType, boolean hasAppendedDate){
-		logToChannel(logText, logType, true);
+		this.logToChannel(logText, logType, true);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	 *            If the output should add a new line after the text.
 	 */
 	protected void sendLog(String log, boolean appendNewLine){
-		logToChannel(log, null, appendNewLine);
+		this.logToChannel(log, null, appendNewLine);
 	}
 	
 	private void logToChannel(String logText, String logType,
@@ -177,7 +177,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 	@Override
 	public String getInput(String message){
 		
-		printGetInputMessage(message);
+		this.printGetInputMessage(message);
 		this.outputStream.setLatestInputMessage(message);
 		this.errorStream.setLatestInputMessage(message);
 		
@@ -247,7 +247,7 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		do{
 			
-			String input = getInput(question + " " + choiceBuilder.toString())
+			String input = this.getInput(question + " " + choiceBuilder.toString())
 					.trim();
 			
 			System.out.println();

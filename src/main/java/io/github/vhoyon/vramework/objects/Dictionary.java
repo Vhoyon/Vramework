@@ -61,8 +61,10 @@ public class Dictionary implements Utils {
 	private String getResourcePath(){
 		String resourcePath = "";
 		
-		if(getDirectory() != null || getDirectory().length() != 0)
-			resourcePath += getDirectory() + ".";
+		String directory = this.getDirectory();
+		
+		if(directory != null && directory.length() != 0)
+			resourcePath += directory + ".";
 		
 		resourcePath += getFileName();
 		
@@ -75,16 +77,16 @@ public class Dictionary implements Utils {
 			ResourceBundle.clearCache();
 		
 		locale = new Locale(lang, country);
-		this.resources = getLanguageResources(locale);
+		this.resources = this.getLanguageResources(locale);
 		
 	}
 	
 	public String getDirectString(String key, Object... replacements){
-		return getString(key, null, replacements);
+		return this.getString(key, null, replacements);
 	}
 	
 	public String getDirectString(String key){
-		return getString(key, null);
+		return this.getString(key, null);
 	}
 	
 	public String getString(String key, String possiblePrefix,
@@ -102,16 +104,16 @@ public class Dictionary implements Utils {
 					"The \"key\" parameter cannot be null!");
 		}
 		
-		key = handleKey(key);
+		key = this.handleKey(key);
 		
-		handleResourcesUpdate();
+		this.handleResourcesUpdate();
 		
 		String string = null;
 		
 		try{
 			try{
 				
-				string = tryGetString(getResources(), key, possiblePrefix);
+				string = this.tryGetString(this.getResources(), key, possiblePrefix);
 				
 				if(string == null || string.length() == 0)
 					throw new NullPointerException();
@@ -119,7 +121,7 @@ public class Dictionary implements Utils {
 			}
 			catch(MissingResourceException e){
 				
-				string = tryGetString(getDefaultLanguageResources(), key,
+				string = this.tryGetString(this.getDefaultLanguageResources(), key,
 						possiblePrefix);
 				
 				if(isDebugging())
@@ -134,7 +136,7 @@ public class Dictionary implements Utils {
 			}
 			catch(NullPointerException e){
 				
-				string = tryGetString(getDefaultLanguageResources(), key,
+				string = this.tryGetString(this.getDefaultLanguageResources(), key,
 						possiblePrefix);
 				
 				if(isDebugging())
@@ -173,7 +175,7 @@ public class Dictionary implements Utils {
 	public String getStringAmount(String key, String possiblePrefix, int amount)
 			throws BadFormatException, AmountNotDefinedException{
 		
-		String langLine = getString(key, possiblePrefix);
+		String langLine = this.getString(key, possiblePrefix);
 		
 		String message;
 		
@@ -201,8 +203,8 @@ public class Dictionary implements Utils {
 		
 		if(!key.startsWith(ROOT_CHAR) && !key.contains(".")){
 			
-			setDirectory(DEFAULT_DIRECTORY);
-			setFileName(DEFAULT_FILE_NAME);
+			this.setDirectory(DEFAULT_DIRECTORY);
+			this.setFileName(DEFAULT_FILE_NAME);
 			
 			return key;
 			
@@ -224,7 +226,7 @@ public class Dictionary implements Utils {
 			
 			if(structure.length == 1){
 				
-				setFileName(DEFAULT_FILE_NAME);
+				this.setFileName(DEFAULT_FILE_NAME);
 				simplifiedKey = key;
 				
 			}
@@ -241,13 +243,13 @@ public class Dictionary implements Utils {
 					
 				}
 				
-				setFileName(structure[structure.length - 2]);
+				this.setFileName(structure[structure.length - 2]);
 				
 				simplifiedKey = structure[structure.length - 1];
 				
 			}
 			
-			setDirectory(builder.toString());
+			this.setDirectory(builder.toString());
 			
 			return simplifiedKey;
 			
@@ -278,11 +280,13 @@ public class Dictionary implements Utils {
 	
 	private void handleResourcesUpdate(){
 		
-		if(!getResourcePath().equals(currentResourcesPath)){
+		String resourcePath = this.getResourcePath();
+		
+		if(!resourcePath.equals(this.currentResourcesPath)){
 			
-			this.resources = getLanguageResources(this.locale);
+			this.resources = this.getLanguageResources(this.locale);
 			
-			this.currentResourcesPath = getResourcePath();
+			this.currentResourcesPath = resourcePath;
 			
 		}
 		

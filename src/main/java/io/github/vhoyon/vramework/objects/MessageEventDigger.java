@@ -19,35 +19,35 @@ public class MessageEventDigger extends EventDigger {
 	}
 	
 	public String getGuildKey(){
-		return KeyBuilder.buildGuildKey(getGuild());
+		return KeyBuilder.buildGuildKey(this.getGuild());
 	}
 	
 	public String getChannelKey(){
-		return KeyBuilder.buildTextChannelKey(getChannel());
+		return KeyBuilder.buildTextChannelKey(this.getChannel());
 	}
 	
 	public String getUserKey(){
-		return KeyBuilder.buildUserKey(getUser());
+		return KeyBuilder.buildUserKey(this.getUser());
 	}
 	
 	public String getCommandKey(String commandName){
-		return KeyBuilder.buildCommandKey(getChannel(), commandName);
+		return KeyBuilder.buildCommandKey(this.getChannel(), commandName);
 	}
 	
 	public String getGuildKey(Object object){
-		return KeyBuilder.buildGuildObjectKey(getGuild(), object);
+		return KeyBuilder.buildGuildObjectKey(this.getGuild(), object);
 	}
 	
 	public String getChannelKey(Object object){
-		return KeyBuilder.buildTextChannelObjectKey(getChannel(), object);
+		return KeyBuilder.buildTextChannelObjectKey(this.getChannel(), object);
 	}
 	
 	public String getUserKey(Object object){
-		return KeyBuilder.buildUserObjectKey(getUser(), object);
+		return KeyBuilder.buildUserObjectKey(this.getUser(), object);
 	}
 	
 	public String getCommandKey(String commandName, Object object){
-		return KeyBuilder.buildCommandObjectKey(getChannel(), commandName,
+		return KeyBuilder.buildCommandObjectKey(this.getChannel(), commandName,
 				object);
 	}
 	
@@ -56,7 +56,7 @@ public class MessageEventDigger extends EventDigger {
 	}
 	
 	public String getGuildId(){
-		return getGuild().getId();
+		return this.getGuild().getId();
 	}
 	
 	public TextChannel getChannel(){
@@ -64,7 +64,7 @@ public class MessageEventDigger extends EventDigger {
 	}
 	
 	public String getChannelId(){
-		return getChannel().getId();
+		return this.getChannel().getId();
 	}
 	
 	public Member getMember(){
@@ -76,11 +76,11 @@ public class MessageEventDigger extends EventDigger {
 	}
 	
 	public String getUserId(){
-		return getUser().getId();
+		return this.getUser().getId();
 	}
 	
 	public String getUserName(){
-		return getUser().getName();
+		return this.getUser().getName();
 	}
 	
 	public SelfUser getRunningBot(){

@@ -12,9 +12,9 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 	public AbstractUIConsole(){
 		super();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		addWindowListener(new WindowAdapter(){
+		this.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent e){
 				try{
@@ -26,7 +26,7 @@ public abstract class AbstractUIConsole extends JFrame implements Console {
 			}
 		});
 		
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 	}
 	
 	@Override

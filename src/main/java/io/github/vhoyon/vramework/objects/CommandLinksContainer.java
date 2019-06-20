@@ -19,7 +19,7 @@ public abstract class CommandLinksContainer {
 	 * The latest links commands will always replace the first command call.
 	 */
 	public CommandLinksContainer(Link... links){
-		initializeContainer(links);
+		this.initializeContainer(links);
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public abstract class CommandLinksContainer {
 		Link[] linksArray = Arrays.stream(commands).map(Link::new)
 				.toArray(Link[]::new);
 		
-		initializeContainer(linksArray);
+		this.initializeContainer(linksArray);
 		
 	}
 	

@@ -42,7 +42,7 @@ public class Link {
 	
 	public String getCall(){
 		try{
-			return getInstance().getCall();
+			return this.getInstance().getCall();
 		}
 		catch(IllegalStateException e){
 			return null;

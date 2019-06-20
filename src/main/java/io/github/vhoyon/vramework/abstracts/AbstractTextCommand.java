@@ -9,8 +9,8 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 	@Override
 	public void actions(){
 		
-		String textToSend = getTextToSend();
-		Boolean isInfoOneLiner = isTextInfoOneLiner();
+		String textToSend = this.getTextToSend();
+		Boolean isInfoOneLiner = this.isTextInfoOneLiner();
 		
 		TextType textType;
 		
@@ -24,7 +24,7 @@ public abstract class AbstractTextCommand extends AbstractBotCommand {
 			
 		}
 		
-		sendMessageMethod(textToSend, textType);
+		this.sendMessageMethod(textToSend, textType);
 		
 	}
 	

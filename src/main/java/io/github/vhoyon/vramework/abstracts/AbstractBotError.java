@@ -28,9 +28,9 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 		this.emoji = errorEmoji;
 		this.isErrorOneLiner = isErrorOneLiner;
 		
-		putStateFromCommand(commandInError);
+		this.putStateFromCommand(commandInError);
 		
-		action();
+		this.action();
 		
 	}
 	

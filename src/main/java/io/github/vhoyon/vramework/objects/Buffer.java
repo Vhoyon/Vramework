@@ -22,14 +22,14 @@ public class Buffer {
 	
 	protected final BufferImplementation getMemoryImpl(){
 		if(this.memoryImpl == null)
-			setMemoryImplementation(new DefaultBufferImplementation());
+			Buffer.setMemoryImplementation(new DefaultBufferImplementation());
 		
 		return this.memoryImpl;
 	}
 	
 	protected final BufferImplementation getSingletonMemoryImpl(){
 		if(this.singletonImpl == null)
-			setSingletonMemoryImplementation(new DefaultBufferImplementation());
+			Buffer.setSingletonMemoryImplementation(new DefaultBufferImplementation());
 		
 		return this.singletonImpl;
 	}

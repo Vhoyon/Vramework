@@ -109,11 +109,11 @@ public interface LinkableCommand extends Command {
 			for(Option option : options){
 				
 				builder.append("\n").append("\t")
-						.append(formatOption(option.getName()));
+						.append(this.formatOption(option.getName()));
 				
 				for(String variant : option.getVariants()){
 					builder.append(optionSeparator).append(
-							formatOption(variant));
+							this.formatOption(variant));
 				}
 				
 				String optionDescription = option.getDescription();

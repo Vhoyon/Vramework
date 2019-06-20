@@ -67,8 +67,8 @@ public abstract class Module {
 	}
 	
 	public void handleIssues() throws Exception{
-		if(hasIssues()){
-			handleIssuesLogic();
+		if(this.hasIssues()){
+			this.handleIssuesLogic();
 		}
 	}
 	

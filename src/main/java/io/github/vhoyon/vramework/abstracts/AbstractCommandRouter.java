@@ -59,7 +59,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		this.commandsRepo = commandsRepo;
 		
-		this.request = createRequest(eventDigger.getMessageContent());
+		this.request = this.createRequest(eventDigger.getMessageContent());
 		
 	}
 	
@@ -89,7 +89,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	}
 	
 	public MessageReceivedEvent getEvent(){
-		return getEventDigger().getEvent();
+		return this.getEventDigger().getEvent();
 	}
 	
 	public Buffer getBuffer(){
@@ -112,7 +112,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	protected AbstractBotCommand getAbstractBotCommand(){
 		
-		AbstractBotCommand botCommand = (AbstractBotCommand)getCommand();
+		AbstractBotCommand botCommand = (AbstractBotCommand)this.getCommand();
 		
 		if(botCommand != null){
 			
@@ -161,10 +161,10 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		}
 		
 		if(isOnlyBotMention){
-			return commandWhenBotMention();
+			return this.commandWhenBotMention();
 		}
 		else if(this.getEvent().isFromType(ChannelType.PRIVATE)){
-			return commandWhenFromPrivate();
+			return this.commandWhenFromPrivate();
 		}
 		else if(this.getEvent().isFromType(ChannelType.TEXT)){
 			
@@ -176,14 +176,14 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			else{
 				
 				if(request.isOnlyCommandPrefix()){
-					return commandWhenFromServerIsOnlyPrefix();
+					return this.commandWhenFromServerIsOnlyPrefix();
 				}
 				
 			}
 			
 		}
 		
-		return commandIfValidated();
+		return this.commandIfValidated();
 		
 	}
 	
@@ -238,7 +238,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	 * @since 0.14.0
 	 */
 	public SettingRepository getSettings(){
-		return getSettings(BufferLevel.CHANNEL);
+		return this.getSettings(BufferLevel.CHANNEL);
 	}
 	
 	/**
@@ -271,11 +271,11 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		case USER:
 		case CHANNEL:
 			repo = SettingRepositoryRepository.getSettingRepository(
-					getEventDigger().getChannel(), defaultSettings);
+					this.getEventDigger().getChannel(), defaultSettings);
 			break;
 		case GUILD:
 			repo = SettingRepositoryRepository.getSettingRepository(
-					getEventDigger().getGuild(), defaultSettings);
+					this.getEventDigger().getGuild(), defaultSettings);
 			break;
 		}
 		

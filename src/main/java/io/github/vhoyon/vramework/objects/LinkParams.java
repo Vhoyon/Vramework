@@ -22,7 +22,7 @@ public class LinkParams extends Link {
 				.map(Object::getClass).toArray(Class<?>[]::new);
 		
 		try{
-			return getClassToLink().getDeclaredConstructor(
+			return this.getClassToLink().getDeclaredConstructor(
 					constructorClassesArray).newInstance(params);
 		}
 		catch(InstantiationException | IllegalAccessException

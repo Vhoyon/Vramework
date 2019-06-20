@@ -22,13 +22,13 @@ public class LoggableJTextArea extends JTextArea implements Loggable {
 	public LoggableJTextArea(){
 		super();
 		
-		init();
+		this.init();
 	}
 	
 	public LoggableJTextArea(int rows, int columns){
 		super(rows, columns);
 		
-		init();
+		this.init();
 	}
 	
 	@Override

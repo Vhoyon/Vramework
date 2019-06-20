@@ -24,7 +24,7 @@ public class EventDigger {
 	}
 	
 	public static boolean isUserBot(Member member){
-		return isUserBot(member.getUser());
+		return EventDigger.isUserBot(member.getUser());
 	}
 	
 	public static boolean isUserBot(User user){
@@ -42,7 +42,7 @@ public class EventDigger {
 		else{
 			
 			return connectedChannel.getMembers().stream()
-					.anyMatch(member -> !isUserBot(member));
+					.anyMatch(member -> !EventDigger.isUserBot(member));
 			
 		}
 		

@@ -75,12 +75,12 @@ public abstract class CommandsLinker implements Translatable {
 			
 		});
 		
-		String prependChars = getPrependChars();
-		String prependCharsVariants = getPrependCharsForVariants();
+		String prependChars = this.getPrependChars();
+		String prependCharsVariants = this.getPrependCharsForVariants();
 		
 		defaultCommands.forEach((key, command) -> {
 			
-			String wholeCommandString = formatWholeCommand(prependChars, key);
+			String wholeCommandString = this.formatWholeCommand(prependChars, key);
 			
 			if(!showDescriptions){
 				builder.append(wholeCommandString);
@@ -94,7 +94,7 @@ public abstract class CommandsLinker implements Translatable {
 					
 					String helpString = command.getCommandDescription();
 					
-					wholeHelpString = formatHelpString(helpString);
+					wholeHelpString = this.formatHelpString(helpString);
 					
 				}
 				catch(Exception e){}
@@ -103,7 +103,7 @@ public abstract class CommandsLinker implements Translatable {
 					builder.append(wholeCommandString);
 				}
 				else{
-					builder.append(formatWholeHelpLine(wholeCommandString,
+					builder.append(this.formatWholeHelpLine(wholeCommandString,
 							wholeHelpString, shouldSummarize));
 				}
 				
@@ -115,7 +115,7 @@ public abstract class CommandsLinker implements Translatable {
 			
 			aliases.forEach(alias -> {
 				
-				builder.append(formatAlias(formatWholeCommand(
+				builder.append(this.formatAlias(this.formatWholeCommand(
 						prependCharsVariants, alias)));
 				
 				builder.append("\n");
@@ -130,9 +130,9 @@ public abstract class CommandsLinker implements Translatable {
 	
 	private String formatWholeCommand(String prependChars, String command){
 		if(prependChars == null || prependChars.length() == 0)
-			return formatCommand(command);
+			return this.formatCommand(command);
 		
-		return prependChars + formatCommand(command);
+		return prependChars + this.formatCommand(command);
 	}
 	
 	public String formatWholeHelpLine(String wholeCommandString,
@@ -170,7 +170,7 @@ public abstract class CommandsLinker implements Translatable {
 	}
 	
 	public String getPrependCharsForVariants(){
-		return getPrependChars();
+		return this.getPrependChars();
 	}
 	
 }

@@ -28,7 +28,7 @@ public abstract class AbstractMessageListener extends ListenerAdapter {
 		// Bots doesn't need attention...
 		if(!event.getAuthor().isBot()){
 			
-			createRouter(event, buffer, commandsRepo).start();
+			this.createRouter(event, buffer, commandsRepo).start();
 			
 		}
 		

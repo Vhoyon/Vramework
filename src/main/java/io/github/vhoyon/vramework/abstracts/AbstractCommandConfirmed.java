@@ -21,13 +21,13 @@ public abstract class AbstractCommandConfirmed extends AbstractBotCommand {
 		
 		if(!hasMemory(BUFFER_CONFIRMATION)){
 			
-			actionIfConfirmable();
+			this.actionIfConfirmable();
 			
 			remember(this, BUFFER_CONFIRMATION);
 			
 		}
 		else{
-			actionIfNotConfirmable();
+			this.actionIfNotConfirmable();
 		}
 		
 	}
