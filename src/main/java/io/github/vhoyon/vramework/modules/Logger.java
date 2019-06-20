@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +23,7 @@ public class Logger extends ModuleOutputtable {
 		INFO, WARNING, ERROR
 	}
 	
-	private static ArrayList<Loggable> outputs;
+	private static List<Loggable> outputs;
 	
 	private static boolean hasIssuedWarning;
 	
@@ -35,12 +36,13 @@ public class Logger extends ModuleOutputtable {
 		separator = "-";
 	}
 	
-	protected static ArrayList<Loggable> getOutputs(){
+	protected static List<Loggable> getOutputs(){
 		return outputs;
 	}
 	
 	public static boolean hasOutputs(){
-		return getOutputs() != null && !getOutputs().isEmpty();
+		List<Loggable> outputs = getOutputs();
+		return outputs != null && !outputs.isEmpty();
 	}
 	
 	/**
@@ -79,11 +81,13 @@ public class Logger extends ModuleOutputtable {
 	 */
 	public static boolean addOutput(Loggable output){
 		
-		if(getOutputs().contains(output)){
+		List<Loggable> outputs = getOutputs();
+		
+		if(outputs.contains(output)){
 			return false;
 		}
 		
-		return getOutputs().add(output);
+		return outputs.add(output);
 		
 	}
 	

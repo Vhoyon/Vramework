@@ -5,6 +5,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +23,7 @@ public class Environment extends Module {
 	private static final String ENV_FILE_NAME = ".env";
 	private static final String ENV_EXAMPLE_FILE_NAME = "example.env";
 	
-	private static HashMap<String, String> envVars;
+	private static Map<String, String> envVars;
 	
 	private static final String WARNINGS = "WARNINGS";
 	private static final String SPACED_KEY_ERRORS = "SPACED_KEY_ERRORS";
