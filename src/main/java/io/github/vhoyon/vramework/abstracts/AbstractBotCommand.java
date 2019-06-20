@@ -153,9 +153,9 @@ public abstract class AbstractBotCommand implements
 		
 		String requestName = getActualCall();
 		
-		String[] calls = this.getAllCalls();
+		List<String> calls = this.getAllCalls();
 		
-		if(!Arrays.asList(calls).contains(requestName)){
+		if(!calls.contains(requestName)){
 			return this.getCall();
 		}
 		

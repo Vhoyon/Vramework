@@ -1,5 +1,7 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.util.List;
+
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 
 public class Link {
@@ -12,7 +14,7 @@ public class Link {
 	
 	public LinkableCommand getInstance() throws IllegalStateException{
 		try{
-			return getClassToLink().newInstance();
+			return this.getClassToLink().newInstance();
 		}
 		catch(IllegalAccessException | InstantiationException e){
 			throw new IllegalStateException(
@@ -24,11 +26,13 @@ public class Link {
 		
 		if(call != null && call.length() != 0){
 			
-			String[] calls = getInstance().getAllCalls();
+			List<String> calls = this.getInstance().getAllCalls();
 			
-			for(String definedCall : calls)
-				if(definedCall.equals(call))
+			for(String definedCall : calls){
+				if(definedCall.equals(call)){
 					return true;
+				}
+			}
 			
 		}
 		

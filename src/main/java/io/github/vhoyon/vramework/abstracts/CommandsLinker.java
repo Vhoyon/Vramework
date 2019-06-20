@@ -1,6 +1,8 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import io.github.vhoyon.vramework.interfaces.Translatable;
@@ -54,9 +56,9 @@ public abstract class CommandsLinker implements Translatable {
 			builder.append(textHeader).append("\n\n");
 		}
 		
-		HashMap<String, Link> linksMap = container.getLinkMap();
+		Map<String, Link> linksMap = container.getLinkMap();
 		
-		TreeMap<String, LinkableCommand> defaultCommands = new TreeMap<>();
+		Map<String, LinkableCommand> defaultCommands = new TreeMap<>();
 		
 		linksMap.forEach((key, link) -> {
 			
@@ -109,20 +111,16 @@ public abstract class CommandsLinker implements Translatable {
 			
 			builder.append("\n");
 			
-			String[] aliases = command.getAliases();
+			List<String> aliases = command.getAliases();
 			
-			if(aliases.length > 0){
+			aliases.forEach(alias -> {
 				
-				for(String alias : aliases){
-					
-					builder.append(formatAlias(formatWholeCommand(
-							prependCharsVariants, alias)));
-					
-					builder.append("\n");
-					
-				}
+				builder.append(formatAlias(formatWholeCommand(
+						prependCharsVariants, alias)));
 				
-			}
+				builder.append("\n");
+				
+			});
 			
 		});
 		

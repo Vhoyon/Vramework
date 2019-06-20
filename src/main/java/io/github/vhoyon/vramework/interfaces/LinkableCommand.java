@@ -1,6 +1,10 @@
 package io.github.vhoyon.vramework.interfaces;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.github.ved.jrequester.Option;
 import io.github.ved.jrequester.Request;
@@ -13,38 +17,35 @@ public interface LinkableCommand extends Command {
 		return this.getCall();
 	}
 	
-	default String[] getAliases(){
-		return new String[0];
+	default List<String> getAliases(){
+		return Collections.emptyList();
 	}
 	
-	default String[] getAllCalls(){
-		String call = getCall();
+	default List<String> getAllCalls(){
+		String call = this.getCall();
 		
 		if(call == null)
-			return new String[0];
+			return Collections.emptyList();
 		
-		String[] aliases = getAliases();
+		List<String> aliases = this.getAliases();
 		
-		String[] allCalls = new String[aliases.length + 1];
+		List<String> allCalls = new ArrayList<>(aliases.size() + 1);
 		
-		allCalls[0] = call;
-		
-		for(int i = 0; i < aliases.length; i++){
-			allCalls[i + 1] = aliases[i];
-		}
+		allCalls.add(call);
+		allCalls.addAll(aliases);
 		
 		return allCalls;
 	}
 	
-	default String[] getCallsExceptActual() throws IllegalStateException{
-		String actualCall = getActualCall();
+	default List<String> getCallsExceptActual() throws IllegalStateException{
+		String actualCall = this.getActualCall();
 		
 		if(actualCall == null)
 			throw new IllegalStateException(
 					"The actual call should not be null. Maybe this method was called in a class not meant to be called?");
 		
-		return Arrays.stream(getAllCalls()).filter(o -> !actualCall.equals(o))
-				.toArray(String[]::new);
+		return this.getAllCalls().stream().filter(o -> !actualCall.equals(o))
+				.collect(Collectors.toList());
 	}
 	
 	default String getCommandDescription(){
@@ -71,8 +72,8 @@ public interface LinkableCommand extends Command {
 			String textWhenNoOptions, String textWhenAliasesAvailable,
 			String textWhenNoAliases){
 		
-		String commandDescription = getCommandDescription();
-		Option[] options = getOptions();
+		String commandDescription = this.getCommandDescription();
+		Option[] options = this.getOptions();
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -123,9 +124,9 @@ public interface LinkableCommand extends Command {
 			
 		}
 		
-		String[] aliases = this.getAliases();
+		List<String> aliases = this.getAliases();
 		
-		if(aliases.length == 0){
+		if(aliases.size() == 0){
 			if(textWhenNoAliases != null)
 				builder.append("\n\n").append(textWhenNoAliases);
 		}
@@ -133,12 +134,13 @@ public interface LinkableCommand extends Command {
 			
 			builder.append("\n");
 			
-			if(textWhenAliasesAvailable != null)
+			if(textWhenAliasesAvailable != null){
 				builder.append("\n").append(textWhenAliasesAvailable);
-			
-			for(String alias : aliases){
-				builder.append("\n").append("\t").append(formatCommand(alias));
 			}
+			
+			aliases.forEach(alias -> {
+				builder.append("\n\t").append(this.formatCommand(alias));
+			});
 			
 		}
 		

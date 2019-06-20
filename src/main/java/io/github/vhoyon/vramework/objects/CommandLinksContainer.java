@@ -3,6 +3,7 @@ package io.github.vhoyon.vramework.objects;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
@@ -12,7 +13,7 @@ import io.github.vhoyon.vramework.modules.Logger;
 
 public abstract class CommandLinksContainer {
 	
-	private LinkedHashMap<String, Link> linkMap;
+	private Map<String, Link> linkMap;
 	
 	/**
 	 * The latest links commands will always replace the first command call.
@@ -59,10 +60,11 @@ public abstract class CommandLinksContainer {
 			
 			try{
 				
-				String[] calls = link.getInstance().getAllCalls();
+				List<String> calls = link.getInstance().getAllCalls();
 				
-				for(String call : calls)
-					this.getLinkMap().put(call, link);
+				Map<String, Link> linkMap = this.getLinkMap();
+				
+				calls.forEach(call -> linkMap.put(call, link));
 				
 			}
 			catch(IllegalStateException e){}
@@ -71,9 +73,10 @@ public abstract class CommandLinksContainer {
 		
 	}
 	
-	public LinkedHashMap<String, Link> getLinkMap(){
-		if(this.linkMap == null)
+	public Map<String, Link> getLinkMap(){
+		if(this.linkMap == null){
 			this.linkMap = new LinkedHashMap<>();
+		}
 		
 		return this.linkMap;
 	}
@@ -92,19 +95,19 @@ public abstract class CommandLinksContainer {
 			Logger.log(e);
 		}
 		
-		return whenCommandNotFound(commandName);
+		return this.whenCommandNotFound(commandName);
 	}
 	
 	public abstract LinkableCommand whenCommandNotFound(String commandName);
 	
 	public Link findLink(String commandName){
-		return getLinkMap().get(commandName);
+		return this.getLinkMap().get(commandName);
 	}
 	
 	public LinkableCommand findCommand(String commandName)
 			throws CommandNotFoundException{
 		
-		Link link = findLink(commandName);
+		Link link = this.findLink(commandName);
 		
 		if(link == null){
 			throw new CommandNotFoundException(commandName);
