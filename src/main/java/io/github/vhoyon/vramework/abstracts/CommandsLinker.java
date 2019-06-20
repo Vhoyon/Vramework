@@ -8,6 +8,7 @@ import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
+import io.github.vhoyon.vramework.objects.Dictionary;
 
 public abstract class CommandsLinker implements Translatable {
 	
