@@ -3,14 +3,17 @@ package io.github.vhoyon.vramework.abstracts;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import io.github.vhoyon.vramework.interfaces.Translatable;
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
 import io.github.vhoyon.vramework.objects.Link;
 
-public abstract class CommandsLinker extends Translatable {
+public abstract class CommandsLinker implements Translatable {
 	
 	private CommandLinksContainer container;
+	
+	private Dictionary dict;
 	
 	public abstract CommandLinksContainer createLinksContainer();
 	
@@ -19,6 +22,16 @@ public abstract class CommandsLinker extends Translatable {
 			return container;
 		
 		return container = createLinksContainer();
+	}
+	
+	@Override
+	public void setDictionary(Dictionary dict){
+		this.dict = dict;
+	}
+	
+	@Override
+	public Dictionary getDictionary(){
+		return this.dict;
 	}
 	
 	public String getFullHelpString(String textHeader){

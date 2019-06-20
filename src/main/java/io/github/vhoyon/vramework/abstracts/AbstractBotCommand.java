@@ -43,13 +43,15 @@ import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
  * @since v0.7.0
  * @author V-ed (Guillaume Marcoux)
  */
-public abstract class AbstractBotCommand extends Translatable implements
-		Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
+public abstract class AbstractBotCommand implements
+		Translatable, Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
 		DiscordUtils {
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
 	public static final String TYPING_TIMER_NAME = "VRAMEWORK_BOT_TYPING_TIMER";
+	
+	private Dictionary dict;
 	
 	protected AbstractCommandRouter router;
 	
@@ -87,6 +89,16 @@ public abstract class AbstractBotCommand extends Translatable implements
 		
 		this.isCopy = true;
 		
+	}
+	
+	@Override
+	public void setDictionary(Dictionary dict){
+		this.dict = dict;
+	}
+	
+	@Override
+	public Dictionary getDictionary(){
+		return this.dict;
 	}
 	
 	@Override
