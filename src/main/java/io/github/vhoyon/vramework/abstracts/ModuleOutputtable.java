@@ -1,6 +1,6 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import io.github.vhoyon.vramework.interfaces.Outputtable;
@@ -8,7 +8,7 @@ import io.github.vhoyon.vramework.interfaces.Outputtable;
 public abstract class ModuleOutputtable extends Module {
 	
 	protected static <E extends Outputtable> boolean handleMessageAndWarning(
-			String message, ArrayList<E> outputs, boolean hasIssuedWarning,
+			String message, List<E> outputs, boolean hasIssuedWarning,
 			Consumer<E> onOutputs){
 		
 		boolean isOutputLess = outputs == null || outputs.isEmpty();

@@ -175,7 +175,7 @@ public class Logger extends ModuleOutputtable {
 		}
 		else{
 			
-			final ArrayList<Loggable> outputs = getOutputs();
+			final List<Loggable> outputs = getOutputs();
 			
 			final String logText = buildLogMessage(message, logType,
 					appendDate, stackElements);
