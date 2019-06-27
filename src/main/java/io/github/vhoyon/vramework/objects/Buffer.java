@@ -8,8 +8,8 @@ public class Buffer {
 	
 	private static Buffer buffer;
 	
-	private BufferImplementation memoryImpl;
-	private BufferImplementation singletonImpl;
+	private BufferImplementation<?> memoryImpl;
+	private BufferImplementation<?> singletonImpl;
 	
 	private Buffer(){}
 	
@@ -20,14 +20,14 @@ public class Buffer {
 		return buffer;
 	}
 	
-	protected final BufferImplementation getMemoryImpl(){
+	protected final BufferImplementation<?> getMemoryImpl(){
 		if(this.memoryImpl == null)
 			Buffer.setMemoryImplementation(new DefaultBufferImplementation());
 		
 		return this.memoryImpl;
 	}
 	
-	protected final BufferImplementation getSingletonMemoryImpl(){
+	protected final BufferImplementation<?> getSingletonMemoryImpl(){
 		if(this.singletonImpl == null)
 			Buffer.setSingletonMemoryImplementation(new DefaultBufferImplementation());
 		
@@ -35,16 +35,16 @@ public class Buffer {
 	}
 	
 	public static void setMemoryImplementation(
-			BufferImplementation implementation){
+			BufferImplementation<?> implementation){
 		Buffer.get().memoryImpl = implementation;
 	}
 	
 	public static void setSingletonMemoryImplementation(
-			BufferImplementation implementation){
+			BufferImplementation<?> implementation){
 		Buffer.get().singletonImpl = implementation;
 	}
 	
-	public static void setImplementation(BufferImplementation implementation){
+	public static void setImplementation(BufferImplementation<?> implementation){
 		Buffer.setMemoryImplementation(implementation);
 		Buffer.setSingletonMemoryImplementation(implementation);
 	}
@@ -139,6 +139,15 @@ public class Buffer {
 	
 	public void emptyMemory(){
 		this.getMemoryImpl().empty();
+	}
+	
+	public void emptySingletonMemory(){
+		this.getSingletonMemoryImpl().empty();
+	}
+	
+	public void emptyAllMemory(){
+		this.emptyMemory();
+		this.emptySingletonMemory();
 	}
 	
 	public boolean has(String key){

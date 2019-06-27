@@ -100,7 +100,7 @@ public class FrameworkTemplate {
 				
 				jda = null;
 				
-				Buffer.get().emptyMemory();
+				Buffer.get().emptyAllMemory();
 				
 				Logger.log("Bot has been shutdown!", LogType.INFO);
 				
