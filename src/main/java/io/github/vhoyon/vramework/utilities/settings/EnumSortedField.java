@@ -18,7 +18,6 @@ public class EnumSortedField extends EnumField {
 		return sortedArray;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected EnumSortedField clone() throws CloneNotSupportedException{
 		EnumSortedField cloned = new EnumSortedField(getName(), getEnv(),
