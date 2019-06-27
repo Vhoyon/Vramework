@@ -89,6 +89,8 @@ public class AuditableFile implements Auditable {
 					new FileReader(auditFile));
 			String header = reader.readLine();
 			
+			reader.close();
+			
 			// If file exists but is empty, we should write header to it.
 			if(header == null){
 				shouldWriteHeader = true;
