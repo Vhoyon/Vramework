@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.vhoyon.vramework.Framework;
+import io.github.vhoyon.vramework.Vramework;
 import io.github.vhoyon.vramework.abstracts.AbstractTerminalConsole;
 import io.github.vhoyon.vramework.abstracts.Module;
 import io.github.vhoyon.vramework.exceptions.BadFileContentException;
@@ -134,9 +134,9 @@ public class Environment extends Module {
 	public static <EnvVar> EnvVar getVar(String key, EnvVar defaultValue){
 		if(envVars == null){
 			
-			if(Framework.isDebugging())
+			if(Vramework.isDebugging())
 				Logger.log(
-						"A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Framework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
+						"A call to get a variable environment has been used but the Environment is not yet set! Make sure you have built the Vramework or call Environment.build() manually! Using the defaultObject provided in the meantime.",
 						Logger.LogType.WARNING);
 			
 			return defaultValue;
@@ -255,14 +255,14 @@ public class Environment extends Module {
 		}
 		catch(FileNotFoundException e){
 			
-			inputStream = Framework.class.getResourceAsStream("/"
+			inputStream = Vramework.class.getResourceAsStream("/"
 					+ ENV_FILE_NAME);
 			
 			if(inputStream == null){
 				
 				Console console;
 				
-				if(Framework.isRunningFromTerminal()){
+				if(Vramework.isRunningFromTerminal()){
 					
 					console = new AbstractTerminalConsole(){
 						@Override
@@ -385,7 +385,7 @@ public class Environment extends Module {
 	private static String buildSystemEnvFile(String folderPath)
 			throws IOException{
 		
-		InputStream exampleFileStream = Framework.class.getResourceAsStream("/"
+		InputStream exampleFileStream = Vramework.class.getResourceAsStream("/"
 				+ ENV_EXAMPLE_FILE_NAME);
 		
 		byte[] buffer = new byte[exampleFileStream.available()];
@@ -413,7 +413,7 @@ public class Environment extends Module {
 	}
 	
 	private static String buildEnvFilePath(){
-		return buildEnvFilePath(Framework.runnableSystemPath());
+		return buildEnvFilePath(Vramework.runnableSystemPath());
 	}
 	
 }

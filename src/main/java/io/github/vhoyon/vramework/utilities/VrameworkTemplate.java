@@ -12,7 +12,7 @@ import io.github.vhoyon.vramework.modules.Metrics;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.Buffer;
 
-public class FrameworkTemplate {
+public class VrameworkTemplate {
 	
 	public static JDA jda;
 	public static String botToken;

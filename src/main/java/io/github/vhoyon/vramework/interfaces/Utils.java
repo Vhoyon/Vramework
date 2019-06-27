@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.vhoyon.vramework.Framework;
+import io.github.vhoyon.vramework.Vramework;
 import io.github.vhoyon.vramework.modules.Environment;
 
 public interface Utils {
@@ -28,7 +28,7 @@ public interface Utils {
 	}
 	
 	default boolean isDebugging(){
-		return Framework.isDebugging() || env("DEBUG", false);
+		return Vramework.isDebugging() || env("DEBUG", false);
 	}
 	
 	default <EnvVar> EnvVar env(String key, EnvVar defaultValue){

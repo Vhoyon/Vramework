@@ -17,7 +17,7 @@ import io.github.vhoyon.vramework.modules.Environment;
 import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Metrics;
 
-public class Framework {
+public class Vramework {
 	
 	private static Class<?> classRunIn;
 	
@@ -26,12 +26,13 @@ public class Framework {
 	private static Date BUILD_STARTED_AT;
 	private static boolean IS_DEBUGGING;
 	
+	@SuppressWarnings("rawtypes")
 	private static Class[] defaultModules = new Class[]
 	{
 		Environment.class, Logger.class, Metrics.class, Audit.class
 	};
 	
-	private Framework(){}
+	private Vramework(){}
 	
 	public static boolean isRunningFromTerminal(){
 		return IS_RUNNING_FROM_TERMINAL;
@@ -51,24 +52,24 @@ public class Framework {
 	
 	public static void build(Class<? extends Module>... modulesToLoad)
 			throws ModuleLoaderException{
-		Framework.build(false, modulesToLoad);
+		Vramework.build(false, modulesToLoad);
 	}
 	
 	public static void build(boolean isDebugging,
 			Class<? extends Module>... modulesToLoad)
 			throws ModuleLoaderException{
-		Framework.build(isDebugging, true, modulesToLoad);
+		Vramework.build(isDebugging, true, modulesToLoad);
 	}
 	
 	public static void buildClean(Class<? extends Module>... modulesToLoad)
 			throws Exception{
-		Framework.buildClean(false, modulesToLoad);
+		Vramework.buildClean(false, modulesToLoad);
 	}
 	
 	public static void buildClean(boolean isDebugging,
 			Class<? extends Module>... modulesToLoad)
 			throws ModuleLoaderException{
-		Framework.build(isDebugging, false, modulesToLoad);
+		Vramework.build(isDebugging, false, modulesToLoad);
 	}
 	
 	public static void build(boolean isDebugging,
@@ -85,10 +86,10 @@ public class Framework {
 				continue;
 			
 			if(!stackElement.getClassName().equals(
-					Framework.class.getCanonicalName())){
+					Vramework.class.getCanonicalName())){
 				
 				try{
-					Framework.classRunIn = Class.forName(stackElement
+					Vramework.classRunIn = Class.forName(stackElement
 							.getClassName());
 				}
 				catch(ClassNotFoundException e){
@@ -103,7 +104,7 @@ public class Framework {
 			
 		}
 		
-		Framework.setupGlobalVariables(isDebugging);
+		Vramework.setupGlobalVariables(isDebugging);
 		
 		List<String> defaultModuleErrors = null;
 		if(shouldLoadDefaultModules){
@@ -159,7 +160,7 @@ public class Framework {
 			}
 			catch(InstantiationException | IllegalAccessException e){
 				errors.add("Module \"" + defaultModule.getCanonicalName()
-						+ "\" not found. The Framework needs an update...");
+						+ "\" not found. The Vramework needs an update...");
 			}
 			
 		}
@@ -260,7 +261,7 @@ public class Framework {
 	
 	private static String getRunnableFolderPath(){
 		
-		String systemPath = Framework.classRunIn.getProtectionDomain()
+		String systemPath = Vramework.classRunIn.getProtectionDomain()
 				.getCodeSource().getLocation().getPath();
 		
 		try{
