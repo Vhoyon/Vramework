@@ -101,8 +101,6 @@ public class SettingRepositoryRepository {
 	
 	protected static boolean hasSettingRepository(String repositoryKey){
 		
-		Buffer buffer = Buffer.get();
-		
 		if(!Buffer.hasSingleton(SettingRepositoryRepository.class)){
 			return false;
 		}
