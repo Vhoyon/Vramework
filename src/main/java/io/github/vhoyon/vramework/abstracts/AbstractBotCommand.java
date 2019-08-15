@@ -225,7 +225,7 @@ public abstract class AbstractBotCommand implements
 		try{
 			return this.getMemory(associatedName, level) != null;
 		}
-		catch(NullPointerException e){
+		catch(IllegalStateException e){
 			return false;
 		}
 	}
