@@ -1,28 +1,30 @@
 package io.github.vhoyon.vramework.abstracts;
 
+import io.github.vhoyon.vramework.interfaces.Emoji;
+
 public abstract class AbstractBotError extends AbstractBotCommand {
 	
 	private String errorMessage;
-	private String emoji;
+	private Emoji emoji;
 	private boolean isErrorOneLiner;
 	
 	public AbstractBotError(AbstractBotCommand commandInError,
 			String errorMessage){
-		this(commandInError, errorMessage, EMOJI_RED_CROSS);
+		this(commandInError, errorMessage, Emoji.RED_CROSS);
 	}
 	
 	public AbstractBotError(AbstractBotCommand commandInError,
-			String errorMessage, String errorEmoji){
+			String errorMessage, Emoji errorEmoji){
 		this(commandInError, errorMessage, errorEmoji, true);
 	}
 	
 	public AbstractBotError(AbstractBotCommand commandInError,
 			String errorMessage, boolean isErrorOneLiner){
-		this(commandInError, errorMessage, EMOJI_RED_CROSS, isErrorOneLiner);
+		this(commandInError, errorMessage, Emoji.RED_CROSS, isErrorOneLiner);
 	}
 	
 	public AbstractBotError(AbstractBotCommand commandInError,
-			String errorMessage, String errorEmoji, boolean isErrorOneLiner){
+			String errorMessage, Emoji errorEmoji, boolean isErrorOneLiner){
 		
 		this.errorMessage = errorMessage;
 		this.emoji = errorEmoji;
@@ -35,18 +37,18 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 	}
 	
 	public AbstractBotError(String errorMessage){
-		this(errorMessage, EMOJI_RED_CROSS);
+		this(errorMessage, Emoji.RED_CROSS);
 	}
 	
-	public AbstractBotError(String errorMessage, String errorEmoji){
+	public AbstractBotError(String errorMessage, Emoji errorEmoji){
 		this(errorMessage, errorEmoji, true);
 	}
 	
 	public AbstractBotError(String errorMessage, boolean isErrorOneLiner){
-		this(errorMessage, EMOJI_RED_CROSS, isErrorOneLiner);
+		this(errorMessage, Emoji.RED_CROSS, isErrorOneLiner);
 	}
 	
-	public AbstractBotError(String errorMessage, String errorEmoji,
+	public AbstractBotError(String errorMessage, Emoji errorEmoji,
 			boolean isErrorOneLiner){
 		
 		this.errorMessage = errorMessage;
@@ -70,7 +72,7 @@ public abstract class AbstractBotError extends AbstractBotCommand {
 		return this.errorMessage;
 	}
 	
-	public String getEmoji(){
+	public Emoji getEmoji(){
 		return this.emoji;
 	}
 	

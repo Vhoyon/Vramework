@@ -1,6 +1,5 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -15,9 +14,7 @@ import io.github.ved.jrequester.Request;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
 import io.github.vhoyon.vramework.interfaces.BufferLevel;
-import io.github.vhoyon.vramework.interfaces.Command;
 import io.github.vhoyon.vramework.interfaces.DiscordUtils;
-import io.github.vhoyon.vramework.interfaces.Emojis;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
 import io.github.vhoyon.vramework.interfaces.Stoppable;
 import io.github.vhoyon.vramework.interfaces.Translatable;
@@ -52,7 +49,7 @@ import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
  * @author V-ed (Guillaume Marcoux)
  */
 public abstract class AbstractBotCommand implements
-		Translatable, Emojis, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
+		Translatable, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
 		DiscordUtils {
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
