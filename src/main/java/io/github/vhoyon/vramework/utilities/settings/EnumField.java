@@ -66,7 +66,7 @@ public class EnumField extends TextField {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected EnumField clone() throws CloneNotSupportedException{
+	protected EnumField duplicate(){
 		EnumField cloned = new EnumField(getName(), getEnv(), getDefaultValue()){
 			@Override
 			protected String sanitizeValue(Object value)

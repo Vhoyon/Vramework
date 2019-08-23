@@ -19,7 +19,7 @@ public class EnumSortedField extends EnumField {
 	}
 	
 	@Override
-	protected EnumSortedField clone() throws CloneNotSupportedException{
+	protected EnumSortedField duplicate(){
 		EnumSortedField cloned = new EnumSortedField(getName(), getEnv(),
 				getDefaultValue()){
 			@Override
