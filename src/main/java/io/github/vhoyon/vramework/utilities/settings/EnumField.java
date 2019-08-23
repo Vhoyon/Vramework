@@ -12,18 +12,10 @@ public class EnumField extends TextField {
 		@Override
 		public boolean contains(Object o){
 			if(o == null || o instanceof String){
-				
 				String e = (String)o;
-				
-				for(String s : this){
-					boolean val = e == null ? s == null : e.equalsIgnoreCase(s);
-					
-					if(val)
-						return true;
-				}
-				
+				return this.stream().anyMatch(
+						s -> e == null ? s == null : e.equalsIgnoreCase(s));
 			}
-			
 			return false;
 		}
 	}
