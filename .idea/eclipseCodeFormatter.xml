@@ -5,9 +5,9 @@
       <Settings>
         <option name="eclipseVersion" value="ECLIPSE_44" />
         <option name="formatter" value="ECLIPSE" />
-        <option name="id" value="1522513266030" />
+        <option name="id" value="1566672944488" />
         <option name="importOrdering" value="ECLIPSE_44" />
-        <option name="name" value="V-ed's Formatter" />
+        <option name="name" value="V-ed's Formatter - Vramework" />
         <option name="pathToConfigFileJava" value="$PROJECT_DIR$/.idea/v-ed_java_formatter.xml" />
         <option name="selectedJavaProfile" value="V-ed" />
         <option name="useOldEclipseJavaFormatter" value="true" />
