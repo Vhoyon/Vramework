@@ -1,12 +1,13 @@
 package io.github.vhoyon.vramework.objects;
 
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import io.github.vhoyon.vramework.abstracts.Storage;
 import io.github.vhoyon.vramework.interfaces.BufferImplementation;
-import io.github.vhoyon.vramework.interfaces.StorageImplementation;
 
-public class Buffer extends Storage {
+public class Buffer extends
+		Storage<BufferImplementation<Map<String, Object>>, Object> {
 	
 	private static Buffer buffer;
 	
@@ -22,32 +23,32 @@ public class Buffer extends Storage {
 	}
 	
 	@Override
-	protected StorageImplementation getDefaultImplementation(){
+	protected BufferImplementation<Map<String, Object>> getDefaultImplementation(){
 		return new DefaultBufferImplementation();
 	}
 	
 	protected final BufferImplementation<?> getSingletonMemoryImpl(){
 		if(this.singletonImpl == null)
-			Buffer.setSingletonMemoryImplementation(new DefaultBufferImplementation());
+			this.setSingletonMemoryImplementation(new DefaultBufferImplementation());
 		
 		return this.singletonImpl;
 	}
 	
-	public static void setSingletonMemoryImplementation(
+	public void setSingletonMemoryImplementation(
 			BufferImplementation<?> implementation){
 		Buffer.get().singletonImpl = implementation;
 	}
 	
-	public static void setImplementation(BufferImplementation<?> implementation){
-		Buffer.setMemoryImplementation(implementation);
-		Buffer.setSingletonMemoryImplementation(implementation);
+	public void setImplementation(BufferImplementation<?> implementation){
+		this.setMemoryImplementation(implementation);
+		this.setSingletonMemoryImplementation(implementation);
 	}
 	
-	public static <E> E getSingleton(Class<E> desiredClass){
-		return getSingleton(desiredClass, null);
+	public <E> E getSingleton(Class<E> desiredClass){
+		return this.getSingleton(desiredClass, null);
 	}
 	
-	public static <E> E getSingleton(Class<E> desiredClass,
+	public <E> E getSingleton(Class<E> desiredClass,
 			Callable<E> createInstanceIfNew)
 			throws UnsupportedOperationException{
 		
@@ -88,7 +89,7 @@ public class Buffer extends Storage {
 		
 	}
 	
-	public static <E> E removeSingleton(Class<E> singletonClass){
+	public <E> E removeSingleton(Class<E> singletonClass){
 		
 		Buffer buffer = Buffer.get();
 		
@@ -107,7 +108,7 @@ public class Buffer extends Storage {
 		
 	}
 	
-	public static boolean hasSingleton(Class<?> singletonClass){
+	public boolean hasSingleton(Class<?> singletonClass){
 		return Buffer.get().getSingletonMemoryImpl()
 				.has(singletonClass.getName());
 	}

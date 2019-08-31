@@ -95,17 +95,17 @@ public class SettingRepositoryRepository {
 	}
 	
 	protected static SettingRepositoryRepository getReposRepo(){
-		return Buffer.getSingleton(SettingRepositoryRepository.class,
+		return Buffer.get().getSingleton(SettingRepositoryRepository.class,
 				SettingRepositoryRepository::new);
 	}
 	
 	protected static boolean hasSettingRepository(String repositoryKey){
 		
-		if(!Buffer.hasSingleton(SettingRepositoryRepository.class)){
+		if(!Buffer.get().hasSingleton(SettingRepositoryRepository.class)){
 			return false;
 		}
 		else{
-			SettingRepositoryRepository repositoryRepository = Buffer
+			SettingRepositoryRepository repositoryRepository = Buffer.get()
 					.getSingleton(SettingRepositoryRepository.class, null);
 			
 			if(repositoryRepository == null)

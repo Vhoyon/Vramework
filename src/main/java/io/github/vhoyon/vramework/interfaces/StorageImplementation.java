@@ -1,10 +1,10 @@
 package io.github.vhoyon.vramework.interfaces;
 
-public interface StorageImplementation {
+public interface StorageImplementation<E> {
 
-	boolean store(String key, Object object);
+	boolean store(String key, E object);
 
-	Object retrieve(String key) throws IllegalStateException;
+	E retrieve(String key) throws IllegalStateException;
 
 	boolean has(String key);
 
