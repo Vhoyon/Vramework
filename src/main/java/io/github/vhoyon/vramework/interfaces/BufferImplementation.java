@@ -1,17 +1,7 @@
 package io.github.vhoyon.vramework.interfaces;
 
-public interface BufferImplementation<E> {
+public interface BufferImplementation<E> extends StorageImplementation {
 	
 	E getMemory();
-	
-	boolean store(String key, Object object);
-	
-	Object retrieve(String key) throws IllegalStateException;
-	
-	boolean has(String key);
-	
-	boolean remove(String key);
-	
-	void empty();
 	
 }

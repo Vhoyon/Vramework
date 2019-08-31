@@ -2,13 +2,14 @@ package io.github.vhoyon.vramework.objects;
 
 import java.util.concurrent.Callable;
 
+import io.github.vhoyon.vramework.abstracts.Storage;
 import io.github.vhoyon.vramework.interfaces.BufferImplementation;
+import io.github.vhoyon.vramework.interfaces.StorageImplementation;
 
-public class Buffer {
+public class Buffer extends Storage {
 	
 	private static Buffer buffer;
 	
-	private BufferImplementation<?> memoryImpl;
 	private BufferImplementation<?> singletonImpl;
 	
 	private Buffer(){}
@@ -20,11 +21,9 @@ public class Buffer {
 		return buffer;
 	}
 	
-	protected final BufferImplementation<?> getMemoryImpl(){
-		if(this.memoryImpl == null)
-			Buffer.setMemoryImplementation(new DefaultBufferImplementation());
-		
-		return this.memoryImpl;
+	@Override
+	protected StorageImplementation getDefaultImplementation(){
+		return new DefaultBufferImplementation();
 	}
 	
 	protected final BufferImplementation<?> getSingletonMemoryImpl(){
@@ -32,11 +31,6 @@ public class Buffer {
 			Buffer.setSingletonMemoryImplementation(new DefaultBufferImplementation());
 		
 		return this.singletonImpl;
-	}
-	
-	public static void setMemoryImplementation(
-			BufferImplementation<?> implementation){
-		Buffer.get().memoryImpl = implementation;
 	}
 	
 	public static void setSingletonMemoryImplementation(
@@ -118,40 +112,13 @@ public class Buffer {
 				.has(singletonClass.getName());
 	}
 	
-	public boolean push(Object object, String fullKey){
-		return this.getMemoryImpl().store(fullKey, object);
-	}
-	
-	public <E> E get(String fullKey) throws IllegalStateException{
-		try{
-			//noinspection unchecked
-			return (E)this.getMemoryImpl().retrieve(fullKey);
-		}
-		catch(IllegalStateException e){
-			throw new IllegalStateException("No object with the key \""
-					+ fullKey + "\" was found in the Buffer.");
-		}
-	}
-	
-	public boolean remove(String fullKey){
-		return this.getMemoryImpl().remove(fullKey);
-	}
-	
-	public void emptyMemory(){
-		this.getMemoryImpl().empty();
-	}
-	
 	public void emptySingletonMemory(){
-		this.getSingletonMemoryImpl().empty();
+		this.getSingletonMemoryImpl().clear();
 	}
 	
 	public void emptyAllMemory(){
-		this.emptyMemory();
+		this.clearMemory();
 		this.emptySingletonMemory();
-	}
-	
-	public boolean has(String key){
-		return this.getMemoryImpl().has(key);
 	}
 	
 }

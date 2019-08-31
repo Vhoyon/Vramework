@@ -1,16 +1,17 @@
 package io.github.vhoyon.vramework.objects;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.github.vhoyon.vramework.interfaces.BufferImplementation;
 
 public class DefaultBufferImplementation implements
-		BufferImplementation<HashMap<String, Object>> {
+		BufferImplementation<Map<String, Object>> {
 	
-	private HashMap<String, Object> memory;
+	private Map<String, Object> memory;
 	
 	@Override
-	public HashMap<String, Object> getMemory(){
+	public Map<String, Object> getMemory(){
 		if(this.memory == null)
 			this.memory = new HashMap<>();
 		
@@ -53,7 +54,7 @@ public class DefaultBufferImplementation implements
 	}
 	
 	@Override
-	public void empty(){
+	public void clear(){
 		this.memory = null;
 	}
 	

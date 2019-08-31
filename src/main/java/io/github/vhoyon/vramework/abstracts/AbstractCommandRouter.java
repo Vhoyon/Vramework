@@ -38,7 +38,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		
 		try{
 			
-			Object bufferedDict = buffer.get(eventDigger
+			Object bufferedDict = buffer.retrieve(eventDigger
 					.getGuildKey(BUFFER_DICTIONARY));
 			setDictionary((Dictionary)bufferedDict);
 			
@@ -48,7 +48,7 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 			setDictionary(new Dictionary());
 			
 			try{
-				buffer.push(getDictionary(),
+				buffer.store(getDictionary(),
 						eventDigger.getGuildKey(BUFFER_DICTIONARY));
 			}
 			catch(NullPointerException e1){}

@@ -194,7 +194,7 @@ public abstract class AbstractBotCommand implements
 	
 	public boolean remember(Object object, String associatedName,
 			BufferLevel level){
-		return this.getBuffer().push(object, getKey(associatedName, level));
+		return this.getBuffer().store(object, getKey(associatedName, level));
 	}
 	
 	public <E> E getMemory(String associatedName) throws IllegalStateException{
@@ -203,7 +203,7 @@ public abstract class AbstractBotCommand implements
 	
 	public <E> E getMemory(String associatedName, BufferLevel level)
 			throws IllegalStateException{
-		return this.getBuffer().get(getKey(associatedName, level));
+		return this.getBuffer().retrieve(getKey(associatedName, level));
 	}
 	
 	public boolean forget(String associatedName){
