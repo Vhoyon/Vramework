@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utilities.settings;
+package io.github.vhoyon.vramework.util.settings;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import io.github.vhoyon.vramework.objects.Buffer;
-import io.github.vhoyon.vramework.utilities.KeyBuilder;
+import io.github.vhoyon.vramework.util.KeyBuilder;
 
 public class SettingRepositoryRepository {
 	

@@ -1,8 +1,9 @@
-package io.github.vhoyon.vramework.utilities;
+package io.github.vhoyon.vramework.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
+import io.github.vhoyon.vramework.util.MessageManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

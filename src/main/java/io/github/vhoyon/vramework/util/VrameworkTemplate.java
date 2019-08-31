@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utilities;
+package io.github.vhoyon.vramework.util;
 
 import javax.security.auth.login.LoginException;
 

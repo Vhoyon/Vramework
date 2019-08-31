@@ -26,11 +26,11 @@ import io.github.vhoyon.vramework.objects.Mention;
 import io.github.vhoyon.vramework.objects.Dictionary;
 import io.github.vhoyon.vramework.objects.MessageEventDigger;
 import io.github.vhoyon.vramework.res.FrameworkResources;
-import io.github.vhoyon.vramework.utilities.KeyBuilder;
-import io.github.vhoyon.vramework.utilities.TimerManager;
-import io.github.vhoyon.vramework.utilities.formatting.DiscordFormatter;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
+import io.github.vhoyon.vramework.util.KeyBuilder;
+import io.github.vhoyon.vramework.util.TimerManager;
+import io.github.vhoyon.vramework.util.formatting.DiscordFormatter;
+import io.github.vhoyon.vramework.util.settings.Setting;
+import io.github.vhoyon.vramework.util.settings.SettingRepository;
 
 /**
  * Class that implements all the logic to execute actions for a Discord command
@@ -542,10 +542,10 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 * object from this command's router.
 	 *
-	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * @return The {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *         object of this
 	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
 	 *         Router}.
@@ -558,12 +558,12 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 * object from this command's router.
 	 *
 	 * @param level
 	 *            The level at which the settings will be retrieved from.
-	 * @return The {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * @return The {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *         object of this
 	 *         {@link io.github.vhoyon.vramework.abstracts.AbstractCommandRouter
 	 *         Router}.
@@ -575,7 +575,7 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 * object from this router.
 	 *
 	 * @param settingName
@@ -593,7 +593,7 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 * object from this router.
 	 *
 	 * @param settingName
@@ -614,7 +614,7 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the value of the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * {@link io.github.vhoyon.vramework.util.settings.Setting} associated
 	 * to the name of the parameter {@code settingName}.
 	 *
 	 * @param settingName
@@ -630,7 +630,7 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the value of the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.Setting} associated
+	 * {@link io.github.vhoyon.vramework.util.settings.Setting} associated
 	 * to the name of the parameter {@code settingName}.
 	 *
 	 * @param settingName
@@ -659,7 +659,7 @@ public abstract class AbstractBotCommand implements
 	 *            {@code Object} value to be set to this setting.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *             associated with the {@code name} provided.
 	 * @throws BadFormatException
 	 *             Thrown if the {@code value} parameter is not the right type
@@ -684,7 +684,7 @@ public abstract class AbstractBotCommand implements
 	 *            The level at which the settings will be retrieved from.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *             associated with the {@code name} provided.
 	 * @throws BadFormatException
 	 *             Thrown if the {@code value} parameter is not the right type
@@ -715,7 +715,7 @@ public abstract class AbstractBotCommand implements
 	 *            on change success.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *             associated with the {@code name} provided.
 	 * @throws BadFormatException
 	 *             Thrown if the {@code value} parameter is not the right type
@@ -747,7 +747,7 @@ public abstract class AbstractBotCommand implements
 	 *            on change success.
 	 * @throws IllegalArgumentException
 	 *             {@code value} parameter is not the type of the
-	 *             {@link io.github.vhoyon.vramework.utilities.settings.Setting}
+	 *             {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *             associated with the {@code name} provided.
 	 * @throws BadFormatException
 	 *             Thrown if the {@code value} parameter is not the right type

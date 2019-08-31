@@ -11,7 +11,7 @@ import io.github.vhoyon.vramework.modules.Logger;
 import io.github.vhoyon.vramework.modules.Logger.LogType;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.TerminalCommandsLinker;
-import io.github.vhoyon.vramework.utils.UpdatableOutputStream;
+import io.github.vhoyon.vramework.util.UpdatableOutputStream;
 
 public abstract class AbstractTerminalConsole implements Console, Loggable {
 	

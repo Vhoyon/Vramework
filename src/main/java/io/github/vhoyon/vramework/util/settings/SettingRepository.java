@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utilities.settings;
+package io.github.vhoyon.vramework.util.settings;
 
 import java.util.HashMap;
 import java.util.Map;

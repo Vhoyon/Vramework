@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utilities;
+package io.github.vhoyon.vramework.util;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;

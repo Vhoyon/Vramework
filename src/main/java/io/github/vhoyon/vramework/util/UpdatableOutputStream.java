@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utils;
+package io.github.vhoyon.vramework.util;
 
 import java.io.PrintStream;
 import java.util.Locale;

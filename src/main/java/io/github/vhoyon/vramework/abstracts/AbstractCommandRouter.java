@@ -11,9 +11,9 @@ import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.Dictionary;
 import io.github.vhoyon.vramework.objects.MessageEventDigger;
 import io.github.vhoyon.vramework.res.FrameworkResources;
-import io.github.vhoyon.vramework.utilities.settings.Setting;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepository;
-import io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository;
+import io.github.vhoyon.vramework.util.settings.Setting;
+import io.github.vhoyon.vramework.util.settings.SettingRepository;
+import io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository;
 
 public abstract class AbstractCommandRouter extends Thread implements Utils,
 		DiscordUtils, Translatable, FrameworkResources {
@@ -226,14 +226,14 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 * object from the Buffer for the TextChannel of this Router or create it if
 	 * there is currently none in the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository}
 	 * Buffer.
 	 *
 	 * @return The
-	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 *         {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 *         object from the current TextChannel-associated buffer.
 	 * @since 0.14.0
 	 */
@@ -243,17 +243,17 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 * object from the Buffer for the TextChannel or Guild, depending on the
 	 * level provided by the {@code level} parameter, of this Router or create
 	 * it if there is currently none in the
-	 * {@link io.github.vhoyon.vramework.utilities.settings.SettingRepositoryRepository}
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository}
 	 * Buffer.
 	 *
 	 * @param level
 	 *            The level at which the SettingRepository must be taken from.
 	 * @return The
-	 *         {@link io.github.vhoyon.vramework.utilities.settings.SettingRepository}
+	 *         {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
 	 *         object from the associated buffer.
 	 * @since 0.14.0
 	 */

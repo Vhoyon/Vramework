@@ -1,4 +1,4 @@
-package io.github.vhoyon.vramework.utilities.formatting;
+package io.github.vhoyon.vramework.util.formatting;
 
 public interface DiscordFormatter {
 	
