@@ -55,27 +55,27 @@ public class Vramework {
 			throws ModuleLoaderException{
 		Vramework.build(false, modulesToLoad);
 	}
-
+	
 	@SafeVarargs
 	public static void build(boolean isDebugging,
 			Class<? extends Module>... modulesToLoad)
 			throws ModuleLoaderException{
 		Vramework.build(isDebugging, true, modulesToLoad);
 	}
-
+	
 	@SafeVarargs
 	public static void buildClean(Class<? extends Module>... modulesToLoad)
 			throws Exception{
 		Vramework.buildClean(false, modulesToLoad);
 	}
-
+	
 	@SafeVarargs
 	public static void buildClean(boolean isDebugging,
 			Class<? extends Module>... modulesToLoad)
 			throws ModuleLoaderException{
 		Vramework.build(isDebugging, false, modulesToLoad);
 	}
-
+	
 	@SafeVarargs
 	public static void build(boolean isDebugging,
 			boolean shouldLoadDefaultModules,

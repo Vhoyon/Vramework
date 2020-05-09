@@ -154,7 +154,8 @@ public final class TimerManager {
 		TimerManager.cancelTimer(timerName, true);
 	}
 	
-	public static void cancelTimer(String timerName, boolean shouldRunFinalActions){
+	public static void cancelTimer(String timerName,
+			boolean shouldRunFinalActions){
 		
 		if(TimerManager.hasTimer(timerName)){
 			TimerWrapper timer = TimerManager.getTimers().remove(timerName);

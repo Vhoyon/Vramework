@@ -4,27 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.managers.AccountManager;
-import net.dv8tion.jda.core.managers.GuildController;
-import net.dv8tion.jda.core.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.managers.AccountManager;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import io.github.ved.jrequester.OptionData;
 import io.github.ved.jrequester.Request;
 import io.github.ved.jsanitizers.exceptions.BadFormatException;
 import io.github.vhoyon.vramework.exceptions.BadContentException;
-import io.github.vhoyon.vramework.interfaces.BufferLevel;
-import io.github.vhoyon.vramework.interfaces.DiscordUtils;
-import io.github.vhoyon.vramework.interfaces.LinkableCommand;
-import io.github.vhoyon.vramework.interfaces.Stoppable;
-import io.github.vhoyon.vramework.interfaces.Translatable;
-import io.github.vhoyon.vramework.interfaces.Utils;
+import io.github.vhoyon.vramework.interfaces.*;
 import io.github.vhoyon.vramework.modules.Logger;
-import io.github.vhoyon.vramework.objects.Buffer;
-import io.github.vhoyon.vramework.objects.EventDigger;
-import io.github.vhoyon.vramework.objects.Mention;
-import io.github.vhoyon.vramework.objects.Dictionary;
-import io.github.vhoyon.vramework.objects.MessageEventDigger;
+import io.github.vhoyon.vramework.objects.*;
 import io.github.vhoyon.vramework.res.FrameworkResources;
 import io.github.vhoyon.vramework.util.KeyBuilder;
 import io.github.vhoyon.vramework.util.TimerManager;
@@ -48,9 +38,8 @@ import io.github.vhoyon.vramework.util.settings.SettingRepository;
  * @since v0.7.0
  * @author V-ed (Guillaume Marcoux)
  */
-public abstract class AbstractBotCommand implements
-		Translatable, Utils, LinkableCommand, FrameworkResources, DiscordFormatter,
-		DiscordUtils {
+public abstract class AbstractBotCommand implements Translatable, Utils,
+		LinkableCommand, FrameworkResources, DiscordFormatter, DiscordUtils {
 	
 	public static final BufferLevel DEFAULT_BUFFER_LEVEL = BufferLevel.CHANNEL;
 	
@@ -267,10 +256,6 @@ public abstract class AbstractBotCommand implements
 		return this.getEventDigger().getChannelId();
 	}
 	
-	public GuildController getGuildController(){
-		return new GuildController(getGuild());
-	}
-	
 	public Guild getGuild(){
 		return this.getEventDigger().getGuild();
 	}
@@ -400,11 +385,7 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public void setSelfNickname(String nickname){
-		this.setNicknameOf(this.getBotMember(), nickname);
-	}
-	
-	public void setNicknameOf(Member member, String nickname){
-		this.getGuildController().setNickname(member, nickname).complete();
+		this.getBotMember().modifyNickname(nickname).complete();
 	}
 	
 	public String sendMessage(String messageToSend){
@@ -486,7 +467,8 @@ public abstract class AbstractBotCommand implements
 	
 	public String sendInfoPrivateMessage(String messageToSend,
 			boolean isOneLiner){
-		return this.sendPrivateMessage(createInfoMessage(messageToSend, isOneLiner));
+		return this.sendPrivateMessage(createInfoMessage(messageToSend,
+				isOneLiner));
 	}
 	
 	public String groupAndSendMessages(String... messages){
@@ -505,7 +487,8 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	public String editMessage(String messageId, String newMessage){
-		return this.editMessageForChannel(getTextContext(), messageId, newMessage);
+		return this.editMessageForChannel(getTextContext(), messageId,
+				newMessage);
 	}
 	
 	public void editMessageQueue(String messageId, String newMessage){
@@ -542,8 +525,8 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
-	 * object from this command's router.
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository} object
+	 * from this command's router.
 	 *
 	 * @return The {@link io.github.vhoyon.vramework.util.settings.Setting}
 	 *         object of this
@@ -558,8 +541,8 @@ public abstract class AbstractBotCommand implements
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
-	 * object from this command's router.
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository} object
+	 * from this command's router.
 	 *
 	 * @param level
 	 *            The level at which the settings will be retrieved from.
@@ -575,8 +558,8 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting}
-	 * object from this router.
+	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting} object
+	 * from this router.
 	 *
 	 * @param settingName
 	 *            The name of the setting to get from the SettingRepository of
@@ -593,8 +576,8 @@ public abstract class AbstractBotCommand implements
 	}
 	
 	/**
-	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting}
-	 * object from this router.
+	 * Gets the {@link io.github.vhoyon.vramework.util.settings.Setting} object
+	 * from this router.
 	 *
 	 * @param settingName
 	 *            The name of the setting to get from the SettingRepository of

@@ -2,9 +2,8 @@ package io.github.vhoyon.vramework.util;
 
 import javax.security.auth.login.LoginException;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import io.github.vhoyon.vramework.abstracts.AbstractMessageListener;
 import io.github.vhoyon.vramework.interfaces.Console;
 import io.github.vhoyon.vramework.modules.Logger;
@@ -28,8 +27,7 @@ public class VrameworkTemplate {
 			
 			try{
 				
-				jda = new JDABuilder(AccountType.BOT).setToken(botToken)
-						.build().awaitReady();
+				jda = JDABuilder.createDefault(botToken).build().awaitReady();
 				jda.addEventListener(messageListener);
 				jda.setAutoReconnect(true);
 				

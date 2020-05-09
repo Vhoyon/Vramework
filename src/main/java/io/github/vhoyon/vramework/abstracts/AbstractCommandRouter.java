@@ -1,11 +1,10 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import io.github.ved.jrequester.Request;
 import io.github.vhoyon.vramework.exceptions.NoCommandException;
 import io.github.vhoyon.vramework.interfaces.*;
-import io.github.vhoyon.vramework.interfaces.Translatable;
 import io.github.vhoyon.vramework.objects.Buffer;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 import io.github.vhoyon.vramework.objects.Dictionary;
@@ -226,8 +225,8 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
-	 * object from the Buffer for the TextChannel of this Router or create it if
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository} object
+	 * from the Buffer for the TextChannel of this Router or create it if
 	 * there is currently none in the
 	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository}
 	 * Buffer.
@@ -243,8 +242,8 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 	
 	/**
 	 * Gets the
-	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository}
-	 * object from the Buffer for the TextChannel or Guild, depending on the
+	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepository} object
+	 * from the Buffer for the TextChannel or Guild, depending on the
 	 * level provided by the {@code level} parameter, of this Router or create
 	 * it if there is currently none in the
 	 * {@link io.github.vhoyon.vramework.util.settings.SettingRepositoryRepository}
@@ -270,12 +269,12 @@ public abstract class AbstractCommandRouter extends Thread implements Utils,
 		default:
 		case USER:
 		case CHANNEL:
-			repo = SettingRepositoryRepository.getSettingRepository(
-					this.getEventDigger().getChannel(), defaultSettings);
+			repo = SettingRepositoryRepository.getSettingRepository(this
+					.getEventDigger().getChannel(), defaultSettings);
 			break;
 		case GUILD:
-			repo = SettingRepositoryRepository.getSettingRepository(
-					this.getEventDigger().getGuild(), defaultSettings);
+			repo = SettingRepositoryRepository.getSettingRepository(this
+					.getEventDigger().getGuild(), defaultSettings);
 			break;
 		}
 		

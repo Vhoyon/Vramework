@@ -1,16 +1,15 @@
 package io.github.vhoyon.vramework.abstracts;
 
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import io.github.vhoyon.vramework.interfaces.Translatable;
 import io.github.vhoyon.vramework.interfaces.Hidden;
 import io.github.vhoyon.vramework.interfaces.LinkableCommand;
+import io.github.vhoyon.vramework.interfaces.Translatable;
 import io.github.vhoyon.vramework.objects.CommandLinksContainer;
-import io.github.vhoyon.vramework.objects.Link;
 import io.github.vhoyon.vramework.objects.Dictionary;
+import io.github.vhoyon.vramework.objects.Link;
 
 public abstract class CommandsLinker implements Translatable {
 	
@@ -80,7 +79,8 @@ public abstract class CommandsLinker implements Translatable {
 		
 		defaultCommands.forEach((key, command) -> {
 			
-			String wholeCommandString = this.formatWholeCommand(prependChars, key);
+			String wholeCommandString = this.formatWholeCommand(prependChars,
+					key);
 			
 			if(!showDescriptions){
 				builder.append(wholeCommandString);

@@ -1,7 +1,7 @@
 package io.github.vhoyon.vramework.objects;
 
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import io.github.vhoyon.vramework.util.KeyBuilder;
 
 public class MessageEventDigger extends EventDigger {

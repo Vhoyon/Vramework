@@ -21,7 +21,8 @@ class LangAmountManager {
 		
 		public LangAmount(String messyLine) throws BadFormatException{
 			
-			String regexMessyLineResolver = LangAmountManager.createMessyLineRegex();
+			String regexMessyLineResolver = LangAmountManager
+					.createMessyLineRegex();
 			
 			Matcher matcher = Pattern.compile(regexMessyLineResolver).matcher(
 					messyLine);

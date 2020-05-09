@@ -113,7 +113,8 @@ public class Dictionary implements Utils {
 		try{
 			try{
 				
-				string = this.tryGetString(this.getResources(), key, possiblePrefix);
+				string = this.tryGetString(this.getResources(), key,
+						possiblePrefix);
 				
 				if(string == null || string.length() == 0)
 					throw new NullPointerException();
@@ -121,8 +122,8 @@ public class Dictionary implements Utils {
 			}
 			catch(MissingResourceException e){
 				
-				string = this.tryGetString(this.getDefaultLanguageResources(), key,
-						possiblePrefix);
+				string = this.tryGetString(this.getDefaultLanguageResources(),
+						key, possiblePrefix);
 				
 				if(isDebugging())
 					Logger.log(
@@ -136,8 +137,8 @@ public class Dictionary implements Utils {
 			}
 			catch(NullPointerException e){
 				
-				string = this.tryGetString(this.getDefaultLanguageResources(), key,
-						possiblePrefix);
+				string = this.tryGetString(this.getDefaultLanguageResources(),
+						key, possiblePrefix);
 				
 				if(isDebugging())
 					Logger.log(

@@ -247,8 +247,8 @@ public abstract class AbstractTerminalConsole implements Console, Loggable {
 		
 		do{
 			
-			String input = this.getInput(question + " " + choiceBuilder.toString())
-					.trim();
+			String input = this.getInput(
+					question + " " + choiceBuilder.toString()).trim();
 			
 			System.out.println();
 			

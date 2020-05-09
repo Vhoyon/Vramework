@@ -1,7 +1,7 @@
 package io.github.vhoyon.vramework.abstracts;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import io.github.vhoyon.vramework.objects.Buffer;
 import io.github.vhoyon.vramework.objects.CommandsRepository;
 

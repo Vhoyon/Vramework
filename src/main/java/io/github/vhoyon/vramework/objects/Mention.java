@@ -3,14 +3,16 @@ package io.github.vhoyon.vramework.objects;
 import java.awt.*;
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.*;
 
 public class Mention implements Member {
 	
@@ -48,9 +50,29 @@ public class Mention implements Member {
 		return this.mentionnedMember.getGuild();
 	}
 	
+	@Nonnull
 	@Override
-	public List<Permission> getPermissions(){
+	public EnumSet<Permission> getPermissions(){
 		return this.mentionnedMember.getPermissions();
+	}
+	
+	@Nonnull
+	@Override
+	public EnumSet<Permission> getPermissions(@Nonnull GuildChannel channel){
+		return this.mentionnedMember.getPermissions(channel);
+	}
+	
+	@Nonnull
+	@Override
+	public EnumSet<Permission> getPermissionsExplicit(){
+		return this.mentionnedMember.getPermissionsExplicit();
+	}
+	
+	@Nonnull
+	@Override
+	public EnumSet<Permission> getPermissionsExplicit(
+			@Nonnull GuildChannel channel){
+		return this.mentionnedMember.getPermissionsExplicit(channel);
 	}
 	
 	@Override
@@ -64,12 +86,13 @@ public class Mention implements Member {
 	}
 	
 	@Override
-	public boolean hasPermission(Channel channel, Permission... permissions){
+	public boolean hasPermission(GuildChannel channel,
+			Permission... permissions){
 		return this.mentionnedMember.hasPermission(channel, permissions);
 	}
 	
 	@Override
-	public boolean hasPermission(Channel channel,
+	public boolean hasPermission(GuildChannel channel,
 			Collection<Permission> permissions){
 		return this.mentionnedMember.hasPermission(channel, permissions);
 	}
@@ -79,9 +102,21 @@ public class Mention implements Member {
 		return this.mentionnedMember.getJDA();
 	}
 	
+	@Nonnull
 	@Override
-	public OffsetDateTime getJoinDate(){
-		return this.mentionnedMember.getJoinDate();
+	public OffsetDateTime getTimeJoined(){
+		return this.mentionnedMember.getTimeJoined();
+	}
+	
+	@Override
+	public boolean hasTimeJoined(){
+		return this.mentionnedMember.hasTimeJoined();
+	}
+	
+	@Nullable
+	@Override
+	public OffsetDateTime getTimeBoosted(){
+		return this.mentionnedMember.getTimeBoosted();
 	}
 	
 	@Override
@@ -89,14 +124,27 @@ public class Mention implements Member {
 		return this.mentionnedMember.getVoiceState();
 	}
 	
+	@Nonnull
 	@Override
-	public Game getGame(){
-		return this.mentionnedMember.getGame();
+	public List<Activity> getActivities(){
+		return this.mentionnedMember.getActivities();
 	}
 	
 	@Override
 	public OnlineStatus getOnlineStatus(){
 		return this.mentionnedMember.getOnlineStatus();
+	}
+	
+	@Nonnull
+	@Override
+	public OnlineStatus getOnlineStatus(@Nonnull ClientType type){
+		return this.mentionnedMember.getOnlineStatus(type);
+	}
+	
+	@Nonnull
+	@Override
+	public EnumSet<ClientType> getActiveClients(){
+		return this.mentionnedMember.getActiveClients();
 	}
 	
 	@Override
@@ -122,11 +170,6 @@ public class Mention implements Member {
 	@Override
 	public int getColorRaw(){
 		return this.mentionnedMember.getColorRaw();
-	}
-	
-	@Override
-	public List<Permission> getPermissions(Channel channel){
-		return this.mentionnedMember.getPermissions(channel);
 	}
 	
 	@Override
@@ -177,4 +220,13 @@ public class Mention implements Member {
 		
 	}
 	
+	@Override
+	public boolean isFake(){
+		return false;
+	}
+	
+	@Override
+	public long getIdLong(){
+		return 0;
+	}
 }

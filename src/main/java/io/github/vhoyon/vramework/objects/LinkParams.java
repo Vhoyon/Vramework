@@ -22,8 +22,9 @@ public class LinkParams extends Link {
 				.map(Object::getClass).toArray(Class<?>[]::new);
 		
 		try{
-			return this.getClassToLink().getDeclaredConstructor(
-					constructorClassesArray).newInstance(params);
+			return this.getClassToLink()
+					.getDeclaredConstructor(constructorClassesArray)
+					.newInstance(params);
 		}
 		catch(InstantiationException | IllegalAccessException
 				| InvocationTargetException | NoSuchMethodException e){
