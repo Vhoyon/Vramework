@@ -25,16 +25,14 @@ public class SettingRepositoryRepository {
 		return this.getRepos().containsKey(key);
 	}
 	
-	@SafeVarargs
 	public static SettingRepository getSettingRepository(Guild guild,
-			Setting<Object>... settingsIfNew){
+			Setting<?>... settingsIfNew){
 		return SettingRepositoryRepository.getSettingRepository(
 				KeyBuilder.buildGuildKey(guild), settingsIfNew);
 	}
 	
-	@SafeVarargs
 	public static SettingRepository getSettingRepository(TextChannel channel,
-			Setting<Object>... settingsIfNew){
+			Setting<?>... settingsIfNew){
 		
 		String channelKey = KeyBuilder.buildTextChannelKey(channel);
 		
@@ -60,9 +58,8 @@ public class SettingRepositoryRepository {
 		
 	}
 	
-	@SafeVarargs
 	public static SettingRepository getSettingRepository(String repositoryKey,
-			Setting<Object>... settingsIfNew){
+			Setting<?>... settingsIfNew){
 		
 		SettingRepositoryRepository repositoryRepository = getReposRepo();
 		

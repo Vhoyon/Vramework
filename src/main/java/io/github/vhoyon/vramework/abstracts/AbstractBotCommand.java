@@ -571,7 +571,7 @@ public abstract class AbstractBotCommand implements Translatable, Utils,
 	 * @since v0.14.0
 	 * @see #setting(String)
 	 */
-	public Setting<Object> getSetting(String settingName){
+	public Setting<?> getSetting(String settingName){
 		return this.getSetting(settingName, DEFAULT_BUFFER_LEVEL);
 	}
 	
@@ -591,7 +591,7 @@ public abstract class AbstractBotCommand implements Translatable, Utils,
 	 * @since v0.14.0
 	 * @see #setting(String)
 	 */
-	public Setting<Object> getSetting(String settingName, BufferLevel level){
+	public Setting<?> getSetting(String settingName, BufferLevel level){
 		return this.getSettings(level).getSetting(settingName);
 	}
 	

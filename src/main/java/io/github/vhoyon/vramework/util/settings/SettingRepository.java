@@ -8,14 +8,14 @@ import io.github.ved.jsanitizers.exceptions.BadFormatException;
 
 public class SettingRepository {
 	
-	private Map<String, Setting<Object>> settings;
+	private final Map<String, Setting<?>> settings;
 	
-	public SettingRepository(Setting<Object>... settings){
+	public SettingRepository(Setting<?>... settings){
 		
 		this.settings = new HashMap<>();
 		
-		for(Setting<Object> setting : settings){
-			Setting<Object> clonedSetting = setting.duplicate();
+		for(Setting<?> setting : settings){
+			Setting<?> clonedSetting = setting.duplicate();
 			
 			this.getSettingsMap().put(clonedSetting.getName(), clonedSetting);
 		}
@@ -47,11 +47,11 @@ public class SettingRepository {
 		return this.getSettingsMap().containsKey(name);
 	}
 	
-	public Setting<Object> getSetting(String name){
+	public Setting<?> getSetting(String name){
 		return this.getSettingsMap().get(name);
 	}
 	
-	public Map<String, Setting<Object>> getSettingsMap(){
+	public Map<String, Setting<?>> getSettingsMap(){
 		return this.settings;
 	}
 	
@@ -61,7 +61,6 @@ public class SettingRepository {
 	}
 	
 	SettingRepository duplicate(){
-		//noinspection unchecked
 		return new SettingRepository(getSettingsMap().values().toArray(
 				new Setting[0]));
 	}
