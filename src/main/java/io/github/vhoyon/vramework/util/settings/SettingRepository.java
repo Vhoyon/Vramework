@@ -8,8 +8,9 @@ import io.github.ved.jsanitizers.exceptions.BadFormatException;
 
 public class SettingRepository {
 	
-	private Map<String, Setting<Object>> settings;
+	private final Map<String, Setting<Object>> settings;
 	
+	@SafeVarargs
 	public SettingRepository(Setting<Object>... settings){
 		
 		this.settings = new HashMap<>();
